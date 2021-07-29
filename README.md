@@ -13,10 +13,15 @@ It is the backend for an online ordering system for a restaurant by operating th
 Deliverable
 
 The objective of the Delilah project submitted is to emulate the task of a backend developer. The deliverables are:
+
 *JS files
+
 *SQL file or installation from the application
+
 *Documentation file
+
 *Readme.md with installation instructions
+
 
 
 The frontend is not included in the deliverable package or resources of this project.The focus is on the backend.
