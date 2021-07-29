@@ -7,9 +7,11 @@ Repositorio: https://github.com/hmfarias/acamica-delilah.git
 # Delilah Restó
 
 General description
+
 It is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.
 
 Deliverable
+
 The objective of the Delilah project submitted is to emulate the task of a backend developer. The deliverables are:
 
 *JS files
