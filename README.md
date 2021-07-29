@@ -4,4 +4,4 @@ Desarrollo Web Full Stack - Proyecto integrador Sprint 3 - JavaScript, NodeJs, S
 
 Repositorio: https://github.com/hmfarias/acamica-delilah.git
 
-Delilah Restó
+# Delilah Restó
