@@ -47,13 +47,10 @@ const isAuthUser = async (req, res, next) => {
 
 		if (!user) return res.status(404).json({ ok: false, message: 'Not a valid token.' });
 
-		console.log('USER ID ---------');
-		console.log(userId);
-		console.log('USER TO ACT ---------');
-		console.log(id);
-
 		if (user.role.name !== 'admin' && userId != id)
-			return res.status(401).json({ ok: false, message: 'Unauthorized user' });
+			return res
+				.status(401)
+				.json({ ok: false, message: 'Administrator or data owner level required' });
 
 		next();
 	} catch (error) {

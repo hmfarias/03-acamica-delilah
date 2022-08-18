@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { UsersService } = require('./../services/index');
+const { UsersService, LoginService } = require('./../services/index');
 const { isAdmin, isAuthUser } = require('./../middlewares/index');
 
 router.get('/', isAdmin, async (req, res) => {
@@ -16,15 +16,19 @@ router.get('/:id', isAuthUser, async (req, res) => {
 });
 
 router.delete('/:id', isAdmin, async (req, res) => {
-	const user = await UsersService.deleteUser(req.params.id);
-	if (!user) return res.status(404).json({ ok: false, message: 'User not found.' });
-	res.status(200).json(user);
+	const { errCode, ok, message } = await UsersService.deleteUser(req.params.id);
+	res.status(errCode).json({
+		ok: ok,
+		message: message,
+	});
 });
 
 router.put('/:id', isAdmin, async (req, res) => {
-	const user = await UsersService.restoreUser(req.params.id);
-	if (!user) return res.status(404).json({ ok: false, message: 'User not found.' });
-	res.status(200).json(user);
+	const { errCode, ok, message } = await UsersService.restoreUser(req.params.id);
+	res.status(errCode).json({
+		ok: ok,
+		message: message,
+	});
 });
 
 module.exports = router;

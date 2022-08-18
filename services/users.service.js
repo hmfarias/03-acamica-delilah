@@ -15,11 +15,35 @@ const UsersService = () => {
 	};
 
 	const deleteUser = async (userId) => {
-		return await Users.destroy({ where: { id: userId } });
+		const user = await Users.findByPk(userId, { paranoid: false });
+		if (!user) return { errCode: 404, ok: false, message: 'User not found.' };
+
+		if (user.deletedAt != null)
+			return { errCode: 404, ok: false, message: 'The user is already deleted' };
+
+		const userDeleted = await Users.destroy({ where: { id: userId } });
+		if (userDeleted)
+			return {
+				errCode: 200,
+				ok: true,
+				message: `Successfully deleted user with ID = ${userId} - (soft deleted)`,
+			};
 	};
 
 	const restoreUser = async (userId) => {
-		return await Users.restore({ where: { id: userId } });
+		const user = await Users.findByPk(userId, { paranoid: false });
+		if (!user) return { errCode: 404, ok: false, message: 'User not found.' };
+
+		if (user.deletedAt === null)
+			return { errCode: 404, ok: false, message: 'The user is not deleted' };
+
+		const userRestored = await Users.restore({ where: { id: userId } });
+		if (userRestored)
+			return {
+				errCode: 200,
+				ok: true,
+				message: `Successfully restored user with ID = ${userId}`,
+			};
 	};
 
 	return { bringUser, bringUsers, deleteUser, restoreUser };
