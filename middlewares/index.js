@@ -5,6 +5,7 @@ const { Users, Roles } = require('../models/index');
 
 const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment file
 
+// Validate administrator user
 const isAdmin = async (req, res, next) => {
 	try {
 		const token = req.headers['authorization'];
@@ -29,6 +30,7 @@ const isAdmin = async (req, res, next) => {
 	}
 };
 
+// Validate administrator user or data owner
 const isAuthUser = async (req, res, next) => {
 	console.log(req.params);
 	try {
@@ -60,6 +62,7 @@ const isAuthUser = async (req, res, next) => {
 	}
 };
 
+// Validate user credentials when logging in
 const validateUser = async (req, res, next) => {
 	const { username, email, password } = req.body;
 	const user = await Users.findOne({
@@ -74,6 +77,7 @@ const validateUser = async (req, res, next) => {
 	next();
 };
 
+// Sign the token
 const signIn = async (req, res) => {
 	try {
 		const { username, email } = req.body;
@@ -96,6 +100,7 @@ const signIn = async (req, res) => {
 	}
 };
 
+// Validate fields for a user registration
 const validateFields = async (req, res, next) => {
 	const error = { ok: false, message: '' }; //object to record possible errors
 
@@ -124,6 +129,7 @@ const validateFields = async (req, res, next) => {
 	next();
 };
 
+//Check if a user already exists
 const chekUserExist = async (req, res, next) => {
 	const { username, email } = req.body;
 	try {
@@ -142,6 +148,7 @@ const chekUserExist = async (req, res, next) => {
 	}
 };
 
+// Register a new user
 const signUp = async (req, res) => {
 	const { username, name, email, phone, address, password, role_id } = req.body;
 	const newUser = await Users.create({
