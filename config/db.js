@@ -1,20 +1,22 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize } = require('sequelize');
 
 const { DB_USER, DB_NAME, DB_PORT, DB_SERVER, DB_PWD } = process.env;
 
-const conString = `mysql://${DB_USER}${
+//mysql://user:password@server:port/database
+
+const connectionString = `mysql://${DB_USER}${
 	DB_PWD && `:${DB_PWD}`
 }@${DB_SERVER}:${DB_PORT}/${DB_NAME}`;
 
-const seq = new Sequelize(conString);
+const sequelizeObject = new Sequelize(connectionString);
 
-seq
+sequelizeObject
 	.authenticate()
 	.then(() => {
-		console.log("All OK");
+		console.log('All OK - connected database');
 	})
 	.catch((e) => {
 		console.error(e.message);
 	});
 
-module.exports = seq;
+module.exports = sequelizeObject;

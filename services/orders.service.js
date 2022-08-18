@@ -1,12 +1,18 @@
-const { Order, Product, User, PaymentMethod, OrderHasProduct } = require("./../models");
+const {
+	Orders,
+	Products,
+	Users,
+	PaymentMethods,
+	OrdersHasProducts,
+} = require('./../models/index');
 
 const OrdersService = () => {
 	const bringOrders = async () => {
-		return await Order.findAll({
+		return await Orders.findAll({
 			include: [
-				{ model: Product },
-				{ model: User, attributes: ["name", "address"] },
-				{ model: PaymentMethod, attributes: ["name"] },
+				{ model: Products, through: { attributes: ['quantity'] } },
+				{ model: Users, attributes: ['name', 'address'] },
+				{ model: PaymentMethods, attributes: ['name'] },
 			],
 		});
 	};
@@ -14,7 +20,7 @@ const OrdersService = () => {
 	const createOrder = async (payment_method, products, user_id) => {
 		const products_data = await Promise.all(
 			products.map(async (prod) => {
-				const productDB = await Product.findByPk(prod.id);
+				const productDB = await Products.findByPk(prod.id);
 				return {
 					quantity: prod.quantity,
 					price: productDB.price,
@@ -27,7 +33,7 @@ const OrdersService = () => {
 			return (acc += prod.quantity * parseFloat(prod.price));
 		}, 0);
 
-		const newOrder = await Order.create({
+		const newOrder = await Orders.create({
 			date: Date.now(),
 			total_price: totalPrice,
 			user_id: user_id,
@@ -36,13 +42,13 @@ const OrdersService = () => {
 
 		await Promise.all(
 			products_data.map(async (prod) => {
-				await OrderHasProduct.create(
+				await OrdersHasProducts.create(
 					{
 						order_id: newOrder.id,
 						product_id: prod.id,
 						quantity: prod.quantity,
 					},
-					{ fields: ["order_id", "product_id", "quantity"] }
+					{ fields: ['order_id', 'product_id', 'quantity'] }
 				);
 			})
 		);

@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("./../config/db");
+const { DataTypes } = require('sequelize');
+const sequelize = require('./../config/db');
 
-const Product = sequelize.define(
-	"product",
+const Products = sequelize.define(
+	'products',
 	{
 		name: {
 			type: DataTypes.STRING,
@@ -22,9 +22,9 @@ const Product = sequelize.define(
 		},
 	},
 	{
-		tableName: "product",
+		tableName: 'products',
 		//timestamps: false, // put in false if the fields created_at and updated_at, do not exist in the table
 		underscored: true, //to sequelize respect the unerscores
 	}
 );
-module.exports = Product;
+module.exports = Products;

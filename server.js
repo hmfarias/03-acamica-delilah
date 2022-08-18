@@ -1,28 +1,27 @@
-//voy en el minuto 01:16:00 del video
 //==========================================================================
 //1. Import Express and other libraries
 //==========================================================================
-const express = require("express");
-const expressJwt = require("express-jwt");
-const jwt = require("jsonwebtoken");
-const { isAdmin } = require("./middlewares/index");
-const helmet = require("helmet");
-const compression = require("compression");
-const rateLimit = require("express-rate-limit");
+const compression = require('compression');
+const express = require('express');
+const expressJwt = require('express-jwt');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit'); //ver
+
+// Routes
+const loginRoute = require('./routes/login');
+const usersRoute = require('./routes/users');
+
 const {
-	Order,
-	Product,
-	User,
-	PaymentMethod,
-	Role,
-	OrderHasProduct,
-} = require("./models/index");
-const { OrdersService } = require("./services/index");
+	OrdersService,
+	ProductsService,
+	PaymentMethodsService,
+	RolesService,
+} = require('./services/index'); //ver
 
-const { Op } = require("sequelize");
-const cors = require("cors"); // necessary so that in the front does not appear cors error
+// const { Op } = require('sequelize');
+const cors = require('cors'); // necessary so that in the front does not appear cors error
 
-const APP_PORT = process.env.APP_PORT || 3000; //bring port from enviroment file
+const APP_PORT = process.env.APP_PORT || 3000; //bring port from enviroment file (If it does not exist, assign 3000 by default)
 const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment file
 
 //==========================================================================
@@ -35,7 +34,7 @@ const app = express();
 //==========================================================================
 
 const rateLimitPolicy = rateLimit({
-	message: "Try again later",
+	message: 'Try again later',
 	max: 10,
 	windowMs: 5 * 60 * 1000, //minutes * 60 * 1000
 });
@@ -43,8 +42,8 @@ const rateLimitPolicy = rateLimit({
 //==========================================================================
 // 3.1 Create Middlewares of our API
 //==========================================================================
+const { isAdmin } = require('./middlewares/index');
 // const {
-// 	validateAdmin,
 // 	validateCompraBody,
 // 	validatePaqueteBody,
 // } = require("./middlewares/index.js");
@@ -59,98 +58,102 @@ app.use(helmet());
 app.use(compression());
 app.use(cors()); // necessary so that in the front does not appear cors error
 
-//Protect all endpoints (except login) using Express-JWT as global Middleware
+//Protect all endpoints (except login and register) using Express-JWT as global Middleware
 // for nothing in life, this chain must be exposed!!!
 app.use(
 	expressJwt({
 		secret: JWT_SECRET,
-		algorithms: ["HS256"],
-	}).unless({ path: ["/login"] })
+		algorithms: ['HS256'],
+		credentialsRequired: false,
+	}).unless({ path: ['/users/login', '/users/register'] })
 );
 
-//==========================================================================
-//4. ENDPOINTS
-//==========================================================================
-
-//login endpoint
-//localhost:3000/login
-app.post("/login", async (req, res) => {
-	const { username, password } = req.body;
-
-	const possibleUser = await User.findOne({
-		attributes: ["id", "name", "email"], //only bring those fields and not others like password field
-		where: {
-			//this is like "username:username", When we have the same name in the variable it can be abbreviated
-			username,
-			//this is like "password:password", When we have the same name in the variable it can be abbreviated
-			password,
-		},
-		include: [{ model: Role }],
-	});
-
-	if (possibleUser == null) {
-		res.status(401).json({ error: "Incorrect user or password" });
+//Invalid token error handling
+app.use((err, req, res, next) => {
+	if (err.name === 'UnauthorizedError') {
+		res.status(401).send({ ok: false, message: 'The token sent is invalid.' });
 	} else {
-		const token = jwt.sign(
-			{
-				id: possibleUser.id,
-				name: possibleUser.name,
-				email: possibleUser.email,
-			},
-			JWT_SECRET, //secret string
-			{ expiresIn: "60m" } // Expiration time of the token
-		);
+		next(err);
+	}
+});
+//================================================================================
+//4. ENDPOINTS
+//================================================================================
 
-		res.json({ token });
+//------------------------------------------------------------------------------//
+//                                      Users Endpoints                         //
+//------------------------------------------------------------------------------//
+//localhost:3000/users/login | localhost:3000/users/register
+app.use('/users', loginRoute);
+//localhost:3000/users
+app.use('/users', usersRoute);
+
+//------------------------------- End users ------------------------------------//
+
+//------------------------------------------------------------------------------//
+//                                   Products Endpoints                         //
+//------------------------------------------------------------------------------//
+//Bring products endpoint
+//localhost:3000/products
+app.get('/products', async (req, res) => {
+	try {
+		const products = await ProductsService.bringProducts();
+		res.status(200).json(products);
+	} catch (error) {
+		res.status(500).json({ error: 'Try again later...' });
 	}
 });
 
-//Other endpoints
 //------------------------------------------------------------------------------//
-//                                   Orders                                   //
+//                            Payment Methods Endpoints                         //
 //------------------------------------------------------------------------------//
-//create new Order endpoint
-//localhost:3000/orders
-app.post("/orders", async (req, res) => {
-	const { payment_method, products } = req.body;
-	const newOrder = await OrdersService.createOrder(payment_method, products, req.user.id);
-
-	res.json({ newOrder });
+//Bring payment methods endpoint
+//localhost:3000/payment
+app.get('/payment', async (req, res) => {
+	try {
+		const paymentMethods = await PaymentMethodsService.bringPaymentMethods();
+		res.status(200).json(paymentMethods);
+	} catch (error) {
+		res.status(500).json({ error: 'Try again later...' });
+	}
 });
 
-//bring Order endpoint if user is Admin
+//------------------------------------------------------------------------------//
+//                                 Roles Endpoints                              //
+//------------------------------------------------------------------------------//
+//Bring Roles endpoint
+//localhost:3000/roles
+app.get('/roles', async (req, res) => {
+	try {
+		const roles = await RolesService.bringRoles();
+		res.status(200).json(roles);
+	} catch (error) {
+		res.status(500).json({ error: 'Try again later...' });
+	}
+});
+
+//------------------------------------------------------------------------------//
+//                                   Orders Endpoints                           //
+//------------------------------------------------------------------------------//
+//bring Orders Dashboard endpoint if user is Admin
 //localhost:3000/orders/dashboard
-app.get("/orders/dashboard", isAdmin, async (req, res) => {
+app.get('/ordersdashboard', isAdmin, async (req, res) => {
 	res.status(200);
 	const orders = await OrdersService.bringOrders();
 	res.json(orders);
 });
 
+//create new Order endpoint
+//localhost:3000/orders
+app.post('/orders', async (req, res) => {
+	const { payment_method, products } = req.body;
+	const newOrder = await OrdersService.createOrder(payment_method, products, req.user.id);
+
+	res.json({ newOrder });
+});
 //------------------------------------------------------------------------------//
 //                                   Users                                   //
 //------------------------------------------------------------------------------//
-//GET - Bring all users
-//localhost:3000/usuarios
-// app.get("/usuarios", validateAdmin, async (req, res) => {
-// 	try {
-// 		const usuarios = await Usuario.findAll({
-// 			include: [
-// 				{
-// 					model: Compra,
-// 					include: [
-// 						{
-// 							model: Paquete,
-// 						},
-// 					],
-// 				},
-// 			],
-// 		});
-
-// 		res.status(200).json(usuarios);
-// 	} catch (error) {
-// 		res.status(500).json({ error: "Intente mas tarde..." });
-// 	}
-// });
 
 // //GET - Bring a user by ID
 // //localhost:3000/usuarios/idUsuario
@@ -447,7 +450,7 @@ app.listen(APP_PORT, () => {
 // To capture the moment when the server is disconnected
 // in case it had to close something more before going down
 //SIGINT is triggered by pressing Ctrl + C
-process.on("SIGINT", () => {
-	console.log(" -- Disconnected server -- ");
+process.on('SIGINT', () => {
+	console.log(' -- Disconnected server -- ');
 	process.exit();
 });

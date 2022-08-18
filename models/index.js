@@ -1,36 +1,38 @@
-const PaymentMethod = require("./../models/paymentMethod");
-const Order = require("./../models/order");
-const OrderHasProduct = require("./../models/orderHasProduct");
-const Product = require("./../models/product");
-const Role = require("./../models/role");
-const User = require("./../models/user");
+//Here all relationships between tables for sequelize are defined
 
-User.belongsTo(Role, {
-	foreignKey: "role_id",
+const Orders = require('./orders');
+const OrdersHasProducts = require('./ordersHasProducts');
+const PaymentMethods = require('./paymentMethods');
+const Products = require('./products');
+const Roles = require('./roles');
+const Users = require('./users');
+
+Users.belongsTo(Roles, {
+	foreignKey: 'role_id', //belongsTo: foreing key in the users table that relates it to the roles table
 });
 
-User.hasMany(Order, {
-	foreignKey: "user_id",
+Users.hasMany(Orders, {
+	foreignKey: 'user_id', //hasMany: foreing key in the orders table, that relates it to the users table
 });
 
-Order.belongsTo(PaymentMethod, {
-	foreignKey: "payment_method_id",
+Orders.belongsTo(PaymentMethods, {
+	foreignKey: 'payment_method_id', //foreing key in the orders table that relates it to the payment_methods table
 });
 
-Order.belongsTo(User, {
-	foreignKey: "user_id",
+Orders.belongsTo(Users, {
+	foreignKey: 'user_id',
 });
 
 // Many to many relationship
-Order.belongsToMany(Product, {
-	through: OrderHasProduct,
+Orders.belongsToMany(Products, {
+	through: OrdersHasProducts,
 });
 
 module.exports = {
-	PaymentMethod,
-	Order,
-	OrderHasProduct,
-	Product,
-	Role,
-	User,
+	Orders,
+	OrdersHasProducts,
+	PaymentMethods,
+	Products,
+	Roles,
+	Users,
 };

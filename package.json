@@ -1,12 +1,22 @@
 {
 	"name": "delilah_resto",
 	"version": "1.0.0",
-	"main": "index.js",
+	"description": "It is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.",
+	"author": "Marcelo Farias",
+	"license": "ISC",
+	"main": "server.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"runserver": "nodemon -r dotenv/config server.js"
+		"server": "nodemon -r dotenv/config server.js",
+		"start": "node server.js"
 	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/hmfarias/03-acamica-delilah"
+	},
+	"homepage": "https://github.com/hmfarias/03-acamica-delilah#readme",
 	"dependencies": {
+		"bcrypt": "^5.0.1",
 		"compression": "^1.7.4",
 		"cors": "^2.8.5",
 		"dotenv": "10.0.0",
@@ -16,9 +26,6 @@
 		"helmet": "^4.6.0",
 		"jsonwebtoken": "8.5.1",
 		"mysql2": "2.2.5",
-		"sequelize": "6.6.2"
-	},
-	"author": "hmfarias",
-	"license": "ISC",
-	"description": ""
+		"sequelize": "^6.21.3"
+	}
 }
