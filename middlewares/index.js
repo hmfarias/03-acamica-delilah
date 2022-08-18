@@ -9,8 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment
 const isAdmin = async (req, res, next) => {
 	try {
 		const token = req.headers['authorization'];
-		if (!token)
-			return res.status(401).json({ ok: false, message: 'No credentials sent' });
+		if (!token) return res.status(401).json({ ok: false, data: 'No credentials sent' });
 
 		const userId = jwt.verify(req.headers.authorization.substring(7), JWT_SECRET).id;
 
@@ -18,10 +17,10 @@ const isAdmin = async (req, res, next) => {
 			include: [Roles],
 		});
 
-		if (!user) return res.status(404).json({ ok: false, message: 'Not a valid token.' });
+		if (!user) return res.status(404).json({ ok: false, data: 'Not a valid token.' });
 
 		if (user.role.name !== 'admin')
-			return res.status(401).json({ ok: false, message: 'Admin level required' });
+			return res.status(401).json({ ok: false, data: 'Admin level required' });
 
 		next();
 	} catch (error) {
@@ -35,8 +34,7 @@ const isAuthUser = async (req, res, next) => {
 	console.log(req.params);
 	try {
 		const token = req.headers['authorization'];
-		if (!token)
-			return res.status(401).json({ ok: false, message: 'No credentials sent' });
+		if (!token) return res.status(401).json({ ok: false, data: 'No credentials sent' });
 
 		const userId = jwt.verify(req.headers.authorization.substring(7), JWT_SECRET).id;
 		const { id } = req.params; // user id on which you are going to act
@@ -45,12 +43,12 @@ const isAuthUser = async (req, res, next) => {
 			include: [Roles],
 		});
 
-		if (!user) return res.status(404).json({ ok: false, message: 'Not a valid token.' });
+		if (!user) return res.status(404).json({ ok: false, data: 'Not a valid token.' });
 
 		if (user.role.name !== 'admin' && userId != id)
 			return res
 				.status(401)
-				.json({ ok: false, message: 'Administrator or data owner level required' });
+				.json({ ok: false, data: 'Administrator or data owner level required' });
 
 		next();
 	} catch (error) {
@@ -66,62 +64,39 @@ const validateUser = async (req, res, next) => {
 		where: { [Op.or]: [username ? { username } : { email }] },
 	});
 	if (!user)
-		return res.status(401).json({ ok: false, message: 'Wrong username or password' });
+		return res.status(401).json({ ok: false, data: 'Wrong username or password' });
 	const passOk = password === user.password;
 
 	if (!passOk)
-		return res.status(401).json({ ok: false, message: 'Wrong username or password' });
+		return res.status(401).json({ ok: false, data: 'Wrong username or password' });
 	next();
-};
-
-// Sign the token
-const signIn = async (req, res) => {
-	try {
-		const { username, email } = req.body;
-		const user = await Users.findOne({
-			where: { [Op.or]: [username ? { username } : { email }] },
-		});
-		const token = jwt.sign(
-			{
-				id: user.id,
-				name: user.name,
-				email: user.email,
-			},
-			JWT_SECRET, //secret string
-			{ expiresIn: '120m' } // Expiration time of the token
-		);
-		res.status(200).header('auth-token', token).json({ ok: true, token });
-	} catch (error) {
-		console.log(error);
-		return res.status(500).json({ error: 'Internal error - Try again later...' });
-	}
 };
 
 // Validate fields for a user registration
 const validateFields = async (req, res, next) => {
-	const error = { ok: false, message: '' }; //object to record possible errors
+	const error = { ok: false, data: '' }; //object to record possible errors
 
 	const regex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i; //possible characters to validate an email
 
 	const { username, name, email, phone, address, password } = req.body;
 
-	if (username.length === 0) error.message += 'Username field is required. ';
-	if (name.length === 0) error.message += 'Name field is required. ';
-	if (email.length === 0) error.message += 'Email field is required. ';
-	if (phone.length === 0) error.message += 'Phone field is required. ';
-	if (address.length === 0) error.message += 'Address field is required. ';
-	if (password.length === 0) error.message += 'Password field is required. ';
+	if (username.length === 0) error.data += 'Username required |';
+	if (name.length === 0) error.data += 'Name required |';
+	if (email.length === 0) error.data += 'Email required |';
+	if (phone.length === 0) error.data += 'Phone required |';
+	if (address.length === 0) error.data += 'Address required |';
+	if (password.length === 0) error.data += 'Password required |';
 
 	if (username.length < 5 && username.length > 0)
-		error.message += 'The Username field must have at least 5 characters. ';
+		error.data += 'Username field must have at least 5 characters |';
 
 	if (password.length < 5 && password.length > 0)
-		error.message += 'The Password field must have at least 5 characters. ';
+		error.data += 'Password field must have at least 5 characters |';
 
 	if (!regex.test(email) && email.length > 0)
-		error.message += 'The Email field has an invalid format. ';
+		error.data += 'Email field has an invalid format |';
 
-	if (error.message.length !== 0) return res.status(400).json(error);
+	if (error.data.length !== 0) return res.status(400).json(error);
 
 	next();
 };
@@ -137,7 +112,7 @@ const chekUserExist = async (req, res, next) => {
 		if (userExists)
 			return res
 				.status(401)
-				.json({ ok: false, message: 'Username or Email already exists.' });
+				.json({ ok: false, data: 'Username or Email already exists.' });
 		next();
 	} catch (error) {
 		console.log(error);
@@ -145,27 +120,10 @@ const chekUserExist = async (req, res, next) => {
 	}
 };
 
-// Register a new user
-const signUp = async (req, res) => {
-	const { username, name, email, phone, address, password, role_id } = req.body;
-	const newUser = await Users.create({
-		username,
-		name,
-		email,
-		phone,
-		address,
-		password,
-		role_id: role_id ? role_id : 2,
-	});
-	res.status(201).json({ ok: true, newUser });
-};
-
 module.exports = {
 	chekUserExist,
 	isAdmin,
 	isAuthUser,
-	signIn,
-	signUp,
 	validateUser,
 	validateFields,
 };

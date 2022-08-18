@@ -1,18 +1,82 @@
-// const { Users, Roles } = require('./../models/index');
+const { Op } = require('sequelize');
+const jwt = require('jsonwebtoken');
 
-// const LoginService = () => {
-// 	const bringUser = async (username, password) => {
-// 		return await Users.findOne({
-// 			attributes: ['id', 'name', 'email'], //only bring those fields and not others like password field
-// 			where: {
-// 				username, //this is like "username = username
-// 				password, //this is like "password = password"
-// 			},
-// 			include: [{ model: Roles }],
-// 		});
-// 	};
+const { Users } = require('../models/index');
 
-// 	return { bringUser };
-// };
+const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment file
 
-// module.exports = LoginService();
+const LoginService = () => {
+	//Sign the token
+	const signIn = async (req, res) => {
+		try {
+			const { username, email } = req.body;
+			const user = await Users.findOne({
+				where: { [Op.or]: [username ? { username } : { email }] },
+			});
+			const token = jwt.sign(
+				{
+					id: user.id,
+					name: user.name,
+					email: user.email,
+				},
+				JWT_SECRET, //secret string
+				{ expiresIn: '120m' } // Expiration time of the token
+			);
+
+			if (!token)
+				return { errCode: 401, ok: false, data: 'The token could not be generated' };
+
+			return {
+				errCode: 200,
+				ok: true,
+				data: token,
+			};
+		} catch (error) {
+			console.log(error);
+			return res.status(500).json({ error: 'Internal error - Try again later...' });
+		}
+	};
+
+	// Register a new user
+	const signUp = async (req, res) => {
+		try {
+			const { username, name, email, phone, address, password, role_id } = req.body;
+			const newUser = await Users.create({
+				username,
+				name,
+				email,
+				phone,
+				address,
+				password,
+				role_id: role_id ? role_id : 2,
+			});
+
+			if (!newUser)
+				return { errCode: 401, ok: false, data: 'The user could not be registered' };
+
+			//The object is filtered so as not to return the password field
+			userResp = JSON.parse(
+				JSON.stringify(newUser, [
+					'username',
+					'name',
+					'email',
+					'phone',
+					'addres',
+					'role_id',
+				])
+			);
+
+			return {
+				errCode: 200,
+				ok: true,
+				data: userResp,
+			};
+		} catch (error) {
+			console.log(error);
+			return res.status(500).json({ error: 'Internal error - Try again later...' });
+		}
+	};
+
+	return { signIn, signUp };
+};
+module.exports = LoginService();

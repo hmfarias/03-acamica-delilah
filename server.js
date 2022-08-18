@@ -10,6 +10,7 @@ const rateLimit = require('express-rate-limit'); //ver
 // Routes
 const loginRoute = require('./routes/login');
 const usersRoute = require('./routes/users');
+const productsRoute = require('./routes/products');
 
 const {
 	OrdersService,
@@ -76,6 +77,17 @@ app.use((err, req, res, next) => {
 		next(err);
 	}
 });
+
+//Bad format json object  token error handling
+app.use((err, req, res, next) => {
+	if (err.name === 'SyntaxError') {
+		res
+			.status(401)
+			.send({ ok: false, message: 'The JSON object sent, has a format error' });
+	} else {
+		next(err);
+	}
+});
 //================================================================================
 //4. ENDPOINTS
 //================================================================================
@@ -93,6 +105,9 @@ app.use('/users', usersRoute);
 //------------------------------------------------------------------------------//
 //                                   Products Endpoints                         //
 //------------------------------------------------------------------------------//
+//localhost:3000/products
+app.use('/products', productsRoute);
+
 //Bring products endpoint
 //localhost:3000/products
 app.get('/products', async (req, res) => {
@@ -451,6 +466,6 @@ app.listen(APP_PORT, () => {
 // in case it had to close something more before going down
 //SIGINT is triggered by pressing Ctrl + C
 process.on('SIGINT', () => {
-	console.log(' -- Disconnected server -- ');
+	console.log(' -- Server offline -- ');
 	process.exit();
 });
