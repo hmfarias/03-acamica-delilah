@@ -43,7 +43,7 @@ const rateLimitPolicy = rateLimit({
 //==========================================================================
 // 3.1 Create Middlewares of our API
 //==========================================================================
-const { isAdmin } = require('./middlewares/index');
+const { isAdmin } = require('./middlewares/usersMiddleware');
 // const {
 // 	validateCompraBody,
 // 	validatePaqueteBody,
@@ -107,17 +107,6 @@ app.use('/users', usersRoute);
 //------------------------------------------------------------------------------//
 //localhost:3000/products
 app.use('/products', productsRoute);
-
-//Bring products endpoint
-//localhost:3000/products
-app.get('/products', async (req, res) => {
-	try {
-		const products = await ProductsService.bringProducts();
-		res.status(200).json(products);
-	} catch (error) {
-		res.status(500).json({ error: 'Try again later...' });
-	}
-});
 
 //------------------------------------------------------------------------------//
 //                            Payment Methods Endpoints                         //

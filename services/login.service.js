@@ -32,8 +32,11 @@ const LoginService = () => {
 				data: token,
 			};
 		} catch (error) {
-			console.log(error);
-			return res.status(500).json({ error: 'Internal error - Try again later...' });
+			return {
+				errCode: 500,
+				ok: false,
+				data: error,
+			};
 		}
 	};
 
@@ -72,8 +75,11 @@ const LoginService = () => {
 				data: userResp,
 			};
 		} catch (error) {
-			console.log(error);
-			return res.status(500).json({ error: 'Internal error - Try again later...' });
+			return {
+				errCode: 500,
+				ok: false,
+				data: error,
+			};
 		}
 	};
 

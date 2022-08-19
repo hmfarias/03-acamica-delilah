@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const { UsersService } = require('./../services/index');
-const { isAdmin, isAuthUser } = require('./../middlewares/index');
+const { isAdmin, isAuthUser } = require('./../middlewares/usersMiddleware');
 
 //GET all users
 router.get('/', isAdmin, async (req, res) => {
 	const { errCode, ok, data } = await UsersService.bringUsers();
 	res.status(errCode).json({
-		ok: ok,
-		data: data,
+		ok,
+		data,
 	});
 });
 
@@ -17,8 +17,8 @@ router.get('/', isAdmin, async (req, res) => {
 router.get('/:id', isAuthUser, async (req, res) => {
 	const { errCode, ok, data } = await UsersService.bringUser(req.params.id);
 	res.status(errCode).json({
-		ok: ok,
-		data: data,
+		ok,
+		data,
 	});
 });
 
@@ -26,8 +26,8 @@ router.get('/:id', isAuthUser, async (req, res) => {
 router.delete('/:id', isAdmin, async (req, res) => {
 	const { errCode, ok, data } = await UsersService.deleteUser(req.params.id);
 	res.status(errCode).json({
-		ok: ok,
-		data: data,
+		ok,
+		data,
 	});
 });
 
@@ -35,8 +35,8 @@ router.delete('/:id', isAdmin, async (req, res) => {
 router.put('/:id', isAdmin, async (req, res) => {
 	const { errCode, ok, data } = await UsersService.restoreUser(req.params.id);
 	res.status(errCode).json({
-		ok: ok,
-		data: data,
+		ok,
+		data,
 	});
 });
 
