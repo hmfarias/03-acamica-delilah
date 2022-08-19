@@ -17,6 +17,7 @@ const PaymentMethods = sequelize.define(
 		tableName: 'payment_methods',
 		//timestamps: false, // put into false if the tables do not have the fields created_at y updated_at
 		underscored: true, //to sequelize respect the unerscores
+		paranoid: true,
 	}
 );
 module.exports = PaymentMethods;

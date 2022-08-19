@@ -1,6 +1,6 @@
-//==========================================================================
+//========================================================
 //1. Import Express and other libraries
-//==========================================================================
+//========================================================
 const compression = require('compression');
 const express = require('express');
 const expressJwt = require('express-jwt');
@@ -11,28 +11,24 @@ const rateLimit = require('express-rate-limit'); //ver
 const loginRoute = require('./routes/login');
 const usersRoute = require('./routes/users');
 const productsRoute = require('./routes/products');
+const rolesRoute = require('./routes/roles');
+const payMethodsRoute = require('./routes/payMethods');
 
-const {
-	OrdersService,
-	ProductsService,
-	PaymentMethodsService,
-	RolesService,
-} = require('./services/index'); //ver
+const { OrdersService } = require('./services/index'); //ver
 
-// const { Op } = require('sequelize');
 const cors = require('cors'); // necessary so that in the front does not appear cors error
 
 const APP_PORT = process.env.APP_PORT || 3000; //bring port from enviroment file (If it does not exist, assign 3000 by default)
 const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment file
 
-//==========================================================================
+//=======================================================
 //2. Create the Express instance
-//==========================================================================
+//=======================================================
 const app = express();
 
-//==========================================================================
+//=======================================================
 //3. Add Global Middleware
-//==========================================================================
+//=======================================================
 
 const rateLimitPolicy = rateLimit({
 	message: 'Try again later',
@@ -40,9 +36,9 @@ const rateLimitPolicy = rateLimit({
 	windowMs: 5 * 60 * 1000, //minutes * 60 * 1000
 });
 
-//==========================================================================
+//=======================================================
 // 3.1 Create Middlewares of our API
-//==========================================================================
+//=======================================================
 const { isAdmin } = require('./middlewares/usersMiddleware');
 // const {
 // 	validateCompraBody,
@@ -51,9 +47,9 @@ const { isAdmin } = require('./middlewares/usersMiddleware');
 // const Paquete_Compra = require("./models/Paquete_Compra");
 //const { response } = require("express");
 
-//==========================================================================
+//=======================================================
 // Use the libraries.
-//==========================================================================
+//=======================================================
 app.use(express.json()); // This Middleware makes us the JSON of the Body in the object of JS
 app.use(helmet());
 app.use(compression());
@@ -88,57 +84,39 @@ app.use((err, req, res, next) => {
 		next(err);
 	}
 });
-//================================================================================
+//=============================================================
 //4. ENDPOINTS
-//================================================================================
+//=============================================================
 
-//------------------------------------------------------------------------------//
-//                                      Users Endpoints                         //
-//------------------------------------------------------------------------------//
+//-----------------------------------------------------------//
+//                  Users Endpoints                          //
+//-----------------------------------------------------------//
 //localhost:3000/users/login | localhost:3000/users/register
 app.use('/users', loginRoute);
 //localhost:3000/users
 app.use('/users', usersRoute);
 
-//------------------------------- End users ------------------------------------//
-
-//------------------------------------------------------------------------------//
-//                                   Products Endpoints                         //
-//------------------------------------------------------------------------------//
+//-----------------------------------------------------------//
+//                Products Endpoints                         //
+//-----------------------------------------------------------//
 //localhost:3000/products
 app.use('/products', productsRoute);
 
-//------------------------------------------------------------------------------//
-//                            Payment Methods Endpoints                         //
-//------------------------------------------------------------------------------//
-//Bring payment methods endpoint
-//localhost:3000/payment
-app.get('/payment', async (req, res) => {
-	try {
-		const paymentMethods = await PaymentMethodsService.bringPaymentMethods();
-		res.status(200).json(paymentMethods);
-	} catch (error) {
-		res.status(500).json({ error: 'Try again later...' });
-	}
-});
+//-----------------------------------------------------------//
+//         Payment Methods Endpoints                         //
+//-----------------------------------------------------------//
+//localhost:3000/paymethods
+app.use('/paymethods', payMethodsRoute);
 
-//------------------------------------------------------------------------------//
-//                                 Roles Endpoints                              //
-//------------------------------------------------------------------------------//
-//Bring Roles endpoint
+//-----------------------------------------------------------//
+//              Roles Endpoints                              //
+//-----------------------------------------------------------//
 //localhost:3000/roles
-app.get('/roles', async (req, res) => {
-	try {
-		const roles = await RolesService.bringRoles();
-		res.status(200).json(roles);
-	} catch (error) {
-		res.status(500).json({ error: 'Try again later...' });
-	}
-});
+app.use('/roles', rolesRoute);
 
-//------------------------------------------------------------------------------//
-//                                   Orders Endpoints                           //
-//------------------------------------------------------------------------------//
+//-----------------------------------------------------------//
+//                Orders Endpoints                           //
+//-----------------------------------------------------------//
 //bring Orders Dashboard endpoint if user is Admin
 //localhost:3000/orders/dashboard
 app.get('/ordersdashboard', isAdmin, async (req, res) => {
@@ -155,75 +133,6 @@ app.post('/orders', async (req, res) => {
 
 	res.json({ newOrder });
 });
-//------------------------------------------------------------------------------//
-//                                   Users                                   //
-//------------------------------------------------------------------------------//
-
-// //GET - Bring a user by ID
-// //localhost:3000/usuarios/idUsuario
-// app.get("/usuarios/:idUsuario", async (req, res) => {
-// 	const idUsuario = req.params.idUsuario;
-// 	try {
-// 		const usuario = await Usuario.findByPk(idUsuario);
-// 		res.status(200).json(usuario);
-// 	} catch (error) {
-// 		res.status(500).json({ error: "Intente mas tarde..." });
-// 	}
-// });
-
-// //POST - Add a user
-// //localhost:3000/usuarios
-// app.post("/usuarios", validateAdmin, async (req, res) => {
-// 	try {
-// 		const usuario = await Usuario.create({
-// 			password: req.body.password,
-// 			email: req.body.email,
-// 			es_admin: req.body.es_admin,
-// 		});
-// 		res.status(200).json(usuario);
-// 	} catch (error) {
-// 		res.status(500).json({ error: "Intente mas tarde..." });
-// 	}
-// });
-// //                                   End users                         //
-// //------------------------------------------------------------------------------//
-
-// //------------------------------------------------------------------------------//
-// //                                   PACKAGES                                   //
-// //------------------------------------------------------------------------------//
-// //GET - Bring all the packets
-// //localhost:3000/paquetes
-// app.get("/paquetes", validateAdmin, async (req, res) => {
-// 	try {
-// 		const paquetes = await Paquete.findAll({
-// 			include: [{ model: Fecha }, { model: Imagen }],
-// 		});
-// 		res.status(200).json(paquetes);
-// 	} catch (error) {
-// 		res.status(500).json({ error: "Intente mas tarde..." });
-// 	}
-// });
-
-// //GET - Bring a package by ID
-// //localhost:3000/paquetes/:idPaquete
-// app.get("/paquetes/:idPaquete", async (req, res) => {
-// 	const idPaquete = req.params.idPaquete;
-// 	try {
-// 		const paquetes = await Paquete.findByPk(idPaquete, {
-// 			include: [
-// 				{
-// 					model: Fecha,
-// 				},
-// 				{
-// 					model: Imagen,
-// 				},
-// 			],
-// 		});
-// 		res.status(200).json(paquetes);
-// 	} catch (error) {
-// 		res.status(500).json({ error: "Intente mas tarde..." });
-// 	}
-// });
 
 // //POST - Add a package.
 // //localhost:3000/paquetes

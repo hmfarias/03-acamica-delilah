@@ -24,18 +24,15 @@ const LoginService = () => {
 			);
 
 			if (!token)
-				return { errCode: 401, ok: false, data: 'The token could not be generated' };
+				return { code: 401, ok: false, data: 'The token could not be generated' };
 
-			return {
-				errCode: 200,
-				ok: true,
-				data: token,
-			};
+			return { code: 200, ok: true, data: token };
 		} catch (error) {
 			return {
-				errCode: 500,
+				code: 500,
 				ok: false,
-				data: error,
+				data: 'Internal error - Try again later',
+				error: error,
 			};
 		}
 	};
@@ -55,7 +52,7 @@ const LoginService = () => {
 			});
 
 			if (!newUser)
-				return { errCode: 401, ok: false, data: 'The user could not be registered' };
+				return { code: 401, ok: false, data: 'The user could not be registered' };
 
 			//The object is filtered so as not to return the password field
 			userResp = JSON.parse(
@@ -69,16 +66,13 @@ const LoginService = () => {
 				])
 			);
 
-			return {
-				errCode: 200,
-				ok: true,
-				data: userResp,
-			};
+			return { code: 200, ok: true, data: userResp };
 		} catch (error) {
 			return {
-				errCode: 500,
+				code: 500,
 				ok: false,
-				data: error,
+				data: 'Internal error - Try again later',
+				error: error,
 			};
 		}
 	};

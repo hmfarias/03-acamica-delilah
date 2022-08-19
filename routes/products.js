@@ -9,56 +9,38 @@ const { validateFields, chekProductExist } = require('../middlewares/productsMid
 
 //POST new product
 router.post('/', isAdmin, validateFields, chekProductExist, async (req, res) => {
-	const { errCode, ok, data } = await ProductsService.newProduct(req, res);
-	res.status(errCode).json({
-		ok,
-		data,
-	});
+	const { code, ok, data, error } = await ProductsService.newProduct(req, res);
+	res.status(code).json({ ok, data, error });
 });
 
 //GET all products
 router.get('/', async (req, res) => {
-	const { errCode, ok, data } = await ProductsService.bringProducts(req.params.id);
-	res.status(errCode).json({
-		ok,
-		data,
-	});
+	const { code, ok, data, error } = await ProductsService.bringProducts(req.params.id);
+	res.status(code).json({ ok, data, error });
 });
 
 //GET product by ID
 router.get('/:id', async (req, res) => {
-	const { errCode, ok, data } = await ProductsService.bringProduct(req.params.id);
-	res.status(errCode).json({
-		ok,
-		data,
-	});
+	const { code, ok, data, error } = await ProductsService.bringProduct(req.params.id);
+	res.status(code).json({ ok, data, error });
 });
 
 // //UPDATE a product
 router.put('/', isAdmin, async (req, res) => {
-	const { errCode, ok, data } = await ProductsService.updateProduct(req, res);
-	res.status(errCode).json({
-		ok,
-		data,
-	});
+	const { code, ok, data, error } = await ProductsService.updateProduct(req, res);
+	res.status(code).json({ ok, data, error });
 });
 
 // //RESTORE product by ID param
 router.put('/:id', isAdmin, async (req, res) => {
-	const { errCode, ok, data } = await ProductsService.restoreProduct(req.params.id);
-	res.status(errCode).json({
-		ok,
-		data,
-	});
+	const { code, ok, data, error } = await ProductsService.restoreProduct(req.params.id);
+	res.status(code).json({ ok, data, error });
 });
 
 // //DELETE product by ID param
 router.delete('/:id', isAdmin, async (req, res) => {
-	const { errCode, ok, data } = await ProductsService.deleteProduct(req.params.id);
-	res.status(errCode).json({
-		ok,
-		data,
-	});
+	const { code, ok, data, error } = await ProductsService.deleteProduct(req.params.id);
+	res.status(code).json({ ok, data, error });
 });
 
 module.exports = router;

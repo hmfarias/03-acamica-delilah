@@ -34,6 +34,7 @@ const OrdersHasProducts = sequelize.define(
 		tableName: 'orders_has_products',
 		//timestamps: false, // put in false if the fields created_at and updated_at, do not exist in the table
 		underscored: true, //to sequelize respect the unerscores
+		paranoid: true,
 	}
 );
 module.exports = OrdersHasProducts;

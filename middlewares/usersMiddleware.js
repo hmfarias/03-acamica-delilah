@@ -25,7 +25,7 @@ const isAdmin = async (req, res, next) => {
 		next();
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({ error: 'Internal error - Try again later...' });
+		res.status(500).json({ ok: false, message: 'Internal error - Try again later...' });
 	}
 };
 
@@ -53,7 +53,7 @@ const isAuthUser = async (req, res, next) => {
 		next();
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({ error: 'Internal error - Try again later...' });
+		res.status(500).json({ ok: false, message: 'Internal error - Try again later...' });
 	}
 };
 
@@ -116,7 +116,9 @@ const chekUserExist = async (req, res, next) => {
 		next();
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json({ error: 'Internal error - Try again later...' });
+		return res
+			.status(500)
+			.json({ ok: false, message: 'Internal error - Try again later...' });
 	}
 };
 

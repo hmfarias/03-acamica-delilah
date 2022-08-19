@@ -29,6 +29,7 @@ const Orders = sequelize.define(
 		tableName: 'orders',
 		//timestamps: false, // put in false if the fields created_at and updated_at, do not exist in the table
 		underscored: true, //to sequelize respect the unerscores (If the field names of the table have a underscore,you must put this option for Sequelize)
+		paranoid: true,
 	}
 );
 module.exports = Orders;

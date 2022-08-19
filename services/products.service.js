@@ -1,34 +1,23 @@
 const { Products } = require('./../models/index');
 
 const ProductsService = () => {
-	const bringProduct = async (productId) => {
+	const bringProduct = async (id) => {
 		try {
-			const product = await Products.findByPk(productId, {
+			const product = await Products.findByPk(id, {
 				paranoid: false,
 			});
-			if (!product)
-				return {
-					errCode: 404,
-					ok: false,
-					data: 'Product not found.',
-				};
+			if (!product) return { code: 404, ok: false, data: 'Product not found' };
 
 			if (product.deletedAt != null)
-				return {
-					errCode: 404,
-					ok: false,
-					data: 'The Product is deleted - (soft deleted)',
-				};
-			return {
-				errCode: 200,
-				ok: true,
-				data: product,
-			};
+				return { code: 404, ok: false, data: 'The Product is deleted - (soft deleted' };
+
+			return { code: 200, ok: true, data: product };
 		} catch (error) {
 			return {
-				errCode: 500,
+				code: 500,
 				ok: false,
-				data: error,
+				data: 'Internal error - Try again later',
+				error: error,
 			};
 		}
 	};
@@ -37,56 +26,42 @@ const ProductsService = () => {
 		try {
 			const products = await Products.findAll();
 			if (!products)
-				return {
-					errCode: 404,
-					ok: false,
-					data: 'There are no products in the database.',
-				};
-			return {
-				errCode: 200,
-				ok: true,
-				data: products,
-			};
+				return { code: 404, ok: false, data: 'There are no products in the database' };
+
+			return { code: 200, ok: true, data: products };
 		} catch (error) {
 			return {
-				errCode: 500,
+				code: 500,
 				ok: false,
-				data: error,
+				data: 'Internal error - Try again later',
+				error: error,
 			};
 		}
 	};
 
-	const deleteProduct = async (productId) => {
+	const deleteProduct = async (id) => {
 		try {
-			const product = await Products.findByPk(productId, { paranoid: false });
-			if (!product)
-				return {
-					errCode: 404,
-					ok: false,
-					data: 'Product not found',
-				};
+			const product = await Products.findByPk(id, { paranoid: false });
+			if (!product) return { code: 404, ok: false, data: 'Product not found' };
 
 			if (product.deletedAt != null)
-				return { errCode: 404, ok: false, data: 'The product is already deleted' };
+				return { code: 404, ok: false, data: 'The product is already deleted' };
 
 			const deletedProduct = await product.destroy();
 			if (!deletedProduct)
-				return {
-					errCode: 404,
-					ok: false,
-					data: 'The product could not be updated',
-				};
+				return { code: 404, ok: false, data: 'The product could not be deleted' };
 
 			return {
-				errCode: 200,
+				code: 200,
 				ok: true,
-				data: `Product with ID = ${productId} successfully deleted - (soft deleted)`,
+				data: `Product with Id: ${id} successfully deleted - (soft deleted)`,
 			};
 		} catch (error) {
 			return {
-				errCode: 500,
+				code: 500,
 				ok: false,
-				data: error,
+				data: 'Internal error - Try again later',
+				error: error,
 			};
 		}
 	};
@@ -102,45 +77,42 @@ const ProductsService = () => {
 				available: available ? available : true,
 			});
 			if (!product)
-				return {
-					errCode: 404,
-					ok: false,
-					data: 'The product could not be registered',
-				};
-			return {
-				errCode: 200,
-				ok: true,
-				data: product,
-			};
+				return { code: 404, ok: false, data: 'The product could not be registered' };
+
+			return { code: 200, ok: true, data: product };
 		} catch (error) {
 			return {
-				errCode: 500,
+				code: 500,
 				ok: false,
-				data: error,
+				data: 'Internal error - Try again later',
+				error: error,
 			};
 		}
 	};
 
-	const restoreProduct = async (productId) => {
+	const restoreProduct = async (id) => {
 		try {
-			const product = await Products.findByPk(productId, { paranoid: false });
-			if (!product) return { errCode: 404, ok: false, data: 'Product not found.' };
+			const product = await Products.findByPk(id, { paranoid: false });
+			if (!product) return { code: 404, ok: false, data: 'Product not found' };
 
 			if (product.deletedAt === null)
-				return { errCode: 404, ok: false, data: 'The product is not deleted' };
+				return { code: 404, ok: false, data: 'The product is not deleted' };
 
-			const productRestored = await Products.restore({ where: { id: productId } });
-			if (productRestored)
-				return {
-					errCode: 200,
-					ok: true,
-					data: `Product with ID = ${productId} successfully restored `,
-				};
+			const productRestored = await Products.restore({ where: { id: id } });
+			if (!productRestored)
+				return { code: 404, ok: false, data: 'The product could not be restored' };
+
+			return {
+				code: 200,
+				ok: true,
+				data: `Product with Id: ${id} successfully restored`,
+			};
 		} catch (error) {
 			return {
-				errCode: 500,
+				code: 500,
 				ok: false,
-				data: error,
+				data: 'Internal error - Try again later',
+				error: error,
 			};
 		}
 	};
@@ -151,17 +123,12 @@ const ProductsService = () => {
 
 			if (!name && !price && !image && !available)
 				return {
-					errCode: 400,
+					code: 400,
 					ok: false,
 					data: 'No data was sent - The product could not be updated',
 				};
 			const product = await Products.findByPk(id);
-			if (!product)
-				return {
-					errCode: 404,
-					ok: false,
-					data: 'Product not found',
-				};
+			if (!product) return { code: 404, ok: false, data: 'Product not found' };
 
 			const updatedProduct = await Products.update(
 				{
@@ -170,28 +137,23 @@ const ProductsService = () => {
 					image: image ? image : product.image,
 					available: available,
 				},
-				{
-					where: { id: id },
-				}
+				{ where: { id: id } }
 			);
 
 			if (!updatedProduct)
-				return {
-					errCode: 404,
-					ok: false,
-					data: 'The product could not be updated',
-				};
+				return { code: 404, ok: false, data: 'The product could not be updated' };
 
 			return {
-				errCode: 200,
+				code: 200,
 				ok: true,
 				data: `Successfully updated product with ID = ${id}`,
 			};
 		} catch (error) {
 			return {
-				errCode: 500,
+				code: 500,
 				ok: false,
-				data: error,
+				data: 'Internal error - Try again later',
+				error: error,
 			};
 		}
 	};
