@@ -68,7 +68,7 @@ app.use(
 //Invalid token error handling
 app.use((err, req, res, next) => {
 	if (err.name === 'UnauthorizedError') {
-		res.status(401).send({ ok: false, message: 'The token sent is invalid.' });
+		res.status(401).send({ ok: false, data: {}, message: 'The token sent is invalid' });
 	} else {
 		next(err);
 	}

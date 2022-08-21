@@ -27,7 +27,7 @@ const PayMethodService = () => {
 			return {
 				code: 500,
 				ok: false,
-				data: {},
+				data: error,
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -57,7 +57,7 @@ const PayMethodService = () => {
 			return {
 				code: 500,
 				ok: false,
-				data: {},
+				data: error,
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -97,7 +97,7 @@ const PayMethodService = () => {
 			return {
 				code: 500,
 				ok: false,
-				data: {},
+				data: error,
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -130,7 +130,7 @@ const PayMethodService = () => {
 			return {
 				code: 500,
 				ok: false,
-				data: {},
+				data: error,
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -168,7 +168,7 @@ const PayMethodService = () => {
 			return {
 				code: 500,
 				ok: false,
-				data: {},
+				data: error,
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -217,7 +217,7 @@ const PayMethodService = () => {
 			return {
 				code: 500,
 				ok: false,
-				data: {},
+				data: error,
 				message: 'Internal error - Try again later',
 			};
 		}

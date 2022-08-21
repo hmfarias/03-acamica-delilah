@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 
-const { Users } = require('../models/index');
+const { Users, Roles } = require('../models/index');
 
 const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment file
 
@@ -24,15 +24,20 @@ const LoginService = () => {
 			);
 
 			if (!token)
-				return { code: 401, ok: false, data: 'The token could not be generated' };
+				return {
+					code: 401,
+					ok: false,
+					data: {},
+					message: 'The token could not be generated',
+				};
 
 			return { code: 200, ok: true, data: token };
 		} catch (error) {
 			return {
 				code: 500,
 				ok: false,
-				data: 'Internal error - Try again later',
-				error: error,
+				data: error,
+				message: 'Internal error - Try again later',
 			};
 		}
 	};
@@ -40,7 +45,22 @@ const LoginService = () => {
 	// Register a new user
 	const signUp = async (req, res) => {
 		try {
-			const { username, name, email, phone, address, password, role_id } = req.body;
+			//check if the role exists before registering the new user
+			const { roleId } = req.body;
+
+			const roleIdDefault = roleId ? roleId : 2;
+
+			const role = await Roles.findByPk(roleIdDefault);
+			if (!role)
+				return {
+					code: 404,
+					ok: false,
+					data: {},
+					message: 'The selected role does not exist',
+				};
+			roleName = role.name;
+
+			const { username, name, email, phone, address, password } = req.body;
 			const newUser = await Users.create({
 				username,
 				name,
@@ -48,31 +68,41 @@ const LoginService = () => {
 				phone,
 				address,
 				password,
-				role_id: role_id ? role_id : 2,
+				role_id: roleIdDefault,
 			});
 
 			if (!newUser)
-				return { code: 401, ok: false, data: 'The user could not be registered' };
+				return {
+					code: 401,
+					ok: false,
+					data: {},
+					message: 'The user could not be registered',
+				};
 
-			//The object is filtered so as not to return the password field
-			userResp = JSON.parse(
-				JSON.stringify(newUser, [
-					'username',
-					'name',
-					'email',
-					'phone',
-					'addres',
-					'role_id',
-				])
-			);
+			//build the user JSON with the correct output format
+			userResp = {
+				id: newUser.id,
+				username: newUser.username,
+				name: newUser.name,
+				email: newUser.email,
+				phone: newUser.phone,
+				address: newUser.address,
+				deletedAt: null,
+				role: { name: roleName },
+			};
 
-			return { code: 200, ok: true, data: userResp };
+			return {
+				code: 200,
+				ok: true,
+				data: userResp,
+				message: 'User was successfully registered',
+			};
 		} catch (error) {
 			return {
 				code: 500,
 				ok: false,
-				data: 'Internal error - Try again later',
-				error: error,
+				data: error,
+				message: 'Internal error - Try again later',
 			};
 		}
 	};

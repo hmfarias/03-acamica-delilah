@@ -4,11 +4,11 @@ const { Roles } = require('../models/index');
 const validateFields = async (req, res, next) => {
 	const { name } = req.body;
 
-	const error = { ok: false, data: '' }; //object to record possible errors
+	const error = { ok: false, data: {}, message: '' }; //object to record possible errors
 
-	if (name.length === 0) error.data += 'Name required |';
+	if (name.length === 0) error.message += 'Name required |';
 
-	if (error.data.length !== 0) return res.status(400).json(error);
+	if (error.message.length !== 0) return res.status(400).json(error);
 
 	next();
 };
@@ -23,13 +23,15 @@ const chekRoleExist = async (req, res, next) => {
 			paranoid: false,
 		});
 		if (roleExists)
-			return res.status(401).json({ ok: false, data: `Role ${nameLow}, already exists` });
+			return res
+				.status(401)
+				.json({ ok: false, data: {}, message: `Role ${nameLow}, already exists` });
 		next();
 	} catch (error) {
 		console.log(error);
 		return res
 			.status(500)
-			.json({ ok: false, message: 'Internal error - Try again later...' });
+			.json({ ok: false, data: error, message: 'Internal error - Try again later...' });
 	}
 };
 

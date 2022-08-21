@@ -9,7 +9,10 @@ const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment
 const isAdmin = async (req, res, next) => {
 	try {
 		const token = req.headers['authorization'];
-		if (!token) return res.status(401).json({ ok: false, data: 'No credentials sent' });
+		if (!token)
+			return res
+				.status(401)
+				.json({ ok: false, data: {}, message: 'No credentials sent' });
 
 		const userId = jwt.verify(req.headers.authorization.substring(7), JWT_SECRET).id;
 
@@ -17,15 +20,20 @@ const isAdmin = async (req, res, next) => {
 			include: [Roles],
 		});
 
-		if (!user) return res.status(404).json({ ok: false, data: 'Not a valid token.' });
+		if (!user)
+			return res.status(404).json({ ok: false, data: {}, message: 'Not a valid token.' });
 
 		if (user.role.name !== 'admin')
-			return res.status(401).json({ ok: false, data: 'Admin level required' });
+			return res
+				.status(401)
+				.json({ ok: false, data: {}, message: 'Admin level required' });
 
 		next();
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({ ok: false, message: 'Internal error - Try again later...' });
+		res
+			.status(500)
+			.json({ ok: false, data: {}, message: 'Internal error - Try again later...' });
 	}
 };
 
@@ -34,7 +42,10 @@ const isAuthUser = async (req, res, next) => {
 	console.log(req.params);
 	try {
 		const token = req.headers['authorization'];
-		if (!token) return res.status(401).json({ ok: false, data: 'No credentials sent' });
+		if (!token)
+			return res
+				.status(401)
+				.json({ ok: false, data: {}, message: 'No credentials sent' });
 
 		const userId = jwt.verify(req.headers.authorization.substring(7), JWT_SECRET).id;
 		const { id } = req.params; // user id on which you are going to act
@@ -43,17 +54,22 @@ const isAuthUser = async (req, res, next) => {
 			include: [Roles],
 		});
 
-		if (!user) return res.status(404).json({ ok: false, data: 'Not a valid token.' });
+		if (!user)
+			return res.status(404).json({ ok: false, data: {}, message: 'Not a valid token.' });
 
 		if (user.role.name !== 'admin' && userId != id)
-			return res
-				.status(401)
-				.json({ ok: false, data: 'Administrator or data owner level required' });
+			return res.status(401).json({
+				ok: false,
+				data: {},
+				message: 'Administrator or data owner level required',
+			});
 
 		next();
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({ ok: false, message: 'Internal error - Try again later...' });
+		res
+			.status(500)
+			.json({ ok: false, data: {}, message: 'Internal error - Try again later...' });
 	}
 };
 
@@ -64,39 +80,43 @@ const validateUser = async (req, res, next) => {
 		where: { [Op.or]: [username ? { username } : { email }] },
 	});
 	if (!user)
-		return res.status(401).json({ ok: false, data: 'Wrong username or password' });
+		return res
+			.status(401)
+			.json({ ok: false, data: {}, message: 'Wrong username or password' });
 	const passOk = password === user.password;
 
 	if (!passOk)
-		return res.status(401).json({ ok: false, data: 'Wrong username or password' });
+		return res
+			.status(401)
+			.json({ ok: false, data: {}, message: 'Wrong username or password' });
 	next();
 };
 
 // Validate fields for a user registration
 const validateFields = async (req, res, next) => {
-	const error = { ok: false, data: '' }; //object to record possible errors
+	const error = { ok: false, data: {}, message: '' }; //object to record possible errors
 
 	const regex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i; //possible characters to validate an email
 
 	const { username, name, email, phone, address, password } = req.body;
 
-	if (username.length === 0) error.data += 'Username required |';
-	if (name.length === 0) error.data += 'Name required |';
-	if (email.length === 0) error.data += 'Email required |';
-	if (phone.length === 0) error.data += 'Phone required |';
-	if (address.length === 0) error.data += 'Address required |';
-	if (password.length === 0) error.data += 'Password required |';
+	if (username.length === 0) error.message += 'Username required |';
+	if (name.length === 0) error.message += 'Name required |';
+	if (email.length === 0) error.message += 'Email required |';
+	if (phone.length === 0) error.message += 'Phone required |';
+	if (address.length === 0) error.message += 'Address required |';
+	if (password.length === 0) error.message += 'Password required |';
 
 	if (username.length < 5 && username.length > 0)
-		error.data += 'Username field must have at least 5 characters |';
+		error.message += 'Username field must have at least 5 characters |';
 
 	if (password.length < 5 && password.length > 0)
-		error.data += 'Password field must have at least 5 characters |';
+		error.message += 'Password field must have at least 5 characters |';
 
 	if (!regex.test(email) && email.length > 0)
-		error.data += 'Email field has an invalid format |';
+		error.message += 'Email field has an invalid format |';
 
-	if (error.data.length !== 0) return res.status(400).json(error);
+	if (error.message.length !== 0) return res.status(400).json(error);
 
 	next();
 };
@@ -112,13 +132,13 @@ const chekUserExist = async (req, res, next) => {
 		if (userExists)
 			return res
 				.status(401)
-				.json({ ok: false, data: 'Username or Email already exists.' });
+				.json({ ok: false, data: {}, message: 'Username or Email already exists.' });
 		next();
 	} catch (error) {
 		console.log(error);
 		return res
 			.status(500)
-			.json({ ok: false, message: 'Internal error - Try again later...' });
+			.json({ ok: false, data: error, message: 'Internal error - Try again later...' });
 	}
 };
 

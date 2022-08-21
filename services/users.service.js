@@ -1,8 +1,8 @@
 const { Roles, Users } = require('./../models/index');
 const UsersService = () => {
-	const bringUser = async (userId) => {
+	const bringUser = async (id) => {
 		try {
-			const user = await Users.findByPk(userId, {
+			const user = await Users.findByPk(id, {
 				paranoid: false,
 				attributes: ['id', 'username', 'name', 'email', 'phone', 'address', 'deletedAt'], //set the attributes to not return password, Created_at and Updated_at fields
 				include: [{ model: Roles, attributes: ['name'] }],
@@ -11,26 +11,28 @@ const UsersService = () => {
 				return {
 					code: 404,
 					ok: false,
-					data: 'User not found',
+					data: {},
+					message: 'User not found',
 				};
-
 			if (user.deletedAt != null)
 				return {
 					code: 404,
 					ok: false,
-					data: 'The user is deleted - (soft deleted)',
+					data: {},
+					message: 'The user is deleted - (soft deleted)',
 				};
 			return {
 				code: 200,
 				ok: true,
-				data: user,
+				data: { user },
+				message: 'Successfully recovered User',
 			};
 		} catch (error) {
 			return {
 				code: 500,
 				ok: false,
 				data: error,
-				error: error,
+				message: 'Internal error - Try again later',
 			};
 		}
 	};
@@ -45,66 +47,82 @@ const UsersService = () => {
 				return {
 					code: 404,
 					ok: false,
-					data: 'There are no users in the database.',
+					data: {},
+					message: 'There are no users in the database.',
 				};
 			return {
 				code: 200,
 				ok: true,
 				data: users,
+				message: 'Successfully recovered Users',
 			};
 		} catch (error) {
 			return {
 				code: 500,
 				ok: false,
 				data: error,
+				message: 'Internal error - Try again later',
 			};
 		}
 	};
 
-	const deleteUser = async (userId) => {
+	const deleteUser = async (id) => {
 		try {
-			const user = await Users.findByPk(userId, { paranoid: false });
-			if (!user) return { code: 404, ok: false, data: 'User not found' };
+			const user = await Users.findByPk(id, {
+				attributes: ['id', 'username', 'name', 'email', 'phone', 'address', 'deletedAt'],
+				paranoid: false,
+				include: [{ model: Roles, attributes: ['name'] }],
+			});
+			if (!user) return { code: 404, ok: false, data: {}, message: 'User not found' };
 
 			if (user.deletedAt != null)
-				return { code: 404, ok: false, data: 'The user is already deleted' };
+				return { code: 404, ok: false, data: {}, message: 'The user is already deleted' };
+			const { username, name, email, phone, address } = user;
 
-			const userDeleted = await Users.destroy({ where: { id: userId } });
+			const userDeleted = await Users.destroy({ where: { id: id } });
 			if (userDeleted)
 				return {
 					code: 200,
 					ok: true,
-					data: `User with Id: ${id} successfully deleted - (soft deleted)`,
+					data: { user },
+					message: `User with Id: ${id} successfully deleted - (soft deleted)`,
 				};
 		} catch (error) {
 			return {
 				code: 500,
 				ok: false,
 				data: error,
+				message: 'Internal error - Try again later',
 			};
 		}
 	};
 
-	const restoreUser = async (userId) => {
+	const restoreUser = async (id) => {
 		try {
-			const user = await Users.findByPk(userId, { paranoid: false });
-			if (!user) return { code: 404, ok: false, data: 'User not found' };
+			const user = await Users.findByPk(id, {
+				attributes: ['id', 'username', 'name', 'email', 'phone', 'address', 'deletedAt'],
+				paranoid: false,
+				include: [{ model: Roles, attributes: ['name'] }],
+			});
+			if (!user) return { code: 404, ok: false, data: {}, message: 'User not found' };
 
 			if (user.deletedAt === null)
-				return { code: 404, ok: false, data: 'The user is not deleted' };
+				return { code: 404, ok: false, data: {}, message: 'The user is not deleted' };
 
-			const userRestored = await Users.restore({ where: { id: userId } });
+			const userRestored = await Users.restore({ where: { id: id } });
 			if (userRestored)
 				return {
 					code: 200,
 					ok: true,
-					data: `User with Id: ${userId} successfully restored`,
+					data: { user },
+					message: `User with Id: ${id} successfully restored`,
 				};
 		} catch (error) {
 			return {
 				code: 500,
 				ok: false,
 				data: error,
+				message: 'Internal error - Try again later',
 			};
 		}
 	};
