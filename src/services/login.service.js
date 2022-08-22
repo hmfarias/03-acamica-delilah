@@ -1,9 +1,7 @@
 const { Op } = require('sequelize');
-const jwt = require('jsonwebtoken');
-
 const { Users, Roles } = require('../models/index');
-
-const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment file
+const { encrypt } = require('../helpers/handleEncript');
+const { signToken } = require('../helpers/signToken');
 
 const LoginService = () => {
 	//Sign the token
@@ -13,16 +11,7 @@ const LoginService = () => {
 			const user = await Users.findOne({
 				where: { [Op.or]: [username ? { username } : { email }] },
 			});
-			const token = jwt.sign(
-				{
-					id: user.id,
-					name: user.name,
-					email: user.email,
-				},
-				JWT_SECRET, //secret string
-				{ expiresIn: '120m' } // Expiration time of the token
-			);
-
+			const token = signToken(user.id, user.name, user.email);
 			if (!token)
 				return {
 					code: 401,
@@ -34,9 +23,9 @@ const LoginService = () => {
 			return { code: 200, ok: true, data: token };
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -61,13 +50,18 @@ const LoginService = () => {
 			roleName = role.name;
 
 			const { username, name, email, phone, address, password } = req.body;
+			const encriptedPass = await encrypt(password);
+			console.log('encriptedPass  -------------');
+			console.log(encriptedPass);
+			console.log(typeof encriptedPass);
+
 			const newUser = await Users.create({
 				username,
 				name,
 				email,
 				phone,
 				address,
-				password,
+				password: encriptedPass,
 				role_id: roleIdDefault,
 			});
 
@@ -99,9 +93,9 @@ const LoginService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}

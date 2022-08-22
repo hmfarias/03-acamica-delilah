@@ -5,14 +5,16 @@ const compression = require('compression');
 const express = require('express');
 const expressJwt = require('express-jwt');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit'); //ver
+const rateLimit = require('express-rate-limit'); ///TODO: agregar rateLimit
 
 // Routes
-const loginRoute = require('./routes/login');
-const usersRoute = require('./routes/users');
-const productsRoute = require('./routes/products');
-const rolesRoute = require('./routes/roles');
-const payMethodsRoute = require('./routes/payMethods');
+const {
+	loginRoute,
+	usersRoute,
+	productsRoute,
+	rolesRoute,
+	payMethodsRoute,
+} = require('./../src/v1/routes');
 
 const { OrdersService } = require('./services/index'); //ver
 
@@ -91,35 +93,35 @@ app.use((err, req, res, next) => {
 //-----------------------------------------------------------//
 //                  Users Endpoints                          //
 //-----------------------------------------------------------//
-//localhost:3000/users/login | localhost:3000/users/register
-app.use('/users', loginRoute);
+//localhost:3000/auth/login | localhost:3000/users/register
+app.use('/api/v1/auth', loginRoute);
 //localhost:3000/users
-app.use('/users', usersRoute);
+app.use('/api/v1/users', usersRoute);
 
 //-----------------------------------------------------------//
 //                Products Endpoints                         //
 //-----------------------------------------------------------//
 //localhost:3000/products
-app.use('/products', productsRoute);
+app.use('/api/v1/products', productsRoute);
 
 //-----------------------------------------------------------//
 //         Payment Methods Endpoints                         //
 //-----------------------------------------------------------//
 //localhost:3000/paymethods
-app.use('/paymethods', payMethodsRoute);
+app.use('/api/v1/paymethods', payMethodsRoute);
 
 //-----------------------------------------------------------//
 //              Roles Endpoints                              //
 //-----------------------------------------------------------//
 //localhost:3000/roles
-app.use('/roles', rolesRoute);
+app.use('/api/v1/roles', rolesRoute);
 
 //-----------------------------------------------------------//
 //                Orders Endpoints                           //
 //-----------------------------------------------------------//
 //bring Orders Dashboard endpoint if user is Admin
 //localhost:3000/orders/dashboard
-app.get('/ordersdashboard', isAdmin, async (req, res) => {
+app.get('/api/v1//ordersdashboard', isAdmin, async (req, res) => {
 	res.status(200);
 	const orders = await OrdersService.bringOrders();
 	res.json(orders);
@@ -127,7 +129,7 @@ app.get('/ordersdashboard', isAdmin, async (req, res) => {
 
 //create new Order endpoint
 //localhost:3000/orders
-app.post('/orders', async (req, res) => {
+app.post('/api/v1//orders', async (req, res) => {
 	const { payment_method, products } = req.body;
 	const newOrder = await OrdersService.createOrder(payment_method, products, req.user.id);
 

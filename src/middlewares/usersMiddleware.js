@@ -31,9 +31,11 @@ const isAdmin = async (req, res, next) => {
 		next();
 	} catch (error) {
 		console.log(error);
-		res
-			.status(500)
-			.json({ ok: false, data: {}, message: 'Internal error - Try again later...' });
+		return res.status(error?.status || 500).json({
+			ok: false,
+			data: { error: error?.message || error },
+			message: 'Internal error - Try again later...',
+		});
 	}
 };
 
@@ -67,29 +69,12 @@ const isAuthUser = async (req, res, next) => {
 		next();
 	} catch (error) {
 		console.log(error);
-		res
-			.status(500)
-			.json({ ok: false, data: {}, message: 'Internal error - Try again later...' });
+		return res.status(error?.status || 500).json({
+			ok: false,
+			data: { error: error?.message || error },
+			message: 'Internal error - Try again later...',
+		});
 	}
-};
-
-// Validate user credentials when logging in
-const validateUser = async (req, res, next) => {
-	const { username, email, password } = req.body;
-	const user = await Users.findOne({
-		where: { [Op.or]: [username ? { username } : { email }] },
-	});
-	if (!user)
-		return res
-			.status(401)
-			.json({ ok: false, data: {}, message: 'Wrong username or password' });
-	const passOk = password === user.password;
-
-	if (!passOk)
-		return res
-			.status(401)
-			.json({ ok: false, data: {}, message: 'Wrong username or password' });
-	next();
 };
 
 // Validate fields for a user registration
@@ -136,9 +121,11 @@ const chekUserExist = async (req, res, next) => {
 		next();
 	} catch (error) {
 		console.log(error);
-		return res
-			.status(500)
-			.json({ ok: false, data: error, message: 'Internal error - Try again later...' });
+		return res.status(error?.status || 500).json({
+			ok: false,
+			data: { error: error?.message || error },
+			message: 'Internal error - Try again later...',
+		});
 	}
 };
 
@@ -146,6 +133,5 @@ module.exports = {
 	chekUserExist,
 	isAdmin,
 	isAuthUser,
-	validateUser,
 	validateFields,
 };

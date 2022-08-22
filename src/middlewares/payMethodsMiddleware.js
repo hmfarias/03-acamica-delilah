@@ -44,8 +44,12 @@ const chekPayMethodExist = async (req, res, next) => {
 	} catch (error) {
 		console.log(error);
 		return res
-			.status(500)
-			.json({ ok: false, data: error, message: 'Internal error - Try again later...' });
+			.status(error?.status || 500)
+			.json({
+				ok: false,
+				data: { error: error?.message || error },
+				message: 'Internal error - Try again later...',
+			});
 	}
 };
 

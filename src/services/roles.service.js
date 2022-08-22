@@ -19,9 +19,9 @@ const RolesService = () => {
 			return { code: 200, ok: true, data: role, message: 'Successfully recovered Role' };
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -49,9 +49,9 @@ const RolesService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -86,9 +86,9 @@ const RolesService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -115,9 +115,9 @@ const RolesService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -148,9 +148,9 @@ const RolesService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -192,9 +192,9 @@ const RolesService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}

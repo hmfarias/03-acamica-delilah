@@ -7,7 +7,7 @@
 	"main": "server.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"server": "nodemon -r dotenv/config server.js",
+		"server": "nodemon -r dotenv/config ./src/server.js",
 		"start": "node server.js"
 	},
 	"repository": {
@@ -16,7 +16,7 @@
 	},
 	"homepage": "https://github.com/hmfarias/03-acamica-delilah#readme",
 	"dependencies": {
-		"bcrypt": "^5.0.1",
+		"bcryptjs": "^2.4.3",
 		"compression": "^1.7.4",
 		"cors": "^2.8.5",
 		"dotenv": "10.0.0",

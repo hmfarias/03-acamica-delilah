@@ -1,6 +1,6 @@
 const { Roles, Users } = require('./../models/index');
 const UsersService = () => {
-	const bringUser = async (id) => {
+	const getUser = async (id) => {
 		try {
 			const user = await Users.findByPk(id, {
 				paranoid: false,
@@ -12,7 +12,7 @@ const UsersService = () => {
 					code: 404,
 					ok: false,
 					data: {},
-					message: 'User not found',
+					message: `User not found - Id:${id}`,
 				};
 			if (user.deletedAt != null)
 				return {
@@ -29,15 +29,15 @@ const UsersService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
 	};
 
-	const bringUsers = async () => {
+	const getUsers = async () => {
 		try {
 			const users = await Users.findAll({
 				attributes: ['id', 'username', 'name', 'email', 'phone', 'address', 'deletedAt'], //set the attributes to not return password, Created_at and Updated_at fields
@@ -58,9 +58,9 @@ const UsersService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -89,9 +89,9 @@ const UsersService = () => {
 				};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -119,14 +119,14 @@ const UsersService = () => {
 				};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
 	};
 
-	return { bringUser, bringUsers, deleteUser, restoreUser };
+	return { getUser, getUsers, deleteUser, restoreUser };
 };
 module.exports = UsersService();

@@ -25,9 +25,9 @@ const ProductsService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -52,9 +52,9 @@ const ProductsService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -93,9 +93,9 @@ const ProductsService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -127,9 +127,9 @@ const ProductsService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -163,9 +163,9 @@ const ProductsService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
@@ -212,9 +212,9 @@ const ProductsService = () => {
 			};
 		} catch (error) {
 			return {
-				code: 500,
+				code: error?.status || 500,
 				ok: false,
-				data: error,
+				data: { error: error?.message || error },
 				message: 'Internal error - Try again later',
 			};
 		}
