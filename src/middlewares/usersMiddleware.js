@@ -39,9 +39,51 @@ const isAdmin = async (req, res, next) => {
 	}
 };
 
+// Validates that the user is admin, but that it isn't his own account that he is acting in
+const isAdminNotHimself = async (req, res, next) => {
+	try {
+		const token = req.headers['authorization'];
+		if (!token)
+			return res
+				.status(401)
+				.json({ ok: false, data: {}, message: 'No credentials sent' });
+
+		const userId = jwt.verify(req.headers.authorization.substring(7), JWT_SECRET).id;
+		const { id } = req.params; // user id on which you are going to act
+
+		const user = await Users.findByPk(userId, {
+			include: [Roles],
+		});
+
+		if (!user)
+			return res.status(404).json({ ok: false, data: {}, message: 'Not a valid token.' });
+		if (user.role.name !== 'admin')
+			return res.status(401).json({
+				ok: false,
+				data: {},
+				message: 'Admin level required',
+			});
+
+		if (userId == id)
+			return res.status(401).json({
+				ok: false,
+				data: {},
+				message: 'Admin can not delete own account',
+			});
+
+		next();
+	} catch (error) {
+		console.log(error);
+		return res.status(error?.status || 500).json({
+			ok: false,
+			data: { error: error?.message || error },
+			message: 'Internal error - Try again later...',
+		});
+	}
+};
+
 // Validate administrator user or data owner
 const isAuthUser = async (req, res, next) => {
-	console.log(req.params);
 	try {
 		const token = req.headers['authorization'];
 		if (!token)
@@ -132,6 +174,7 @@ const chekUserExist = async (req, res, next) => {
 module.exports = {
 	chekUserExist,
 	isAdmin,
+	isAdminNotHimself,
 	isAuthUser,
 	validateFields,
 };

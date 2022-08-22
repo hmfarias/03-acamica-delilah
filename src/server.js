@@ -2,26 +2,26 @@
 //1. Import Express and other libraries
 //========================================================
 const compression = require('compression');
-const express = require('express');
-const expressJwt = require('express-jwt');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit'); ///TODO: agregar rateLimit
-
-// Routes
-const {
-	loginRoute,
-	usersRoute,
-	productsRoute,
-	rolesRoute,
-	payMethodsRoute,
-} = require('./../src/v1/routes');
-
-const { OrdersService } = require('./services/index'); //ver
-
 const cors = require('cors'); // necessary so that in the front does not appear cors error
+const express = require('express');
+const helmet = require('helmet');
 
 const APP_PORT = process.env.APP_PORT || 3000; //bring port from enviroment file (If it does not exist, assign 3000 by default)
-const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment file
+const {
+	jsonError,
+	jwtProtection,
+	rateLimitPolicy,
+	tokenError,
+} = require('./middlewares/globalMiddleware'); //global middlewares
+const {
+	loginRoute,
+	payMethodsRoute,
+	productsRoute,
+	rolesRoute,
+	usersRoute,
+} = require('./../src/v1/routes'); // Routes
+
+const { OrdersService } = require('./services/index'); //ver
 
 //=======================================================
 //2. Create the Express instance
@@ -29,99 +29,47 @@ const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment
 const app = express();
 
 //=======================================================
-//3. Add Global Middleware
-//=======================================================
-
-const rateLimitPolicy = rateLimit({
-	message: 'Try again later',
-	max: 10,
-	windowMs: 5 * 60 * 1000, //minutes * 60 * 1000
-});
-
-//=======================================================
-// 3.1 Create Middlewares of our API
-//=======================================================
-const { isAdmin } = require('./middlewares/usersMiddleware');
-// const {
-// 	validateCompraBody,
-// 	validatePaqueteBody,
-// } = require("./middlewares/index.js");
-// const Paquete_Compra = require("./models/Paquete_Compra");
-//const { response } = require("express");
-
-//=======================================================
-// Use the libraries.
+//3. Use Global Middleware
 //=======================================================
 app.use(express.json()); // This Middleware makes us the JSON of the Body in the object of JS
 app.use(helmet());
 app.use(compression());
 app.use(cors()); // necessary so that in the front does not appear cors error
 
-//Protect all endpoints (except login and register) using Express-JWT as global Middleware
-// for nothing in life, this chain must be exposed!!!
-app.use(
-	expressJwt({
-		secret: JWT_SECRET,
-		algorithms: ['HS256'],
-		credentialsRequired: false,
-	}).unless({ path: ['/users/login', '/users/register'] })
-);
+//=======================================================
+// 3.1 Use Middlewares of our API
+//=======================================================
+app.use(rateLimitPolicy); //Activate the rate limit policy
+app.use(jwtProtection()); //protect endpoints with jwt
+app.use(tokenError); //Handle invalid token error
+app.use(jsonError); //Handle invalid json format error
 
-//Invalid token error handling
-app.use((err, req, res, next) => {
-	if (err.name === 'UnauthorizedError') {
-		res.status(401).send({ ok: false, data: {}, message: 'The token sent is invalid' });
-	} else {
-		next(err);
-	}
-});
-
-//Bad format json object  token error handling
-app.use((err, req, res, next) => {
-	if (err.name === 'SyntaxError') {
-		res
-			.status(401)
-			.send({ ok: false, message: 'The JSON object sent, has a format error' });
-	} else {
-		next(err);
-	}
-});
 //=============================================================
 //4. ENDPOINTS
 //=============================================================
 
-//-----------------------------------------------------------//
-//                  Users Endpoints                          //
-//-----------------------------------------------------------//
+//Users Endpoints --------------------------
 //localhost:3000/auth/login | localhost:3000/users/register
 app.use('/api/v1/auth', loginRoute);
 //localhost:3000/users
 app.use('/api/v1/users', usersRoute);
 
-//-----------------------------------------------------------//
-//                Products Endpoints                         //
-//-----------------------------------------------------------//
+//Products Endpoints ----------------------
 //localhost:3000/products
 app.use('/api/v1/products', productsRoute);
 
-//-----------------------------------------------------------//
-//         Payment Methods Endpoints                         //
-//-----------------------------------------------------------//
+//Payment Methods Endpoints ---------------
 //localhost:3000/paymethods
 app.use('/api/v1/paymethods', payMethodsRoute);
 
-//-----------------------------------------------------------//
-//              Roles Endpoints                              //
-//-----------------------------------------------------------//
+//Roles Endpoints -------------------------
 //localhost:3000/roles
 app.use('/api/v1/roles', rolesRoute);
 
-//-----------------------------------------------------------//
-//                Orders Endpoints                           //
-//-----------------------------------------------------------//
+//Orders Endpoints ------------------------
 //bring Orders Dashboard endpoint if user is Admin
 //localhost:3000/orders/dashboard
-app.get('/api/v1//ordersdashboard', isAdmin, async (req, res) => {
+app.get('/api/v1//ordersdashboard', async (req, res) => {
 	res.status(200);
 	const orders = await OrdersService.bringOrders();
 	res.json(orders);
@@ -242,18 +190,6 @@ app.post('/api/v1//orders', async (req, res) => {
 // 	}
 // });
 
-// //GET - Bring a purchase by ID
-// //localhost:3000/compras/:idCompra
-// app.get("/compras/:idCompra", async (req, res) => {
-// 	const idCompra = req.params.idCompra;
-// 	try {
-// 		const compras = await Compra.findByPk(idCompra);
-// 		res.status(200).json(compras);
-// 	} catch (error) {
-// 		res.status(500).json({ error: "Intente mas tarde..." });
-// 	}
-// });
-
 // //POST - Add a purchase
 // //localhost:3000/compras
 // app.post("/compras", validateCompraBody, async (req, res) => {
@@ -272,24 +208,6 @@ app.post('/api/v1//orders', async (req, res) => {
 // 		res.status(200).json(compra);
 // 	} catch (error) {
 // 		console.log(error);
-// 		res.status(500).json({ error: "Intente mas tarde..." });
-// 	}
-// });
-
-// //DELETE - Delete a purchase by ID
-// //localhost:3000/compras/idCompra
-// app.delete("/compras/:idCompra", async (req, res) => {
-// 	const idCompra = req.params.idCompra;
-// 	try {
-// 		const compra = await Compra.destroy({
-// 			where: {
-// 				id: {
-// 					[Op.eq]: idCompra,
-// 				},
-// 			},
-// 		});
-// 		res.status(200).json(compra);
-// 	} catch (error) {
 // 		res.status(500).json({ error: "Intente mas tarde..." });
 // 	}
 // });
@@ -323,17 +241,6 @@ app.post('/api/v1//orders', async (req, res) => {
 
 // //                                  FIN COMPRAS                                 //
 // //------------------------------------------------------------------------------//
-
-// //GET - Bring all package-buy (to try)
-// //localhost:3000/paquete_compra
-// app.get("/paquete_compra", validateAdmin, async (req, res) => {
-// 	try {
-// 		const paquete_compra = await PaqueteCompra.findAll();
-// 		res.status(200).json(paquete_compra);
-// 	} catch (error) {
-// 		res.status(500).json({ error: "Intente mas tarde..." });
-// 	}
-// });
 
 //----------------------------sequelize---------------------------------
 //GET - TRAER BANDA/S POR PALABRA CLAVE - V2

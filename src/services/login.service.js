@@ -1,7 +1,6 @@
 const { Op } = require('sequelize');
 const { Users, Roles } = require('../models/index');
-const { encrypt } = require('../helpers/handleEncript');
-const { signToken } = require('../helpers/signToken');
+const { encrypt, signToken } = require('../helpers');
 
 const LoginService = () => {
 	//Sign the token

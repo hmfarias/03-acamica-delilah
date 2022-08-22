@@ -3,7 +3,11 @@ const router = express.Router();
 
 const { UsersService } = require('../../services');
 
-const { isAdmin, isAuthUser } = require('../../middlewares/usersMiddleware');
+const {
+	isAdmin,
+	isAdminNotHimself,
+	isAuthUser,
+} = require('../../middlewares/usersMiddleware');
 
 router
 	//GET all users
@@ -19,7 +23,7 @@ router
 	})
 
 	//DELETE user by id
-	.delete('/:id', isAdmin, async (req, res) => {
+	.delete('/:id', isAdminNotHimself, async (req, res) => {
 		const { code, ok, data, message } = await UsersService.deleteUser(req.params.id);
 		res.status(code).json({ ok, data, message });
 	})
