@@ -1,6 +1,6 @@
 const { Roles } = require('./../models/index');
 const RolesService = () => {
-	const bringRole = async (id) => {
+	const getRole = async (id) => {
 		try {
 			const role = await Roles.findByPk(id, {
 				attributes: ['id', 'name', 'deletedAt'],
@@ -16,7 +16,12 @@ const RolesService = () => {
 					message: 'The role is deleted - (soft deleted)',
 				};
 
-			return { code: 200, ok: true, data: role, message: 'Successfully recovered Role' };
+			return {
+				code: 200,
+				ok: true,
+				data: { role },
+				message: 'Successfully recovered Role',
+			};
 		} catch (error) {
 			return {
 				code: error?.status || 500,
@@ -27,7 +32,7 @@ const RolesService = () => {
 		}
 	};
 
-	const bringRoles = async () => {
+	const getRoles = async () => {
 		try {
 			const roles = await Roles.findAll({
 				paranoid: false,
@@ -44,7 +49,7 @@ const RolesService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: roles,
+				data: { roles },
 				message: 'Successfully recovered Roles',
 			};
 		} catch (error) {
@@ -81,7 +86,7 @@ const RolesService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { id, role: role.name },
+				data: { role: { id, role: role.name } },
 				message: `Role with ID: ${id} Name: ${role.name}, successfully deleted`,
 			};
 		} catch (error) {
@@ -110,7 +115,7 @@ const RolesService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: role,
+				data: { role },
 				message: 'Role was successfully registered',
 			};
 		} catch (error) {
@@ -131,8 +136,8 @@ const RolesService = () => {
 			if (role.deletedAt === null)
 				return { code: 404, ok: false, data: {}, message: 'The role is not deleted' };
 
-			const rolRestored = await Roles.restore({ where: { id: id } });
-			if (!rolRestored)
+			const roleRestored = await Roles.restore({ where: { id: id } });
+			if (!roleRestored)
 				return {
 					code: 404,
 					ok: false,
@@ -143,7 +148,7 @@ const RolesService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { id, role: role.name },
+				data: { role: { id, role: role.name } },
 				message: `Role with ID: ${id} Name: ${role.name}, successfully restored`,
 			};
 		} catch (error) {
@@ -188,7 +193,8 @@ const RolesService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: `Successfully updated role with ID: ${id} Name: ${name}`,
+				data: { role: { id, name } },
+				message: `Successfully updated role with ID: ${id} Name: ${name}`,
 			};
 		} catch (error) {
 			return {
@@ -200,6 +206,6 @@ const RolesService = () => {
 		}
 	};
 
-	return { bringRole, bringRoles, deleteRole, newRole, restoreRole, updateRole };
+	return { getRole, getRoles, deleteRole, newRole, restoreRole, updateRole };
 };
 module.exports = RolesService();

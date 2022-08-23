@@ -1,7 +1,7 @@
 const { Products } = require('./../models/index');
 
 const ProductsService = () => {
-	const bringProduct = async (id) => {
+	const getProduct = async (id) => {
 		try {
 			const product = await Products.findByPk(id, {
 				paranoid: false,
@@ -20,7 +20,7 @@ const ProductsService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: product,
+				data: { product },
 				message: 'Successfully recovered Product',
 			};
 		} catch (error) {
@@ -33,7 +33,7 @@ const ProductsService = () => {
 		}
 	};
 
-	const bringProducts = async () => {
+	const getProducts = async () => {
 		try {
 			const products = await Products.findAll();
 			if (!products)
@@ -47,7 +47,7 @@ const ProductsService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: products,
+				data: { products },
 				message: 'Successfully recovered Products',
 			};
 		} catch (error) {
@@ -88,7 +88,7 @@ const ProductsService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { id, name, price, available, image },
+				data: { product: { id, name, price, available, image } },
 				message: `Product with Id: ${id} successfully deleted - (soft deleted)`,
 			};
 		} catch (error) {
@@ -122,7 +122,7 @@ const ProductsService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: product,
+				data: { product },
 				message: 'Product was successfully registered',
 			};
 		} catch (error) {
@@ -158,7 +158,7 @@ const ProductsService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { id, name, price, available, image },
+				data: { product: { id, name, price, available, image } },
 				message: `Product with Id: ${id} successfully restored`,
 			};
 		} catch (error) {
@@ -207,7 +207,7 @@ const ProductsService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { id, name, price, image, available },
+				data: { product: { id, name, price, image, available } },
 				message: `Successfully updated product with ID = ${id}`,
 			};
 		} catch (error) {
@@ -221,8 +221,8 @@ const ProductsService = () => {
 	};
 
 	return {
-		bringProduct,
-		bringProducts,
+		getProduct,
+		getProducts,
 		deleteProduct,
 		newProduct,
 		restoreProduct,

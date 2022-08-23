@@ -15,6 +15,7 @@ const {
 } = require('./middlewares/globalMiddleware'); //global middlewares
 const {
 	loginRoute,
+	ordersRoute,
 	payMethodsRoute,
 	productsRoute,
 	rolesRoute,
@@ -49,31 +50,21 @@ app.use(jsonError); //Handle invalid json format error
 //=============================================================
 
 //Users Endpoints --------------------------
-//localhost:3000/auth/login | localhost:3000/users/register
 app.use('/api/v1/auth', loginRoute);
 //localhost:3000/users
 app.use('/api/v1/users', usersRoute);
 
 //Products Endpoints ----------------------
-//localhost:3000/products
 app.use('/api/v1/products', productsRoute);
 
 //Payment Methods Endpoints ---------------
-//localhost:3000/paymethods
 app.use('/api/v1/paymethods', payMethodsRoute);
 
 //Roles Endpoints -------------------------
-//localhost:3000/roles
 app.use('/api/v1/roles', rolesRoute);
 
 //Orders Endpoints ------------------------
-//bring Orders Dashboard endpoint if user is Admin
-//localhost:3000/orders/dashboard
-app.get('/api/v1//ordersdashboard', async (req, res) => {
-	res.status(200);
-	const orders = await OrdersService.bringOrders();
-	res.json(orders);
-});
+app.use('/api/v1/orders', ordersRoute);
 
 //create new Order endpoint
 //localhost:3000/orders

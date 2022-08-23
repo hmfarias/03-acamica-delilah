@@ -14,13 +14,13 @@ router.post('/', isAdmin, validateFields, chekRoleExist, async (req, res) => {
 router
 	//GET all roles
 	.get('/', isAdmin, async (req, res) => {
-		const { code, ok, data, message } = await RolesService.bringRoles();
+		const { code, ok, data, message } = await RolesService.getRoles();
 		res.status(code).json({ ok, data, message });
 	})
 
 	//GET rol by id param
 	.get('/:id', isAdmin, async (req, res) => {
-		const { code, ok, data, message } = await RolesService.bringRole(req.params.id);
+		const { code, ok, data, message } = await RolesService.getRole(req.params.id);
 		res.status(code).json({ ok, data, message });
 	})
 

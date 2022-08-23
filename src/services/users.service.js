@@ -53,7 +53,7 @@ const UsersService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: users,
+				data: { users },
 				message: 'Successfully recovered Users',
 			};
 		} catch (error) {

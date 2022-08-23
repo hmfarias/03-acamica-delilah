@@ -2,19 +2,14 @@ const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 
 const { Users, Roles } = require('../models/index');
+const { getUserIdToken } = require('../helpers');
 
 const JWT_SECRET = process.env.JWT_SECRET; //bring secret string from enviroment file
 
 // Validate administrator user
 const isAdmin = async (req, res, next) => {
 	try {
-		const token = req.headers['authorization'];
-		if (!token)
-			return res
-				.status(401)
-				.json({ ok: false, data: {}, message: 'No credentials sent' });
-
-		const userId = jwt.verify(req.headers.authorization.substring(7), JWT_SECRET).id;
+		const userId = getUserIdToken(req.headers['authorization']);
 
 		const user = await Users.findByPk(userId, {
 			include: [Roles],
@@ -42,13 +37,8 @@ const isAdmin = async (req, res, next) => {
 // Validates that the user is admin, but that it isn't his own account that he is acting in
 const isAdminNotHimself = async (req, res, next) => {
 	try {
-		const token = req.headers['authorization'];
-		if (!token)
-			return res
-				.status(401)
-				.json({ ok: false, data: {}, message: 'No credentials sent' });
+		const userId = getUserIdToken(req.headers['authorization']);
 
-		const userId = jwt.verify(req.headers.authorization.substring(7), JWT_SECRET).id;
 		const { id } = req.params; // user id on which you are going to act
 
 		const user = await Users.findByPk(userId, {
@@ -85,13 +75,8 @@ const isAdminNotHimself = async (req, res, next) => {
 // Validate administrator user or data owner
 const isAuthUser = async (req, res, next) => {
 	try {
-		const token = req.headers['authorization'];
-		if (!token)
-			return res
-				.status(401)
-				.json({ ok: false, data: {}, message: 'No credentials sent' });
+		const userId = getUserIdToken(req.headers['authorization']);
 
-		const userId = jwt.verify(req.headers.authorization.substring(7), JWT_SECRET).id;
 		const { id } = req.params; // user id on which you are going to act
 
 		const user = await Users.findByPk(userId, {

@@ -8,8 +8,6 @@ const {
 	chekProductExist,
 } = require('../../middlewares/productsMiddleware');
 
-// const { createNewProduct, updateProduct, deleteProduct } = require('../services/product');
-
 router
 	//POST new product
 	.post('/', isAdmin, validateFields, chekProductExist, async (req, res) => {
@@ -19,15 +17,13 @@ router
 
 	//GET all products
 	.get('/', async (req, res) => {
-		const { code, ok, data, message } = await ProductsService.bringProducts(
-			req.params.id
-		);
+		const { code, ok, data, message } = await ProductsService.getProducts(req.params.id);
 		res.status(code).json({ ok, data, message });
 	})
 
 	//GET product by ID
 	.get('/:id', async (req, res) => {
-		const { code, ok, data, message } = await ProductsService.bringProduct(req.params.id);
+		const { code, ok, data, message } = await ProductsService.getProduct(req.params.id);
 		res.status(code).json({ ok, data, message });
 	})
 

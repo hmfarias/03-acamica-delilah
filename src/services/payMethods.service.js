@@ -1,7 +1,7 @@
 const { PaymentMethods } = require('../models/index');
 
 const PayMethodService = () => {
-	const bringPayMethod = async (id) => {
+	const getPayMethod = async (id) => {
 		try {
 			const method = await PaymentMethods.findByPk(id, {
 				attributes: ['id', 'name', 'available', 'deletedAt'],
@@ -13,14 +13,14 @@ const PayMethodService = () => {
 				return {
 					code: 404,
 					ok: false,
-					data: { id, name: method.name },
+					data: { payMethod: { id, name: method.name } },
 					message: 'The payment method is deleted - (soft deleted)',
 				};
 
 			return {
 				code: 200,
 				ok: true,
-				data: method,
+				data: { payMethod: method },
 				message: 'Successfully recovered Role',
 			};
 		} catch (error) {
@@ -33,7 +33,7 @@ const PayMethodService = () => {
 		}
 	};
 
-	const bringPayMethods = async () => {
+	const getPayMethods = async () => {
 		try {
 			const methods = await PaymentMethods.findAll({
 				paranoid: false,
@@ -50,7 +50,7 @@ const PayMethodService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: methods,
+				data: { payMethods: methods },
 				message: 'Successfully recovered Roles',
 			};
 		} catch (error) {
@@ -73,7 +73,7 @@ const PayMethodService = () => {
 				return {
 					code: 404,
 					ok: false,
-					data: { id, name: method.name },
+					data: { payMethod: { id, name: method.name } },
 					message: 'The payment method is already deleted',
 				};
 
@@ -90,7 +90,7 @@ const PayMethodService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { id, name: method.name },
+				data: { payMethod: { id, name: method.name } },
 				message: `Payment method with ID: ${id} Name: ${method.name}, successfully deleted`,
 			};
 		} catch (error) {
@@ -123,7 +123,7 @@ const PayMethodService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: method,
+				data: { payMethod: method },
 				message: 'Payment method successfully registered',
 			};
 		} catch (error) {
@@ -145,7 +145,7 @@ const PayMethodService = () => {
 				return {
 					code: 404,
 					ok: false,
-					data: { id, name: method.name },
+					data: { payMethod: { id, name: method.name } },
 					message: 'The payment method is not deleted',
 				};
 
@@ -154,14 +154,14 @@ const PayMethodService = () => {
 				return {
 					code: 404,
 					ok: false,
-					data: { id, name: method.name },
+					data: { payMethod: { id, name: method.name } },
 					message: 'The payment method could not be restored',
 				};
 
 			return {
 				code: 200,
 				ok: true,
-				data: { id, name: method.name },
+				data: { payMethod: { id, name: method.name } },
 				message: `Payment method with ID: ${id} Name: ${method.name} successfully restored`,
 			};
 		} catch (error) {
@@ -210,7 +210,7 @@ const PayMethodService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { id, name: nameLow },
+				data: { payMethod: { id, name: nameLow } },
 				message: `Payment method with Id: ${id} Name: ${method.name}, successfully updated `,
 			};
 		} catch (error) {
@@ -224,8 +224,8 @@ const PayMethodService = () => {
 	};
 
 	return {
-		bringPayMethod,
-		bringPayMethods,
+		getPayMethod,
+		getPayMethods,
 		deletePayMethod,
 		newPayMethod,
 		restorePayMethod,

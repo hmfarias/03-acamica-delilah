@@ -17,13 +17,13 @@ router
 
 	//GET all payment methods
 	.get('/', isAdmin, async (req, res) => {
-		const { code, ok, data, message } = await PayMethodsService.bringPayMethods();
+		const { code, ok, data, message } = await PayMethodsService.getPayMethods();
 		res.status(code).json({ ok, data, message });
 	})
 
 	//GET payment method by id param
 	.get('/:id', isAdmin, async (req, res) => {
-		const { code, ok, data, message } = await PayMethodsService.bringPayMethod(
+		const { code, ok, data, message } = await PayMethodsService.getPayMethod(
 			req.params.id
 		);
 		res.status(code).json({ ok, data, message });

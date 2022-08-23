@@ -1,14 +1,16 @@
 // Routes
 const loginRoute = require('./../routes/auth');
-const usersRoute = require('./../routes/users');
+const ordersRoute = require('./../routes/orders');
+const payMethodsRoute = require('./../routes/payMethods');
 const productsRoute = require('./../routes/products');
 const rolesRoute = require('./../routes/roles');
-const payMethodsRoute = require('./../routes/payMethods');
+const usersRoute = require('./../routes/users');
 
 module.exports = {
 	loginRoute,
-	usersRoute,
+	ordersRoute,
+	payMethodsRoute,
 	productsRoute,
 	rolesRoute,
-	payMethodsRoute,
+	usersRoute,
 };

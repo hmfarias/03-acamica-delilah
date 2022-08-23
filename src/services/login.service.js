@@ -19,7 +19,7 @@ const LoginService = () => {
 					message: 'The token could not be generated',
 				};
 
-			return { code: 200, ok: true, data: token };
+			return { code: 200, ok: true, data: { token } };
 		} catch (error) {
 			return {
 				code: error?.status || 500,
@@ -50,9 +50,6 @@ const LoginService = () => {
 
 			const { username, name, email, phone, address, password } = req.body;
 			const encriptedPass = await encrypt(password);
-			console.log('encriptedPass  -------------');
-			console.log(encriptedPass);
-			console.log(typeof encriptedPass);
 
 			const newUser = await Users.create({
 				username,
