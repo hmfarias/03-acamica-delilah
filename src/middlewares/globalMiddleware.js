@@ -42,4 +42,24 @@ const jwtProtection = () => {
 	}).unless({ path: ['/api/v1/auth/login', '/api/v1/auth/register'] });
 };
 
-module.exports = { jsonError, jwtProtection, rateLimitPolicy, tokenError };
+// Validate fields when ID is required
+const validateFieldParam = async (req, res, next) => {
+	console.log('llega ------------');
+	console.log(req.params);
+	const { id } = req.params;
+
+	const error = { ok: false, data: {}, message: '' }; //object to record possible errors
+
+	if (!id || id == 0) error.message += 'ID parameter is required';
+	if (error.message.length !== 0) return res.status(400).json(error);
+
+	next();
+};
+
+module.exports = {
+	jsonError,
+	jwtProtection,
+	rateLimitPolicy,
+	tokenError,
+	validateFieldParam,
+};

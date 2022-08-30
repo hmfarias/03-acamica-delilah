@@ -4,24 +4,25 @@ const ProductsService = () => {
 	const getProduct = async (id) => {
 		try {
 			const product = await Products.findByPk(id, {
+				attributes: ['id', 'name', 'price', 'image', 'available', 'deletedAt'],
 				paranoid: false,
 			});
 			if (!product)
-				return { code: 404, ok: false, data: {}, message: 'Product not found' };
+				return { code: 404, ok: false, data: {}, message: 'Product/s not found' };
 
 			if (product.deletedAt != null)
 				return {
-					code: 404,
+					code: 410,
 					ok: false,
 					data: {},
-					message: 'The Product is deleted - (soft deleted',
+					message: 'Product is deleted - (soft deleted)',
 				};
 
 			return {
 				code: 200,
 				ok: true,
 				data: { product },
-				message: 'Successfully recovered Product',
+				message: 'Successful operation',
 			};
 		} catch (error) {
 			return {
@@ -41,7 +42,7 @@ const ProductsService = () => {
 					code: 404,
 					ok: false,
 					data: {},
-					message: 'There are no products in the database',
+					message: 'Product/s not found',
 				};
 
 			return {
@@ -68,10 +69,10 @@ const ProductsService = () => {
 
 			if (product.deletedAt != null)
 				return {
-					code: 404,
+					code: 410,
 					ok: false,
 					data: {},
-					message: 'The product is already deleted',
+					message: 'Product is deleted - (soft deleted)',
 				};
 
 			const { name, price, available, image } = product;
@@ -79,17 +80,17 @@ const ProductsService = () => {
 			const deletedProduct = await product.destroy();
 			if (!deletedProduct)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The product could not be deleted',
+					message: 'Unexpected error - The product could not be deleted',
 				};
 
 			return {
 				code: 200,
 				ok: true,
-				data: { product: { id, name, price, available, image } },
-				message: `Product with Id: ${id} successfully deleted - (soft deleted)`,
+				data: { product: { id, name, price, image, available } },
+				message: `Successful operation for product ID: ${id}, Name: ${name}`,
 			};
 		} catch (error) {
 			return {
@@ -113,17 +114,17 @@ const ProductsService = () => {
 			});
 			if (!product)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The product could not be registered',
+					message: 'Unexpected error',
 				};
-
+			const { id, available: avail } = product;
 			return {
 				code: 200,
 				ok: true,
-				data: { product },
-				message: 'Product was successfully registered',
+				data: { product: { id, name, price, image, available: avail } },
+				message: `Successfull operation for product ID: ${product.id}, Name: ${product.name}`,
 			};
 		} catch (error) {
 			return {
@@ -142,24 +143,24 @@ const ProductsService = () => {
 				return { code: 404, ok: false, data: {}, message: 'Product not found' };
 
 			if (product.deletedAt === null)
-				return { code: 404, ok: false, data: {}, message: 'The product is not deleted' };
+				return { code: 406, ok: false, data: {}, message: 'Product is not deleted' };
 
 			const { name, price, available, image } = product;
 
 			const productRestored = await Products.restore({ where: { id: id } });
 			if (!productRestored)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The product could not be restored',
+					message: 'Unexpected error - The product could not be restored',
 				};
 
 			return {
 				code: 200,
 				ok: true,
-				data: { product: { id, name, price, available, image } },
-				message: `Product with Id: ${id} successfully restored`,
+				data: { product: { id, name, price, image, available } },
+				message: `Successfull operation for Product ID: ${id} Name: ${name}`,
 			};
 		} catch (error) {
 			return {
@@ -173,42 +174,49 @@ const ProductsService = () => {
 
 	const updateProduct = async (req, res) => {
 		try {
-			const { id, name, price, image, available } = req.body;
+			const { id } = req.params;
+			const { name, price, image, available } = req.body;
 
-			if (!name && !price && !image && !available)
-				return {
-					code: 400,
-					ok: false,
-					data: {},
-					message: 'No data was sent - The product could not be updated',
-				};
 			const product = await Products.findByPk(id);
 			if (!product)
 				return { code: 404, ok: false, data: {}, message: 'Product not found' };
 
+			const nameUpd = name ? name : product.name;
+			const priceUpd = price ? price : product.price;
+			const imageUpd = image ? image : product.image;
+			const availabeUpd = available ? available : product.available;
+
 			const updatedProduct = await Products.update(
 				{
-					name: name ? name : product.name,
-					price: price ? price : product.price,
-					image: image ? image : product.image,
-					available: available,
+					name: nameUpd,
+					price: priceUpd,
+					image: imageUpd,
+					available: availabeUpd,
 				},
 				{ where: { id: id } }
 			);
 
 			if (!updatedProduct)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The product could not be updated',
+					message: 'Unexpected error - The product could not be updated',
 				};
 
 			return {
 				code: 200,
 				ok: true,
-				data: { product: { id, name, price, image, available } },
-				message: `Successfully updated product with ID = ${id}`,
+				data: {
+					product: {
+						id,
+						name: nameUpd,
+						price: priceUpd,
+						image: imageUpd,
+						available: availabeUpd,
+					},
+				},
+				message: `Successfull operation for product ID: ${id} Name: ${name}`,
 			};
 		} catch (error) {
 			return {

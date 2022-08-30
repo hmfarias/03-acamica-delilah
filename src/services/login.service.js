@@ -63,10 +63,10 @@ const LoginService = () => {
 
 			if (!newUser)
 				return {
-					code: 401,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The user could not be registered',
+					message: 'Unexpected error - The user could not be registered',
 				};
 
 			//build the user JSON with the correct output format

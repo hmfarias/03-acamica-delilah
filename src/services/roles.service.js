@@ -10,10 +10,10 @@ const RolesService = () => {
 
 			if (role.deletedAt != null)
 				return {
-					code: 404,
+					code: 410,
 					ok: false,
 					data: {},
-					message: 'The role is deleted - (soft deleted)',
+					message: 'Role is deleted - (soft deleted)',
 				};
 
 			return {
@@ -77,10 +77,10 @@ const RolesService = () => {
 
 			if (!roleDeleted)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The role could not be deleted',
+					message: 'Unexpected error - The role could not be deleted',
 				};
 
 			return {
@@ -106,10 +106,10 @@ const RolesService = () => {
 			const role = await Roles.create({ name: nameLow });
 			if (!role)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The role could not be registered',
+					message: 'Unexpected error - The role could not be registered',
 				};
 
 			return {
@@ -134,15 +134,15 @@ const RolesService = () => {
 			if (!role) return { code: 404, ok: false, data: {}, message: 'Role not found' };
 
 			if (role.deletedAt === null)
-				return { code: 404, ok: false, data: {}, message: 'The role is not deleted' };
+				return { code: 404, ok: false, data: {}, message: 'Role is not deleted' };
 
 			const roleRestored = await Roles.restore({ where: { id: id } });
 			if (!roleRestored)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The role could not be deleted',
+					message: 'Unexpected error - The role could not be deleted',
 				};
 
 			return {
@@ -184,10 +184,10 @@ const RolesService = () => {
 
 			if (!updatedRole)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The role could not be updated',
+					message: 'Unexpected error - The role could not be updated',
 				};
 
 			return {

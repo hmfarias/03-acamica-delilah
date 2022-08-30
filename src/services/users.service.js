@@ -16,10 +16,10 @@ const UsersService = () => {
 				};
 			if (user.deletedAt != null)
 				return {
-					code: 404,
+					code: 410,
 					ok: false,
 					data: {},
-					message: 'The user is deleted - (soft deleted)',
+					message: 'User is deleted - (soft deleted)',
 				};
 			return {
 				code: 200,
@@ -107,7 +107,7 @@ const UsersService = () => {
 			if (!user) return { code: 404, ok: false, data: {}, message: 'User not found' };
 
 			if (user.deletedAt === null)
-				return { code: 404, ok: false, data: {}, message: 'The user is not deleted' };
+				return { code: 404, ok: false, data: {}, message: 'User is not deleted' };
 
 			const userRestored = await Users.restore({ where: { id: id } });
 			if (userRestored)

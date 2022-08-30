@@ -11,10 +11,10 @@ const PayMethodService = () => {
 
 			if (method.deletedAt != null)
 				return {
-					code: 404,
+					code: 410,
 					ok: false,
 					data: { payMethod: { id, name: method.name } },
-					message: 'The payment method is deleted - (soft deleted)',
+					message: 'Payment method is deleted - (soft deleted)',
 				};
 
 			return {
@@ -81,10 +81,10 @@ const PayMethodService = () => {
 
 			if (!methodDeleted)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: { id, name: method.name },
-					message: 'The payment method could not be deleted',
+					message: 'Unexpected error - The payment method could not be deleted',
 				};
 
 			return {
@@ -114,10 +114,10 @@ const PayMethodService = () => {
 			});
 			if (!method)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The payment method could not be registered',
+					message: 'Unexpected error - The payment method could not be registered',
 				};
 
 			return {
@@ -146,16 +146,16 @@ const PayMethodService = () => {
 					code: 404,
 					ok: false,
 					data: { payMethod: { id, name: method.name } },
-					message: 'The payment method is not deleted',
+					message: 'Payment method is not deleted',
 				};
 
 			const methodRestored = await PaymentMethods.restore({ where: { id: id } });
 			if (!methodRestored)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: { payMethod: { id, name: method.name } },
-					message: 'The payment method could not be restored',
+					message: 'Unexpected error - The payment method could not be restored',
 				};
 
 			return {
@@ -201,10 +201,10 @@ const PayMethodService = () => {
 
 			if (!updatedMethod)
 				return {
-					code: 404,
+					code: 500,
 					ok: false,
 					data: {},
-					message: 'The payment method could not be updated',
+					message: 'Unexpected error - The payment method could not be updated',
 				};
 
 			return {

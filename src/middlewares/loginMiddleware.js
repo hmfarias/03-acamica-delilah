@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 
 const { Users } = require('../models/index');
-const { compare } = require('bcrypt');
+const { compare } = require('bcryptjs');
 
 // Validate user credentials when logging in
 const validateUser = async (req, res, next) => {

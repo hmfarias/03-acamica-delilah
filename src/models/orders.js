@@ -14,15 +14,15 @@ const Orders = sequelize.define(
 		},
 		status: {
 			type: DataTypes.ENUM([
-				'nuevo',
-				'confirmado',
-				'preparando',
-				'enviando',
-				'cancelado',
-				'entregado',
+				'new',
+				'confirmed',
+				'preparing',
+				'sending',
+				'cancelled',
+				'delivered',
 			]),
 			allowNull: true,
-			defaultValue: 'nuevo',
+			defaultValue: 'new',
 		},
 	},
 	{

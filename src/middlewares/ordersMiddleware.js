@@ -28,13 +28,18 @@ const validateFields = async (req, res, next) => {
 const validateFieldsUpdate = async (req, res, next) => {
 	try {
 		const { status } = req.body;
-		// console.log('status-----------');
-		// console.log(status);
-		//TODO: VALIDAR LOS UNICOS POSIBLES STATUS PARA LA ORDEN
+		console.log('status-----------');
+		console.log(status);
+
 		const error = { ok: false, data: {}, message: '' }; //object to record possible errors
 
 		if (!status || status.length === 0)
 			error.message += 'New status for the order is missing';
+		if (error.message.length !== 0) return res.status(400).json(error);
+
+		const possibleStatus = 'new confirmed preparing sending cancelled delivered';
+		if (!possibleStatus.includes(status))
+			error.message += `Status |${status}| not supported - Only: new | confirmed | preparing | sending | cancelled | delivered, admitted`;
 		if (error.message.length !== 0) return res.status(400).json(error);
 
 		next();

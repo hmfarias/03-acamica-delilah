@@ -30,21 +30,21 @@ router
 	})
 
 	// //UPDATE an order
-	.put('/:id', isAdmin, validateFieldsUpdate, async (req, res) => {
-		const { code, ok, data, message } = await OrdersService.updateOrder(req, res);
+	.put('/newstatus/:id', isAdmin, validateFieldsUpdate, async (req, res) => {
+		const { code, ok, data, message } = await OrdersService.updateOrderStatus(req, res);
+		res.status(code).json({ ok, data, message });
+	})
+
+	// //RESTORE order by ID param
+	.put('/:id', isAdmin, async (req, res) => {
+		const { code, ok, data, message } = await OrdersService.restoreOrder(req.params.id);
+		res.status(code).json({ ok, data, message });
+	})
+
+	//DELETE order by ID param
+	.delete('/:id', isAdmin, async (req, res) => {
+		const { code, ok, data, message } = await OrdersService.deleteOrder(req.params.id);
 		res.status(code).json({ ok, data, message });
 	});
-
-// // //RESTORE order by ID param
-// .put('/:id', isAdmin, async (req, res) => {
-// 	const { code, ok, data, message } = await OrdersService.restoreOrder(req.params.id);
-// 	res.status(code).json({ ok, data, message });
-// })
-
-// // //DELETE order by ID param
-// .delete('/:id', isAdmin, async (req, res) => {
-// 	const { code, ok, data, message } = await OrderssService.deleteOrder(req.params.id);
-// 	res.status(code).json({ ok, data, message });
-// });
 
 module.exports = router;

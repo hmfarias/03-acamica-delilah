@@ -16,11 +16,11 @@ const isAdmin = async (req, res, next) => {
 		});
 
 		if (!user)
-			return res.status(404).json({ ok: false, data: {}, message: 'Not a valid token.' });
+			return res.status(404).json({ ok: false, data: {}, message: 'Not a valid token' });
 
 		if (user.role.name !== 'admin')
 			return res
-				.status(401)
+				.status(403)
 				.json({ ok: false, data: {}, message: 'Admin level required' });
 
 		next();
@@ -48,7 +48,7 @@ const isAdminNotHimself = async (req, res, next) => {
 		if (!user)
 			return res.status(404).json({ ok: false, data: {}, message: 'Not a valid token.' });
 		if (user.role.name !== 'admin')
-			return res.status(401).json({
+			return res.status(403).json({
 				ok: false,
 				data: {},
 				message: 'Admin level required',
