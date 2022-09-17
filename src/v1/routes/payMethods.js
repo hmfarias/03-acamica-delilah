@@ -7,6 +7,7 @@ const {
 	validateFields,
 	chekPayMethodExist,
 } = require('../../middlewares/payMethodsMiddleware');
+const { validateFieldParam } = require('../../middlewares/globalMiddleware');
 
 router
 	//POST a new payment method
@@ -30,18 +31,22 @@ router
 	})
 
 	//RESTORE payment method by id
-	.put('/:id', async (req, res) => {
+	.put('/restore/:id', async (req, res) => {
 		const { code, ok, data, message } = await PayMethodsService.restorePayMethod(
 			req.params.id
 		);
 		res.status(code).json({ ok, data, message });
 	})
+	///RESTORE can only be done through the ID parameter
+	.put('/restore', validateFieldParam, async (req, res) => {})
 
 	//UPDATE payment method
 	.put('/', async (req, res) => {
 		const { code, ok, data, message } = await PayMethodsService.updatePayMethod(req, res);
 		res.status(code).json({ ok, data, message });
 	})
+	//UPDATE can only be done through the ID parameter
+	.put('/update', validateFieldParam, async (req, res) => {})
 
 	//DELETE payment method by id
 	.delete('/:id', isAdmin, async (req, res) => {
@@ -49,6 +54,8 @@ router
 			req.params.id
 		);
 		res.status(code).json({ ok, data, message });
-	});
+	})
+	///DELETE can only be done through the ID parameter
+	.delete('/delete', validateFieldParam, async (req, res) => {});
 
 module.exports = router;

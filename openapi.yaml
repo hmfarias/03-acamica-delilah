@@ -1,0 +1,2040 @@
+openapi: 3.0.0
+info:
+  title: 'Delilah Resto '
+  description: API for delicious food orders. As a customer you can register, see the list of our products and place an order.Restaurant managers have the ability to receive orders and update them..
+  termsOfService: https://github.com/hmfarias/03-acamica-delilah#readme
+  contact:
+    name: Marcelo Farias
+    email: hmfarias7@gmail.com
+  version: 1.0.0
+
+servers:
+
+  - description: Local Server
+    url: http://localhost:3000/api/v1
+
+tags: 
+  - name: Products
+    description:  'Everything about Products availables in Delilah Resto'
+  - name: Roles
+    description:  'Everything about users Roles availables in Delilah Resto'
+  - name: Users
+    description: 'Everything about Delilah Resto Users'
+  - name: Orders
+    description: 'Everything about Delilah Resto Orders'
+  - name: PayMethods
+    description: 'Everything about Delilah Resto Paymwent Methods'
+#   ------------------------------------------------------------------------------PATHS    
+paths:
+
+  # ------------------------------------------------------------PATHS FOR PRODUCTS 
+  /products:
+    # -------------------------------------------POST NEW PRODUCT
+    post:
+      tags:
+        - Products
+      security: 
+        - bearerAuth: 
+          - read
+      summary: "Add a new dish to Delilah Resto's menu"
+      description: 'Admin level required'
+      operationId: newProduct
+      requestBody:
+        description: 'Required to post a new product'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/productReq'
+        required: true
+      responses:
+        '200':
+          description: 'Successful operation - returns the added product'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/productResp200'      
+        '400':
+          description: 'Some required fields is not present'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '409':
+          description: 'Product already exists'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error409'           
+        '500':
+          description: 'The product could not be registered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'    
+         
+    # ------------------------------------------GET ALL PRODUCTS            
+    get:
+      tags:
+        - Products
+      security: 
+        - bearerAuth: 
+          - read
+      summary: 'List all products'
+      description: 'Returns a list of products'
+      operationId: getProducts
+      responses:
+        '200':
+          description: 'Successful operation - returns an array of products'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/productsResp200'          
+        '404':
+          description: 'There are no products in the database'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'           
+
+  /products/{id}:
+    # ----------------------------------------GET PRODUCT BY ID
+    get:
+      tags:
+        - Products
+      security: 
+        - bearerAuth: 
+          - read
+      summary: 'Find product by Id'
+      description: 'Returns a single product'
+      operationId: getProduct
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of product to return'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the product with the Id specified by parameter'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/productResp200'          
+        '404':
+          description: 'The product not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                   
+        '410':
+          description: 'The product is deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'       
+
+  /products/update/{id}:
+    # ----------------------------------------PUT UPDATE PRODUCT          
+    put:
+      tags:
+        - Products
+      security: 
+        - bearerAuth: 
+          - read
+      summary: 'Update an existent product'
+      description: 'Admin level required'
+      operationId: updateProduct
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of product that needs to be updated'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: 'Required to update a product'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/productReqUpdate'
+        required: true
+      responses:
+        '200':
+          description: 'Successful operation - returns the updated product'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/productResp200'          
+        '400':
+          description: 'The Id parameter is required together with at least one of the following fields: name, price, image or available'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'Product not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'       
+        '500':
+          description: 'The product could not be updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                                   
+        'default':
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'       
+                 
+  /products/delete/{id}:
+      # ------------------------------------DELETE PRODUCT BY ID
+    delete:
+      tags:
+        - Products
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'Deletes a product by Id'
+      description: 'Admin level required'
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of product that needs to be deleted'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the deleted product'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/productResp200'      
+        '400':
+          description: 'The Id parameter is required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'The product not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                     
+        '410':
+          description: 'The product is deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'     
+        '500':
+          description: 'The product could not be deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                           
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'    
+                               
+  /products/restore/{id}:
+    # -------------------------------------RESTORE PRODUCT BY ID
+    put:
+      tags:
+        - Products
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'Restore a product by Id'
+      description: 'Admin level required'
+      operationId: restoreProduct
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of product that needs to be restored'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the restored product'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/productResp200'         
+        '400':
+          description: 'The Id parameter is required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'The product not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                     
+        '406':
+          description: 'The product is not deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error406'                     
+        '410':
+          description: 'The product is deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'     
+        '500':
+          description: 'The product could not be deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                           
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'        
+
+  # ------------------------------------------------------------PATHS FOR ROLES 
+  /roles:
+    # ----------------------------------------------POST NEW ROLE
+    post:
+      tags:
+        - Roles
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: "Add a new user role to Delilah Resto's system"
+      description: 'Admin level required'
+      operationId: newRole
+      requestBody:
+        description: 'Required to post a new role'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/roleReq'
+        required: true
+      responses:
+        '200':
+          description: 'Successful operation - returns the added role'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/roleResp200'      
+        '400':
+          description: 'Some required fields is not present'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '409':
+          description: 'Role already exists'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error409'           
+        '500':
+          description: 'The role could not be registered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'    
+    # --------------------------------------------GET ALL ROLES            
+    get:
+      tags:
+        - Roles
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'List all roles'
+      description: 'Admin level required'
+      operationId: getRoles
+      responses:
+        '200':
+          description: 'Successful operation - returns an array of roles'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rolesResp200'          
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'There are no roles in the database'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'           
+
+  /roles/{id}:
+    # --------------------------------------------GET ROLE BY ID
+    get:
+      tags:
+        - Roles
+      security: 
+        - bearerAuth: 
+          - read
+      summary: 'Find role by Id - Return a single role'
+      description: 'Admin level required'
+      operationId: getRole
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of role to return'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the role with the Id specified by parameter'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/roleResp200'       
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'The role not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                   
+        '410':
+          description: 'The role is already deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'       
+
+  /roles/update/{id}:
+    # -------------------------------------------PUT UPDATE ROLE          
+    put:
+      tags:
+        - Roles
+      security: 
+        - bearerAuth: 
+          - read
+      summary: 'Update an existent role'
+      description: 'Admin level required'
+      operationId: updateRole
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of role that needs to be updated'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: 'Required to update a role'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/roleReqUpdate'
+        required: true
+      responses:
+        '200':
+          description: 'Successful operation - returns the updated role'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/roleResp200'          
+        '400':
+          description: 'Id parameter or name field are not present'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'Role not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'       
+        '500':
+          description: 'The role could not be updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                                   
+        'default':
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'       
+                 
+  /roles/delete/{id}:
+      # ---------------------------------------DELETE ROLE BY ID
+    delete:
+      tags:
+        - Roles
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'Deletes a role by Id'
+      description: 'Admin level required'
+      operationId: deleteRole
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of role that needs to be deleted'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the deleted role'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/roleResp200'          
+        '400':
+          description: 'The Id parameter is required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'The role not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                     
+        '410':
+          description: 'The role is already deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'     
+        '500':
+          description: 'The role could not be deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                           
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'    
+                               
+  /roles/restore/{id}:
+    # ----------------------------------------RESTORE ROLE BY ID
+    put:
+      tags:
+        - Roles
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'Restore a role by Id'
+      description: 'Admin Level required'
+      operationId: restoreRole
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of role that needs to be restored'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the restored role'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/roleResp200'          
+        '400':
+          description: 'The Id parameter is required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'The role not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                     
+        '406':
+          description: 'The role is not deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error406'                     
+        '410':
+          description: 'The role is deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'     
+        '500':
+          description: 'The role could not be deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                           
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'        
+
+  # ------------------------------------------------------------PATHS FOR USERS 
+  /register:
+    # ----------------------------------------------POST NEW USER
+    post:
+      tags:
+        - Users
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: "Register a new user to Delilah Resto's system"
+      description: ''
+      operationId: signUp
+      requestBody:
+        description: 'Required to register a new user'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userReq'
+        required: true
+      responses:
+        '200':
+          description: 'Successful operation - returns the added user'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userResp200'      
+        '400':
+          description: 'Some required fields is not present'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        '409':
+          description: 'User already exists'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error409'           
+        '500':
+          description: 'The user could not be registered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'    
+                
+  /login:
+    # ----------------------------------------------USER AUTHENTICATION
+    post:
+      tags:
+        - Users
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: "Authenticate a user to the system"
+      description: ''
+      operationId: signIn
+      requestBody:
+        description: 'Required to autenticate an user'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginReq'
+        required: true
+      responses:
+        '200':
+          description: 'Successful operation - returns the added user'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loginResp200'      
+        '400':
+          description: 'Some required fields is not present'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        '500':
+          description: 'The user could not be registered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'    
+    
+  /users:
+   # --------------------------------------------GET ALL USERS    
+    get:
+      tags:
+        - Users
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'List all users'
+      description: 'Admin level required'
+      operationId: getUsers
+      responses:
+        '200':
+          description: 'Successful operation - returns an array of users'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/usersResp200'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'There are no users in the database'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'           
+
+  /users/{id}:
+    # --------------------------------------------GET USER BY ID
+    get:
+      tags:
+        - Users
+      security: 
+        - bearerAuth: 
+          - read
+      summary: 'Find user by Id - Return a single user'
+      description: 'Admin level or account owner required '
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of user to return'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the user with the Id specified by parameter'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userResp200'      
+        '403':
+          description: 'Admin Level or account owner required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403-2'         
+        '404':
+          description: 'The user not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                   
+        '410':
+          description: 'The user is deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'       
+
+  /users/update/{id}:
+    # -------------------------------------------PUT UPDATE USER          
+    put:
+      tags:
+        - Users
+      security: 
+        - bearerAuth: 
+          - read
+      summary: 'Update an existent user'
+      description: 'Admin level required, or be the account owner - You can update the [name], [email], [phone] and [password] fields - You can not update the [username] or [user role] fields'
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of user that needs to be updated'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: 'Required to update a user'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userReqUpdate'
+        required: true
+      responses:
+        '200':
+          description: 'Successful operation - returns the updated user'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userResp200'          
+        '400':
+          description: 'Id parameter or some field is missing or has an incorrect format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level or data owner required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403-2'                   
+        '404':
+          description: 'User not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'       
+        '500':
+          description: 'The user could not be updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                                   
+        'default':
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'       
+                 
+  /users/delete/{id}:
+      # ---------------------------------------DELETE USER BY ID
+    delete:
+      tags:
+        - Users
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'Deletes a user by Id'
+      description: 'Admin level required'
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of user that needs to be deleted'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the deleted user'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userResp200'          
+        '400':
+          description: 'The Id parameter is required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'The user not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                     
+        '410':
+          description: 'The user is already deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'     
+        '500':
+          description: 'The user could not be deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                           
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'    
+                               
+  /users/restore/{id}:
+    # ----------------------------------------RESTORE USER BY ID
+    put:
+      tags:
+        - Users
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'Restore a user by Id'
+      description: 'Admin Level required'
+      operationId: restoreUser
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of user that needs to be restored'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the restored user'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userResp200'          
+        '400':
+          description: 'The Id parameter is required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'The user not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                     
+        '406':
+          description: 'The user is not deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error406'                     
+        '410':
+          description: 'The user is deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'     
+        '500':
+          description: 'The user could not be deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                           
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'        
+
+
+  # ------------------------------------------------------------PATHS FOR PAYMENT METHODS 
+  /paymethods:
+    # ----------------------------------------------POST NEW PAY METHOD
+    post:
+      tags:
+        - PayMethods
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: "Add a new payment method to Delilah Resto's system"
+      description: 'Admin level required'
+      operationId: newPayMethod
+      requestBody:
+        description: 'Required to post a new Payment Method'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payMethodReq'
+        required: true
+      responses:
+        '200':
+          description: 'Successful operation - returns the added payment method'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payMethodResp200'      
+        '400':
+          description: 'Some required fields is not present'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '409':
+          description: 'Payment method already exists'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error409'           
+        '500':
+          description: 'The payment method could not be registered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'    
+    # --------------------------------------------GET ALL PAYMENT METHODS          
+    get:
+      tags:
+        - PayMethods
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'List all payment methods'
+      description: 'Admin level required'
+      operationId: getPayMethods
+      responses:
+        '200':
+          description: 'Successful operation - returns an array of payment methods'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payMethodsResp200'          
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'There are no payment methods in the database'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'           
+
+  /paymethods/{id}:
+    # --------------------------------------------GET ROLE BY ID
+    get:
+      tags:
+        - PayMethods
+      security: 
+        - bearerAuth: 
+          - read
+      summary: 'Find payment method by Id - Return a single payment method'
+      description: 'Admin level required'
+      operationId: getPayMethod
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of payment method to return'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the payment method with the Id specified by parameter'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payMethodResp200'       
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'The role not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                   
+        '410':
+          description: 'The payment method is already deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'       
+
+  /paymethods/update/{id}:
+    # -------------------------------------------PUT UPDATE PAYMENT METHOD          
+    put:
+      tags:
+        - PayMethods
+      security: 
+        - bearerAuth: 
+          - read
+      summary: 'Update an existent payment method'
+      description: 'Admin level required'
+      operationId: updatePayMethod
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of payment method that needs to be updated'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: 'Required to update a payment method'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payMethodReqUpdate'
+        required: true
+      responses:
+        '200':
+          description: 'Successful operation - returns the updated payment method'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payMethodResp200'          
+        '400':
+          description: 'Id parameter or name field are not present'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'Payment method not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'       
+        '500':
+          description: 'The payment method could not be updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                                   
+        'default':
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'       
+                 
+  /paymethods/delete/{id}:
+      # ---------------------------------------DELETE PAYMENT METHOD BY ID
+    delete:
+      tags:
+        - PayMethods
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'Deletes a payment method by Id'
+      description: 'Admin level required'
+      operationId: deletePayMethod
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of payment method that needs to be deleted'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the deleted payment method'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payMethodResp200'          
+        '400':
+          description: 'The Id parameter is required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'The payment method not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                     
+        '410':
+          description: 'The payment method is already deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'     
+        '500':
+          description: 'The payment method could not be deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                           
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'    
+                               
+  /paymethods/restore/{id}:
+    # ----------------------------------------RESTORE PAYMENT METHOD BY ID
+    put:
+      tags:
+        - PayMethods
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'Restore a payment method by Id'
+      description: 'Admin Level required'
+      operationId: restorePayMethod
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of payment method that needs to be restored'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the restored payment method'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payMethodResp200'          
+        '400':
+          description: 'The Id parameter is required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400Param'      
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'The payment method not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                     
+        '406':
+          description: 'The payment method is not deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error406'                     
+        '410':
+          description: 'The payment method is deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'     
+        '500':
+          description: 'The payment method could not be deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'                           
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'        
+
+         
+                
+#  -----------------------------------------------------------------COMPONENTS
+components:
+
+  #  -------------------------------------------------------SECURITY 
+  securitySchemes:
+    bearerAuth:            
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  #  --------------------------------------------------------SCHEMAS       
+  schemas:
+    #  ----------------------------------SCHEMAS FOR PRODUCTS
+    product:
+      required:
+        - id
+        - name
+        - price
+        - image
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 7
+        name:
+          type: string
+          example: 'Burger Special Chesse'
+        price:
+          type: number
+          format: float
+          example: 700.00
+        image:
+          type: string
+          example: 'http://delilah/images/burger.png'
+        available:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          example: '|creation date and time|'
+        updatedAt:
+          type: string
+          example: '|update date and time|'
+        deletedAt:
+          type: string
+          example: '|null| or |delete date and time|'
+
+    products:
+      type: array
+      items: 
+        $ref: '#/components/schemas/product'          
+    
+    productReq:
+      required:
+        - name
+        - price
+        - image
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Burger Special Chesse'
+        price:
+          type: number
+          format: float
+          example: 700.00
+        image:
+          type: string
+          example: 'http://delilah/images/burger.png'
+        available:
+          type: boolean
+          example: true
+
+    productReqUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Burger Special Chesse'
+        price:
+          type: number
+          format: float
+          example: 700.00
+        image:
+          type: string
+          example: 'http://delilah/images/burger.png'
+        available:
+          type: boolean
+          example: true
+
+    productResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            product:
+              $ref: '#/components/schemas/product'      
+        message:
+          $ref: '#/components/schemas/messageSuccess'
+ 
+    productsResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            products:
+              $ref: '#/components/schemas/products'     
+        message:
+          type: string
+          example: 'Successfully recovered ProductS'
+  
+      #  ----------------------------------SCHEMAS FOR ROLES
+    role:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 7
+        name:
+          type: string
+          example: 'user'
+        createdAt:
+          type: string
+          example: '|creation date and time|'
+        updatedAt:
+          type: string
+          example: '|update date and time|'
+        deletedAt:
+          type: string
+          example: '|null| or |delete date and time|'
+          
+    roleName:
+      properties:
+        name:
+          type: string
+          example: 'user'
+
+          
+    roles:
+      type: array
+      items: 
+        $ref: '#/components/schemas/role'          
+    
+    roleReq:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'user'
+
+    roleReqUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'user'
+
+    roleResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            role:
+              $ref: '#/components/schemas/role'      
+        message:
+          $ref: '#/components/schemas/messageSuccess'
+ 
+    rolesResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            roles:
+              $ref: '#/components/schemas/roles'     
+        message:
+          type: string
+          example: 'Successfully recovered Roles'
+          
+      #  ----------------------------------SCHEMAS FOR LOGIN          
+    loginReq:
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+          example: 'jSmith'
+        password:
+          type: string
+          example: '********'
+
+    loginResp:
+      type: object
+      properties:
+        token:
+          type: string
+          example: 'eyJhbGciOiJIzI1NiIsInR5cCI6IkpjXVCJ9. ...'
+
+    loginResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/loginResp'      
+        message:
+          $ref: '#/components/schemas/messageSuccess'
+
+          
+      #  ----------------------------------SCHEMAS FOR USERS
+    user:
+      required:
+        - id
+        - username
+        - name
+        - email
+        - phone
+        - address
+        - password
+        - role_id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 7
+        username:
+          type: string
+          example: 'jSmith'
+        name:
+          type: string
+          example: 'John Smith'
+        email:
+          type: string
+          example: 'jsmith@gmail.com'
+        phone:
+          type: string
+          example: '+44 8812345678'
+        address:
+          type: string
+          example: 'TARDIST ST, 4242, Space 453, Gallifrey'
+        password:
+          type: string
+          example: '***************'
+        createdAt:
+          type: string
+          example: '|creation date and time|'
+        updatedAt:
+          type: string
+          example: '|update date and time|'
+        deletedAt:
+          type: string
+          example: '|null| or |delete date and time|'
+        role_id:
+          type: integer
+          format: int64
+          example: 7
+          
+    users:
+      type: array
+      items: 
+        $ref: '#/components/schemas/user'          
+    
+    userReq:
+      required:
+        - username
+        - name
+        - email
+        - phone
+        - address
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+          example: 'jSmith'
+        name:
+          type: string
+          example: 'John Smith'
+        email:
+          type: string
+          example: 'jsmith@gmail.com'
+        phone:
+          type: string
+          example: '+44 8812345678'
+        address:
+          type: string
+          example: 'TARDIST ST, 4242, Space 453, Gallifrey'
+        password:
+          type: string
+          example: '********'
+        role_id:
+          type: integer
+          format: int64
+          example: '1'
+          
+    userResp:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 7
+        username:
+          type: string
+          example: 'jSmith'
+        name:
+          type: string
+          example: 'John Smith'
+        email:
+          type: string
+          example: 'jsmith@gmail.com'
+        phone:
+          type: string
+          example: '+44 8812345678'
+        address:
+          type: string
+          example: 'TARDIST ST, 4242, Space 453, Gallifrey'
+        createdAt:
+          type: string
+          example: '|creation date and time|'
+        updatedAt:
+          type: string
+          example: '|update date and time|'
+        deletedAt:
+          type: string
+          example: '|null| or |delete date and time|'
+        role:
+             $ref: '#/components/schemas/roleName'
+
+
+    userReqUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'John Smith'
+        email:
+          type: string
+          example: 'jsmith@gmail.com'
+        phone:
+          type: string
+          example: '+44 8812345678'
+        address:
+          type: string
+          example: 'TARDIST ST, 4242, Space 453, Gallifrey'
+        password:
+          type: string
+          example: '***************'
+
+
+    userResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/userResp'      
+        message:
+          $ref: '#/components/schemas/messageSuccess'
+          
+    usersResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            users:
+              $ref: '#/components/schemas/userResp'     
+        message:
+          type: string
+          example: 'Successfully recovered Users'
+
+      #  ----------------------------------SCHEMAS FOR PAYMENT METHODS
+    payMethod:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 7
+        name:
+          type: string
+          example: 'user'
+        createdAt:
+          type: string
+          example: '|creation date and time|'
+        updatedAt:
+          type: string
+          example: '|update date and time|'
+        deletedAt:
+          type: string
+          example: '|null| or |delete date and time|'
+          
+    payMethodName:
+      properties:
+        name:
+          type: string
+          example: 'cash'
+
+          
+    payMethods:
+      type: array
+      items: 
+        $ref: '#/components/schemas/payMethod'          
+    
+    payMethodReq:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'user'
+
+    payMethodReqUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'user'
+
+    payMethodResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            payMethod:
+              $ref: '#/components/schemas/payMethod'      
+        message:
+          $ref: '#/components/schemas/messageSuccess'
+ 
+    payMethodsResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            payMethods:
+              $ref: '#/components/schemas/payMethods'     
+        message:
+          type: string
+          example: 'Successfully recovered Payment Methods'
+
+          
+    # -----------------------------------SCHEMA FOR Success message      
+    messageSuccess:
+      type: string
+      example: 'Successful operation for |entity| ID: |entity ID|, Name: |entity name|'     
+          
+    #  ----------------------------------SCHEMAS FOR ERRORS
+    errorDefault:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+          properties:
+            error:
+              type: string
+              example: '|Error|'
+        message:
+          type: string
+          example: 'Internal error - Try again later'
+    
+    error400:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+        message:
+          type: string
+          example: '|field| field is required |'  
+
+    error400Param:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+        message:
+          type: string
+          example: '|parameter or field| |parameter or field name| is required | or has an incorrect format'  
+ 
+    error403:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+        message:
+          type: string
+          example: 'Admin level required'  
+          
+    error403-2:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+        message:
+          type: string
+          example: 'Admin level or data owner required'  
+          
+    error404:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+        message:
+          type: string
+          example: '|entity| not found'     
+          
+    error406:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+        message:
+          type: string
+          example: '|entity| is not deleted'     
+          
+    error409:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+        message:
+          type: string
+          example: '|entity| |entity name| already exists'     
+          
+    error410:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+        message:
+          type: string
+          example: '|entity| is deleted - (soft deleted)'
+                   
+    error500:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+        message:
+          type: string
+          example: 'Unexpected error - |message|'
+  
+
+                  
+    

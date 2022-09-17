@@ -1,5 +1,28 @@
 const { Products } = require('../models/index');
 
+//Check if a product already exists
+const chekProductExist = async (req, res, next) => {
+	const { name } = req.body;
+	try {
+		const productExists = await Products.findOne({
+			where: { name },
+			paranoid: false,
+		});
+		if (productExists)
+			return res
+				.status(409)
+				.json({ ok: false, data: {}, message: `Product ${name}, already exists` });
+		next();
+	} catch (error) {
+		console.log(error);
+		return res.status(error?.status || 500).json({
+			ok: false,
+			data: { error: error?.message || error },
+			message: 'Internal error - Try again later...',
+		});
+	}
+};
+
 // Validate fields for a product registration
 const validateFields = async (req, res, next) => {
 	const { name, price, image } = req.body;
@@ -27,38 +50,15 @@ const validateFieldsUpdate = async (req, res, next) => {
 		(!image || image.trim().length === 0) &&
 		!available
 	)
-		error.message += 'At least one field is required to update';
+		error.message += 'Name, price, image or available field is required';
 
 	if (error.message.length !== 0) return res.status(400).json(error);
 
 	next();
 };
 
-//Check if a product already exists
-const chekProductExist = async (req, res, next) => {
-	const { name } = req.body;
-	try {
-		const productExists = await Products.findOne({
-			where: { name },
-			paranoid: false,
-		});
-		if (productExists)
-			return res
-				.status(409)
-				.json({ ok: false, data: {}, message: 'Product already exists' });
-		next();
-	} catch (error) {
-		console.log(error);
-		return res.status(error?.status || 500).json({
-			ok: false,
-			data: { error: error?.message || error },
-			message: 'Internal error - Try again later...',
-		});
-	}
-};
-
 module.exports = {
+	chekProductExist,
 	validateFields,
 	validateFieldsUpdate,
-	chekProductExist,
 };

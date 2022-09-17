@@ -29,6 +29,7 @@ router
 		res.status(code).json({ ok, data, message });
 	})
 
+	//UPDATE product by ID
 	.put('/update/:id', isAdmin, validateFieldsUpdate, async (req, res) => {
 		const { code, ok, data, message } = await ProductsService.updateProduct(req, res);
 		res.status(code).json({ ok, data, message });

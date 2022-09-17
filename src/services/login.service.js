@@ -19,7 +19,12 @@ const LoginService = () => {
 					message: 'The token could not be generated',
 				};
 
-			return { code: 200, ok: true, data: { token } };
+			return {
+				code: 200,
+				ok: true,
+				data: { token },
+				message: `Successful operation for User ID: ${user.id}, Name: ${user.username}`,
+			};
 		} catch (error) {
 			return {
 				code: error?.status || 500,
@@ -84,7 +89,7 @@ const LoginService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: userResp,
+				data: { user: userResp },
 				message: 'User was successfully registered',
 			};
 		} catch (error) {

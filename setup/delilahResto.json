@@ -1,844 +1,813 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "title": "Delilah Resto ",
-    "description": "API for delicious food orders. As a customer you can register, see the list of our products and place an order.Restaurant managers have the ability to receive orders and update them..",
-    "termsOfService": "https://github.com/hmfarias/03-acamica-delilah#readme",
-    "contact": {
-      "name": "Marcelo Farias",
-      "email": "hmfarias7@gmail.com"
-    },
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "description": "Local Server",
-      "url": "http://localhost:3000/api/v1"
-    }
-  ],
-  "tags": [
-    {
-      "name": "Products",
-      "description": "Everything about Products availables in Delilah Resto"
-    },
-    {
-      "name": "Users",
-      "description": "Everything about Delilah Resto Users"
-    },
-    {
-      "name": "Orders",
-      "description": "Everything about Delilah Resto Orders"
-    }
-  ],
-  "paths": {
-    "/products": {
-      "post": {
-        "tags": [
-          "Products"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "Add a new dish to Delilah Resto's menu",
-        "description": "Admin level required",
-        "operationId": "newProduct",
-        "requestBody": {
-          "description": "Required to post a new product",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/productReq"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation - returns the added product",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/productResp200"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Some required fields is not present",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error400"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Admin Level required",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error403"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Product already exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error409"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "The product could not be registered",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error500"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Internal error - Try again later",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorDefault"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Products"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "List all products",
-        "description": "Returns a list of products",
-        "operationId": "getProducts",
-        "responses": {
-          "200": {
-            "description": "Successful operation - returns an array of products",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/productsResp200"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "There are no products in the database",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error404"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Internal error - Try again later",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorDefault"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/products/{id}": {
-      "get": {
-        "tags": [
-          "Products"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-              "read"
-            ]
-          }
-        ],
-        "summary": "Find product by Id",
-        "description": "Returns a single product",
-        "operationId": "getProduct",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of product to return",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation - returns the added product",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/productResp200"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The product not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error404"
-                }
-              }
-            }
-          },
-          "410": {
-            "description": "The product is deleted (soft deleted)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error410"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Internal error - Try again later",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorDefault"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/products/update/{id}": {
-      "put": {
-        "tags": [
-          "Products"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-              "read"
-            ]
-          }
-        ],
-        "summary": "Update an existent product",
-        "description": "Admin level required",
-        "operationId": "updateProduct",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of product that needs to be restored",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Required to update a product",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/productReqUpdate"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation - returns the updated product",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/productResp200"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The Id field is required together with at least one of the following fields: name, price, image or available",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error400"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Admin Level required",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error403"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Product not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error404"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "The product could not be updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error500"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorDefault"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/products/delete/{id}": {
-      "delete": {
-        "tags": [
-          "Products"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-              "read"
-            ]
-          }
-        ],
-        "summary": "Deletes a product by Id",
-        "description": "Delete a product",
-        "operationId": "deleteProduct",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of product that needs to be deleted",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation - returns the deleted product",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/productResp200"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Admin Level required",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error403"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The product not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error404"
-                }
-              }
-            }
-          },
-          "410": {
-            "description": "The product is deleted (soft deleted)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error410"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "The product could not be deleted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error500"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Internal error - Try again later",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorDefault"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/products/restore/{id}": {
-      "put": {
-        "tags": [
-          "Products"
-        ],
-        "security": [
-          {
-            "bearerAuth": [
-              "read"
-            ]
-          }
-        ],
-        "summary": "Restore a product by Id",
-        "description": "restore a product",
-        "operationId": "restoreProduct",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of product that needs to be restored",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation - returns the restored product",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/productResp200"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Admin Level required",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error403"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The product not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error404"
-                }
-              }
-            }
-          },
-          "406": {
-            "description": "The product is not deleted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error406"
-                }
-              }
-            }
-          },
-          "410": {
-            "description": "The product is deleted (soft deleted)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error410"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "The product could not be deleted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error500"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Internal error - Try again later",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorDefault"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "schemas": {
-      "productReq": {
-        "required": [
-          "name",
-          "price",
-          "image"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "Burger Special Chesse"
-          },
-          "price": {
-            "type": "number",
-            "format": "float",
-            "example": 700
-          },
-          "image": {
-            "type": "string",
-            "example": "http://delilah/images/burger.png"
-          }
-        }
-      },
-      "productReqUpdate": {
-        "required": [
-          "id"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 7
-          },
-          "name": {
-            "type": "string",
-            "example": "Burger Special Chesse"
-          },
-          "price": {
-            "type": "number",
-            "format": "float",
-            "example": 700
-          },
-          "image": {
-            "type": "string",
-            "example": "http://delilah/images/burger.png"
-          },
-          "available": {
-            "type": "boolean",
-            "example": true
-          }
-        }
-      },
-      "product": {
-        "required": [
-          "id",
-          "name",
-          "price",
-          "image"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 7
-          },
-          "name": {
-            "type": "string",
-            "example": "Burger Special Chesse"
-          },
-          "price": {
-            "type": "number",
-            "format": "float",
-            "example": 700
-          },
-          "image": {
-            "type": "string",
-            "example": "http://delilah/images/burger.png"
-          },
-          "available": {
-            "type": "boolean",
-            "example": true
-          }
-        }
-      },
-      "products": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/product"
-        }
-      },
-      "productResp200": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": true
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "product": {
-                "$ref": "#/components/schemas/product"
-              }
-            }
-          },
-          "message": {
-            "type": "string",
-            "example": "Successful operation for product ID: [product id], Name: [product name]"
-          }
-        }
-      },
-      "productsResp200": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": true
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "products": {
-                "$ref": "#/components/schemas/products"
-              }
-            }
-          },
-          "message": {
-            "type": "string",
-            "example": "Successfully recovered ProductS"
-          }
-        }
-      },
-      "productRespPost": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": false
-          },
-          "data": {
-            "type": "object"
-          },
-          "message": {
-            "type": "string",
-            "example": "The product could not be registered"
-          }
-        }
-      },
-      "productResp404": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": false
-          },
-          "data": {
-            "type": "object"
-          },
-          "message": {
-            "type": "string",
-            "example": "Product not found"
-          }
-        }
-      },
-      "errorDefault": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": false
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "type": "string",
-                "example": "|Error|"
-              }
-            }
-          },
-          "message": {
-            "type": "string",
-            "example": "Internal error - Try again later"
-          }
-        }
-      },
-      "error400": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": false
-          },
-          "data": {
-            "type": "object"
-          },
-          "message": {
-            "type": "string",
-            "example": "|field| is required |"
-          }
-        }
-      },
-      "error403": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": false
-          },
-          "data": {
-            "type": "object"
-          },
-          "message": {
-            "type": "string",
-            "example": "Admin level required"
-          }
-        }
-      },
-      "error404": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": false
-          },
-          "data": {
-            "type": "object"
-          },
-          "message": {
-            "type": "string",
-            "example": "|entity| not found"
-          }
-        }
-      },
-      "error406": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": false
-          },
-          "data": {
-            "type": "object"
-          },
-          "message": {
-            "type": "string",
-            "example": "|entity| is not deleted"
-          }
-        }
-      },
-      "error409": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": false
-          },
-          "data": {
-            "type": "object"
-          },
-          "message": {
-            "type": "string",
-            "example": "|entity| already exists"
-          }
-        }
-      },
-      "error410": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": false
-          },
-          "data": {
-            "type": "object"
-          },
-          "message": {
-            "type": "string",
-            "example": "|entity| is deleted - (soft deleted)"
-          }
-        }
-      },
-      "error500": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": false
-          },
-          "data": {
-            "type": "object"
-          },
-          "message": {
-            "type": "string",
-            "example": "Unexpected error - |message|"
-          }
-        }
-      }
-    }
-  }
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Delilah Resto ",
+		"description": "API for delicious food orders. As a customer you can register, see the list of our products and place an order.Restaurant managers have the ability to receive orders and update them..",
+		"termsOfService": "https://github.com/hmfarias/03-acamica-delilah#readme",
+		"contact": {
+			"name": "Marcelo Farias",
+			"email": "hmfarias7@gmail.com"
+		},
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"description": "Local Server",
+			"url": "http://localhost:3000/api/v1"
+		}
+	],
+	"tags": [
+		{
+			"name": "Products",
+			"description": "Everything about Products availables in Delilah Resto"
+		},
+		{
+			"name": "Users",
+			"description": "Everything about Delilah Resto Users"
+		},
+		{
+			"name": "Orders",
+			"description": "Everything about Delilah Resto Orders"
+		}
+	],
+	"paths": {
+		"/products": {
+			"post": {
+				"tags": ["Products"],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"summary": "Add a new dish to Delilah Resto's menu",
+				"description": "Admin level required",
+				"operationId": "newProduct",
+				"requestBody": {
+					"description": "Required to post a new product",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/productReq"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation - returns the added product",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/productResp200"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Some required fields is not present",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error400"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Admin Level required",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error403"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Product already exists",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error409"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The product could not be registered",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error500"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Internal error - Try again later",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorDefault"
+								}
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"tags": ["Products"],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"summary": "List all products",
+				"description": "Returns a list of products",
+				"operationId": "getProducts",
+				"responses": {
+					"200": {
+						"description": "Successful operation - returns an array of products",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/productsResp200"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "There are no products in the database",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error404"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Internal error - Try again later",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorDefault"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/{id}": {
+			"get": {
+				"tags": ["Products"],
+				"security": [
+					{
+						"bearerAuth": ["read"]
+					}
+				],
+				"summary": "Find product by Id",
+				"description": "Returns a single product",
+				"operationId": "getProduct",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of product to return",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation - returns the added product",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/productResp200"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The product not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error404"
+								}
+							}
+						}
+					},
+					"410": {
+						"description": "The product is deleted (soft deleted)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error410"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Internal error - Try again later",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorDefault"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/update/{id}": {
+			"put": {
+				"tags": ["Products"],
+				"security": [
+					{
+						"bearerAuth": ["read"]
+					}
+				],
+				"summary": "Update an existent product",
+				"description": "Admin level required",
+				"operationId": "updateProduct",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of product that needs to be restored",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Required to update a product",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/productReqUpdate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation - returns the updated product",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/productResp200"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The Id field is required together with at least one of the following fields: name, price, image or available",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error400"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Admin Level required",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error403"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Product not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error404"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The product could not be updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error500"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Unexpected error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorDefault"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/delete/{id}": {
+			"delete": {
+				"tags": ["Products"],
+				"security": [
+					{
+						"bearerAuth": ["read"]
+					}
+				],
+				"summary": "Deletes a product by Id",
+				"description": "Delete a product",
+				"operationId": "deleteProduct",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of product that needs to be deleted",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation - returns the deleted product",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/productResp200"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Admin Level required",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error403"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The product not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error404"
+								}
+							}
+						}
+					},
+					"410": {
+						"description": "The product is deleted (soft deleted)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error410"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The product could not be deleted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error500"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Internal error - Try again later",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorDefault"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/restore/{id}": {
+			"put": {
+				"tags": ["Products"],
+				"security": [
+					{
+						"bearerAuth": ["read"]
+					}
+				],
+				"summary": "Restore a product by Id",
+				"description": "restore a product",
+				"operationId": "restoreProduct",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of product that needs to be restored",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation - returns the restored product",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/productResp200"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Admin Level required",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error403"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The product not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error404"
+								}
+							}
+						}
+					},
+					"406": {
+						"description": "The product is not deleted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error406"
+								}
+							}
+						}
+					},
+					"410": {
+						"description": "The product is deleted (soft deleted)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error410"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "The product could not be deleted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/error500"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Internal error - Try again later",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/errorDefault"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
+		"schemas": {
+			"productReq": {
+				"required": ["name", "price", "image"],
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "Burger Special Chesse"
+					},
+					"price": {
+						"type": "number",
+						"format": "float",
+						"example": 700
+					},
+					"image": {
+						"type": "string",
+						"example": "http://delilah/images/burger.png"
+					}
+				}
+			},
+			"productReqUpdate": {
+				"required": ["id"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64",
+						"example": 7
+					},
+					"name": {
+						"type": "string",
+						"example": "Burger Special Chesse"
+					},
+					"price": {
+						"type": "number",
+						"format": "float",
+						"example": 700
+					},
+					"image": {
+						"type": "string",
+						"example": "http://delilah/images/burger.png"
+					},
+					"available": {
+						"type": "boolean",
+						"example": true
+					}
+				}
+			},
+			"product": {
+				"required": ["id", "name", "price", "image"],
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64",
+						"example": 7
+					},
+					"name": {
+						"type": "string",
+						"example": "Burger Special Chesse"
+					},
+					"price": {
+						"type": "number",
+						"format": "float",
+						"example": 700
+					},
+					"image": {
+						"type": "string",
+						"example": "http://delilah/images/burger.png"
+					},
+					"available": {
+						"type": "boolean",
+						"example": true
+					}
+				}
+			},
+			"products": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/product"
+				}
+			},
+			"productResp200": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": true
+					},
+					"data": {
+						"type": "object",
+						"properties": {
+							"product": {
+								"$ref": "#/components/schemas/product"
+							}
+						}
+					},
+					"message": {
+						"type": "string",
+						"example": "Successful operation for Product ID: [product id], Name: [product name]"
+					}
+				}
+			},
+			"productsResp200": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": true
+					},
+					"data": {
+						"type": "object",
+						"properties": {
+							"products": {
+								"$ref": "#/components/schemas/products"
+							}
+						}
+					},
+					"message": {
+						"type": "string",
+						"example": "Successfully recovered ProductS"
+					}
+				}
+			},
+			"productRespPost": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": false
+					},
+					"data": {
+						"type": "object"
+					},
+					"message": {
+						"type": "string",
+						"example": "The product could not be registered"
+					}
+				}
+			},
+			"productResp404": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": false
+					},
+					"data": {
+						"type": "object"
+					},
+					"message": {
+						"type": "string",
+						"example": "Product not found"
+					}
+				}
+			},
+			"errorDefault": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": false
+					},
+					"data": {
+						"type": "object",
+						"properties": {
+							"error": {
+								"type": "string",
+								"example": "|Error|"
+							}
+						}
+					},
+					"message": {
+						"type": "string",
+						"example": "Internal error - Try again later"
+					}
+				}
+			},
+			"error400": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": false
+					},
+					"data": {
+						"type": "object"
+					},
+					"message": {
+						"type": "string",
+						"example": "|field| is required |"
+					}
+				}
+			},
+			"error403": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": false
+					},
+					"data": {
+						"type": "object"
+					},
+					"message": {
+						"type": "string",
+						"example": "Admin level required"
+					}
+				}
+			},
+			"error404": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": false
+					},
+					"data": {
+						"type": "object"
+					},
+					"message": {
+						"type": "string",
+						"example": "|entity| not found"
+					}
+				}
+			},
+			"error406": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": false
+					},
+					"data": {
+						"type": "object"
+					},
+					"message": {
+						"type": "string",
+						"example": "|entity| is not deleted"
+					}
+				}
+			},
+			"error409": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": false
+					},
+					"data": {
+						"type": "object"
+					},
+					"message": {
+						"type": "string",
+						"example": "|entity| already exists"
+					}
+				}
+			},
+			"error410": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": false
+					},
+					"data": {
+						"type": "object"
+					},
+					"message": {
+						"type": "string",
+						"example": "|entity| is deleted - (soft deleted)"
+					}
+				}
+			},
+			"error500": {
+				"type": "object",
+				"properties": {
+					"ok": {
+						"type": "boolean",
+						"example": false
+					},
+					"data": {
+						"type": "object"
+					},
+					"message": {
+						"type": "string",
+						"example": "Unexpected error - |message|"
+					}
+				}
+			}
+		}
+	}
 }

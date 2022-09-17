@@ -44,8 +44,6 @@ const jwtProtection = () => {
 
 // Validate fields when ID is required
 const validateFieldParam = async (req, res, next) => {
-	console.log('llega ------------');
-	console.log(req.params);
 	const { id } = req.params;
 
 	const error = { ok: false, data: {}, message: '' }; //object to record possible errors

@@ -3,7 +3,6 @@ const RolesService = () => {
 	const getRole = async (id) => {
 		try {
 			const role = await Roles.findByPk(id, {
-				attributes: ['id', 'name', 'deletedAt'],
 				paranoid: false,
 			});
 			if (!role) return { code: 404, ok: false, data: {}, message: 'role not found' };
@@ -20,7 +19,7 @@ const RolesService = () => {
 				code: 200,
 				ok: true,
 				data: { role },
-				message: 'Successfully recovered Role',
+				message: `Successful operation for Role ID: ${role.id}, Name: ${role.name}`,
 			};
 		} catch (error) {
 			return {
@@ -36,14 +35,13 @@ const RolesService = () => {
 		try {
 			const roles = await Roles.findAll({
 				paranoid: false,
-				attributes: ['id', 'name', 'deletedAt'],
 			});
 			if (!roles)
 				return {
 					code: 404,
 					ok: false,
 					data: {},
-					message: 'There are no roles in the database.',
+					message: 'Roles not found',
 				};
 
 			return {
@@ -71,9 +69,14 @@ const RolesService = () => {
 				return { code: 403, ok: false, data: {}, message: 'Unable to delete ADMIN role' };
 
 			if (role.deletedAt != null)
-				return { code: 404, ok: false, data: {}, message: 'The role is already deleted' };
+				return {
+					code: 410,
+					ok: false,
+					data: {},
+					message: 'Role is deleted - (soft deleted)',
+				};
 
-			const roleDeleted = await Roles.destroy({ where: { id: id } });
+			const roleDeleted = await role.destroy({ where: { id: id } });
 
 			if (!roleDeleted)
 				return {
@@ -86,8 +89,8 @@ const RolesService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { role: { id, role: role.name } },
-				message: `Role with ID: ${id} Name: ${role.name}, successfully deleted`,
+				data: { role },
+				message: `Successful operation for Role ID: ${id} Name: ${role.name}`,
 			};
 		} catch (error) {
 			return {
@@ -111,12 +114,13 @@ const RolesService = () => {
 					data: {},
 					message: 'Unexpected error - The role could not be registered',
 				};
-
+			const { id, createdAt, updatedAt } = role;
+			const deletedAt = null;
 			return {
 				code: 200,
 				ok: true,
-				data: { role },
-				message: 'Role was successfully registered',
+				data: { role: { id, name, createdAt, updatedAt, deletedAt } },
+				message: `Successful operation for Role ID: ${role.id} , Name: ${role.name}`,
 			};
 		} catch (error) {
 			return {
@@ -136,7 +140,7 @@ const RolesService = () => {
 			if (role.deletedAt === null)
 				return { code: 404, ok: false, data: {}, message: 'Role is not deleted' };
 
-			const roleRestored = await Roles.restore({ where: { id: id } });
+			const roleRestored = await role.restore({ where: { id: id } });
 			if (!roleRestored)
 				return {
 					code: 500,
@@ -148,8 +152,8 @@ const RolesService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { role: { id, role: role.name } },
-				message: `Role with ID: ${id} Name: ${role.name}, successfully restored`,
+				data: { role },
+				message: `Successful operation for Role ID: ${id} Name: ${role.name}`,
 			};
 		} catch (error) {
 			return {
@@ -163,7 +167,8 @@ const RolesService = () => {
 
 	const updateRole = async (req, res) => {
 		try {
-			const { id, name } = req.body;
+			const { id } = req.params;
+			const { name } = req.body;
 
 			if (!name)
 				return {
@@ -193,8 +198,8 @@ const RolesService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { role: { id, name } },
-				message: `Successfully updated role with ID: ${id} Name: ${name}`,
+				data: { role },
+				message: `Successfully operation for role with ID: ${id} Name: ${name}`,
 			};
 		} catch (error) {
 			return {

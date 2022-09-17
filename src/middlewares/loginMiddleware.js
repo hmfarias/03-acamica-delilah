@@ -32,4 +32,20 @@ const validateUser = async (req, res, next) => {
 	}
 };
 
-module.exports = { validateUser };
+// Validate fields for a user login
+const validateFieldsLogin = async (req, res, next) => {
+	const error = { ok: false, data: {}, message: '' }; //object to record possible errors
+
+	const { username, password } = req.body;
+
+	if (!username || username.trim().length === 0)
+		error.message += 'Username field is required |';
+	if (!password || password.trim().length === 0)
+		error.message += 'Password field is required |';
+
+	if (error.message.length !== 0) return res.status(400).json(error);
+
+	next();
+};
+
+module.exports = { validateFieldsLogin, validateUser };

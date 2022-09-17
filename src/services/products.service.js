@@ -4,7 +4,6 @@ const ProductsService = () => {
 	const getProduct = async (id) => {
 		try {
 			const product = await Products.findByPk(id, {
-				attributes: ['id', 'name', 'price', 'image', 'available', 'deletedAt'],
 				paranoid: false,
 			});
 			if (!product)
@@ -75,8 +74,6 @@ const ProductsService = () => {
 					message: 'Product is deleted - (soft deleted)',
 				};
 
-			const { name, price, available, image } = product;
-
 			const deletedProduct = await product.destroy();
 			if (!deletedProduct)
 				return {
@@ -89,8 +86,8 @@ const ProductsService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { product: { id, name, price, image, available } },
-				message: `Successful operation for product ID: ${id}, Name: ${name}`,
+				data: { product },
+				message: `Successful operation for Product ID: ${id}, Name: ${product.name}`,
 			};
 		} catch (error) {
 			return {
@@ -104,13 +101,16 @@ const ProductsService = () => {
 
 	const newProduct = async (req, res) => {
 		try {
-			const { name, price, image, available } = req.body;
+			const { name, price, image, available: avail } = req.body;
+			const available = avail ? avail : true;
+			const deletedAt = null;
 
 			const product = await Products.create({
 				name,
 				price,
 				image,
-				available: available ? available : true,
+				available,
+				deletedAt,
 			});
 			if (!product)
 				return {
@@ -119,11 +119,10 @@ const ProductsService = () => {
 					data: {},
 					message: 'Unexpected error',
 				};
-			const { id, available: avail } = product;
 			return {
 				code: 200,
 				ok: true,
-				data: { product: { id, name, price, image, available: avail } },
+				data: { product },
 				message: `Successfull operation for product ID: ${product.id}, Name: ${product.name}`,
 			};
 		} catch (error) {
@@ -145,9 +144,7 @@ const ProductsService = () => {
 			if (product.deletedAt === null)
 				return { code: 406, ok: false, data: {}, message: 'Product is not deleted' };
 
-			const { name, price, available, image } = product;
-
-			const productRestored = await Products.restore({ where: { id: id } });
+			const productRestored = await product.restore({ where: { id: id } });
 			if (!productRestored)
 				return {
 					code: 500,
@@ -159,8 +156,8 @@ const ProductsService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { product: { id, name, price, image, available } },
-				message: `Successfull operation for Product ID: ${id} Name: ${name}`,
+				data: { product },
+				message: `Successfull operation for Product ID: ${id} Name: ${product.name}`,
 			};
 		} catch (error) {
 			return {
@@ -186,15 +183,12 @@ const ProductsService = () => {
 			const imageUpd = image ? image : product.image;
 			const availabeUpd = available ? available : product.available;
 
-			const updatedProduct = await Products.update(
-				{
-					name: nameUpd,
-					price: priceUpd,
-					image: imageUpd,
-					available: availabeUpd,
-				},
-				{ where: { id: id } }
-			);
+			const updatedProduct = await product.update({
+				name: nameUpd,
+				price: priceUpd,
+				image: imageUpd,
+				available: availabeUpd,
+			});
 
 			if (!updatedProduct)
 				return {
@@ -210,13 +204,13 @@ const ProductsService = () => {
 				data: {
 					product: {
 						id,
-						name: nameUpd,
-						price: priceUpd,
-						image: imageUpd,
-						available: availabeUpd,
+						name: product.name,
+						price: product.price,
+						image: product.image,
+						available: product.available,
 					},
 				},
-				message: `Successfull operation for product ID: ${id} Name: ${name}`,
+				message: `Successfull operation for product ID: ${id} Name: ${product.name}`,
 			};
 		} catch (error) {
 			return {

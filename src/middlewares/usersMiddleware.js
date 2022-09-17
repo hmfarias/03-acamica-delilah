@@ -90,7 +90,7 @@ const isAuthUser = async (req, res, next) => {
 			return res.status(401).json({
 				ok: false,
 				data: {},
-				message: 'Administrator or data owner level required',
+				message: 'Admin level or data owner required',
 			});
 
 		next();
@@ -112,12 +112,17 @@ const validateFields = async (req, res, next) => {
 
 	const { username, name, email, phone, address, password } = req.body;
 
-	if (username.length === 0) error.message += 'Username required |';
-	if (name.length === 0) error.message += 'Name required |';
-	if (email.length === 0) error.message += 'Email required |';
-	if (phone.length === 0) error.message += 'Phone required |';
-	if (address.length === 0) error.message += 'Address required |';
-	if (password.length === 0) error.message += 'Password required |';
+	if (!username || username.trim().length === 0)
+		error.message += 'Username field is required |';
+	if (!name || name.trim().length === 0) error.message += 'Name field is required |';
+	if (!email || email.trim().length === 0) error.message += 'Email field is required |';
+	if (!phone || phone.trim().length === 0) error.message += 'Phone field is required |';
+	if (!address || address.trim().length === 0)
+		error.message += 'Address field is required |';
+	if (!password || password.trim().length === 0)
+		error.message += 'Password field is required |';
+
+	if (error.message.length !== 0) return res.status(400).json(error);
 
 	if (username.length < 5 && username.length > 0)
 		error.message += 'Username field must have at least 5 characters |';
@@ -142,9 +147,11 @@ const chekUserExist = async (req, res, next) => {
 			paranoid: false,
 		});
 		if (userExists)
-			return res
-				.status(401)
-				.json({ ok: false, data: {}, message: 'Username or Email already exists.' });
+			return res.status(409).json({
+				ok: false,
+				data: {},
+				message: `User ${username} or Email ${email} already exists`,
+			});
 		next();
 	} catch (error) {
 		console.log(error);
@@ -156,10 +163,40 @@ const chekUserExist = async (req, res, next) => {
 	}
 };
 
+// Validate fields for update user
+const validateFieldsUpdate = async (req, res, next) => {
+	const { name, email, phone, address, password } = req.body;
+
+	const regex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i; //possible characters to validate an email
+
+	const error = { ok: false, data: {}, message: '' }; //object to record possible error
+
+	if (
+		(!name || name.trim().length === 0) &&
+		(!email || email.trim().length === 0) &&
+		(!phone || phone.trim().length === 0) &&
+		(!address || address.trim().length === 0) &&
+		(!password || password.trim().length === 0)
+	)
+		error.message += 'Name, email, phone, address or password field is required';
+
+	if (error.message.length !== 0) return res.status(400).json(error);
+
+	if (password && password.length < 5)
+		error.message += 'Password field must have at least 5 characters |';
+
+	if (email && !regex.test(email)) error.message += 'Email field has an invalid format |';
+
+	if (error.message.length !== 0) return res.status(400).json(error);
+
+	next();
+};
+
 module.exports = {
 	chekUserExist,
 	isAdmin,
 	isAdminNotHimself,
 	isAuthUser,
 	validateFields,
+	validateFieldsUpdate,
 };
