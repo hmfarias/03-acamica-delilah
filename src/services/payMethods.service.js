@@ -3,25 +3,26 @@ const { PaymentMethods } = require('../models/index');
 const PayMethodService = () => {
 	const getPayMethod = async (id) => {
 		try {
-			const method = await PaymentMethods.findByPk(id, {
-				attributes: ['id', 'name', 'available', 'deletedAt'],
+			const payMethod = await PaymentMethods.findByPk(id, {
+				// attributes: ['id', 'name', 'available', 'deletedAt'],
 				paranoid: false,
 			});
-			if (!method) return { code: 404, ok: false, data: 'Payment method not found' };
+			if (!payMethod)
+				return { code: 404, ok: false, data: {}, message: 'Payment Method not found' };
 
-			if (method.deletedAt != null)
+			if (payMethod.deletedAt != null)
 				return {
 					code: 410,
 					ok: false,
-					data: { payMethod: { id, name: method.name } },
-					message: 'Payment method is deleted - (soft deleted)',
+					data: { payMethod: { id, name: payMethod.name } },
+					message: 'Payment Method is deleted - (soft deleted)',
 				};
 
 			return {
 				code: 200,
 				ok: true,
-				data: { payMethod: method },
-				message: 'Successfully recovered Role',
+				data: { payMethod },
+				message: `Successful operation for Payment Method ID: ${id}, Name: ${payMethod.name}`,
 			};
 		} catch (error) {
 			return {
@@ -37,7 +38,7 @@ const PayMethodService = () => {
 		try {
 			const methods = await PaymentMethods.findAll({
 				paranoid: false,
-				attributes: ['id', 'name', 'available', 'deletedAt'],
+				// attributes: ['id', 'name', 'available', 'deletedAt'],
 			});
 			if (!methods)
 				return {
@@ -51,7 +52,7 @@ const PayMethodService = () => {
 				code: 200,
 				ok: true,
 				data: { payMethods: methods },
-				message: 'Successfully recovered Roles',
+				message: 'Successfully recovered Payment Methods',
 			};
 		} catch (error) {
 			return {
@@ -65,33 +66,33 @@ const PayMethodService = () => {
 
 	const deletePayMethod = async (id) => {
 		try {
-			const method = await PaymentMethods.findByPk(id, { paranoid: false });
-			if (!method)
+			const payMethod = await PaymentMethods.findByPk(id, { paranoid: false });
+			if (!payMethod)
 				return { code: 404, ok: false, data: {}, message: 'Payment method not found' };
 
-			if (method.deletedAt != null)
+			if (payMethod.deletedAt != null)
 				return {
-					code: 404,
+					code: 410,
 					ok: false,
-					data: { payMethod: { id, name: method.name } },
-					message: 'The payment method is already deleted',
+					data: {},
+					message: 'Payment Method is deleted - (soft deleted)',
 				};
 
-			const methodDeleted = await PaymentMethods.destroy({ where: { id: id } });
+			const methodDeleted = await payMethod.destroy();
 
 			if (!methodDeleted)
 				return {
 					code: 500,
 					ok: false,
-					data: { id, name: method.name },
+					data: {},
 					message: 'Unexpected error - The payment method could not be deleted',
 				};
 
 			return {
 				code: 200,
 				ok: true,
-				data: { payMethod: { id, name: method.name } },
-				message: `Payment method with ID: ${id} Name: ${method.name}, successfully deleted`,
+				data: { payMethod },
+				message: `Successful operation for Payment Method ID: ${id} Name: ${payMethod.name}`,
 			};
 		} catch (error) {
 			return {
@@ -108,11 +109,12 @@ const PayMethodService = () => {
 			const { name, available } = req.body;
 			const nameLow = name.toLowerCase();
 
-			const method = await PaymentMethods.create({
+			const payMethod = await PaymentMethods.create({
 				name: nameLow,
 				available: available ? available : true,
+				deletedAt: null,
 			});
-			if (!method)
+			if (!payMethod)
 				return {
 					code: 500,
 					ok: false,
@@ -123,8 +125,8 @@ const PayMethodService = () => {
 			return {
 				code: 200,
 				ok: true,
-				data: { payMethod: method },
-				message: 'Payment method successfully registered',
+				data: { payMethod },
+				message: 'Payment Method successfully registered',
 			};
 		} catch (error) {
 			return {
@@ -138,31 +140,32 @@ const PayMethodService = () => {
 
 	const restorePayMethod = async (id) => {
 		try {
-			const method = await PaymentMethods.findByPk(id, { paranoid: false });
-			if (!method) return { code: 404, ok: false, data: 'Payment method not found' };
+			const payMethod = await PaymentMethods.findByPk(id, { paranoid: false });
+			if (!payMethod)
+				return { code: 404, ok: false, data: {}, message: 'Payment method not found' };
 
-			if (method.deletedAt === null)
+			if (payMethod.deletedAt === null)
 				return {
-					code: 404,
+					code: 406,
 					ok: false,
-					data: { payMethod: { id, name: method.name } },
-					message: 'Payment method is not deleted',
+					data: {},
+					message: 'Payment Method is not deleted',
 				};
 
-			const methodRestored = await PaymentMethods.restore({ where: { id: id } });
+			const methodRestored = await payMethod.restore();
 			if (!methodRestored)
 				return {
 					code: 500,
 					ok: false,
-					data: { payMethod: { id, name: method.name } },
-					message: 'Unexpected error - The payment method could not be restored',
+					data: {},
+					message: 'Unexpected error - The Payment Method could not be deleted',
 				};
 
 			return {
 				code: 200,
 				ok: true,
-				data: { payMethod: { id, name: method.name } },
-				message: `Payment method with ID: ${id} Name: ${method.name} successfully restored`,
+				data: { payMethod },
+				message: `Successful operation for Payment Method ID: ${id} Name: ${payMethod.name}`,
 			};
 		} catch (error) {
 			return {
@@ -176,42 +179,34 @@ const PayMethodService = () => {
 
 	const updatePayMethod = async (req, res) => {
 		try {
-			const { id, name, available } = req.body;
+			const { id } = req.params;
+			const { name, available } = req.body;
 
-			if (!name && !available)
-				return {
-					code: 400,
-					ok: false,
-					data: { id, name, available },
-					message: 'No data was sent - The payment method could not be updated',
-				};
-			const nameLow = name.toLowerCase();
-
-			const method = await PaymentMethods.findByPk(id);
-			if (!method)
+			const payMethod = await PaymentMethods.findByPk(id);
+			if (!payMethod)
 				return { code: 404, ok: false, data: {}, message: 'Payment method not found' };
 
-			const updatedMethod = await PaymentMethods.update(
-				{
-					name: name ? nameLow : PaymentMethods.name,
-					available: available,
-				},
-				{ where: { id: id } }
-			);
+			const nameUpd = name ? name.toLowerCase() : payMethod.name;
+			const availableUpd = available !== undefined ? available : payMethod.available;
+
+			const updatedMethod = await payMethod.update({
+				name: nameUpd,
+				available: availableUpd,
+			});
 
 			if (!updatedMethod)
 				return {
 					code: 500,
 					ok: false,
 					data: {},
-					message: 'Unexpected error - The payment method could not be updated',
+					message: 'Unexpected error - The Payment Method could not be updated',
 				};
 
 			return {
 				code: 200,
 				ok: true,
-				data: { payMethod: { id, name: nameLow } },
-				message: `Payment method with Id: ${id} Name: ${method.name}, successfully updated `,
+				data: { payMethod },
+				message: `Successfully operation for Payment Method with ID: ${id} Name: ${nameUpd}`,
 			};
 		} catch (error) {
 			return {

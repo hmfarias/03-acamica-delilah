@@ -37,7 +37,7 @@ const validateFields = async (req, res, next) => {
 	next();
 };
 
-// Validate fields for update product
+// Validate fields for update role
 const validateFieldsUpdate = async (req, res, next) => {
 	const { name } = req.body;
 

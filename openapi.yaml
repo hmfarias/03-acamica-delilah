@@ -193,7 +193,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/productResp200'          
         '400':
-          description: 'The Id parameter is required together with at least one of the following fields: name, price, image or available'
+          description: 'The [Id] parameter is required together with at least one of the following fields: [name], [price], [image] or [available]'
           content:
             application/json:
               schema:
@@ -250,7 +250,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/productResp200'      
         '400':
-          description: 'The Id parameter is required'
+          description: 'The [Id] parameter is required'
           content:
             application/json:
               schema:
@@ -268,7 +268,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/error404'                     
         '410':
-          description: 'The product is deleted (soft deleted)'
+          description: 'The product is already deleted (soft deleted)'
           content:
             application/json:
               schema:
@@ -313,7 +313,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/productResp200'         
         '400':
-          description: 'The Id parameter is required'
+          description: 'The [Id] parameter is required'
           content:
             application/json:
               schema:
@@ -336,12 +336,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error406'                     
-        '410':
-          description: 'The product is deleted (soft deleted)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error410'     
         '500':
           description: 'The product could not be deleted'
           content:
@@ -532,7 +526,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/roleResp200'          
         '400':
-          description: 'Id parameter or name field are not present'
+          description: '[Id] parameter or [name] field are not present'
           content:
             application/json:
               schema:
@@ -589,7 +583,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/roleResp200'          
         '400':
-          description: 'The Id parameter is required'
+          description: 'The [Id] parameter is required'
           content:
             application/json:
               schema:
@@ -652,7 +646,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/roleResp200'          
         '400':
-          description: 'The Id parameter is required'
+          description: 'The [Id] parameter is required'
           content:
             application/json:
               schema:
@@ -675,12 +669,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error406'                     
-        '410':
-          description: 'The role is deleted (soft deleted)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error410'     
         '500':
           description: 'The role could not be deleted'
           content:
@@ -911,7 +899,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/userResp200'          
         '400':
-          description: 'Id parameter or some field is missing or has an incorrect format'
+          description: '[Id] parameter or some field is missing or has an incorrect format'
           content:
             application/json:
               schema:
@@ -968,7 +956,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/userResp200'          
         '400':
-          description: 'The Id parameter is required'
+          description: 'The [Id] parameter is required'
           content:
             application/json:
               schema:
@@ -1031,7 +1019,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/userResp200'          
         '400':
-          description: 'The Id parameter is required'
+          description: 'The [Id] parameter is required'
           content:
             application/json:
               schema:
@@ -1054,12 +1042,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error406'                     
-        '410':
-          description: 'The user is deleted (soft deleted)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error410'     
         '500':
           description: 'The user could not be deleted'
           content:
@@ -1167,7 +1149,7 @@ paths:
                 $ref: '#/components/schemas/errorDefault'           
 
   /paymethods/{id}:
-    # --------------------------------------------GET ROLE BY ID
+    # --------------------------------------------GET PAYMENT METHOD BY ID
     get:
       tags:
         - PayMethods
@@ -1199,7 +1181,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/error403'                   
         '404':
-          description: 'The role not found'
+          description: 'The payment method not found'
           content:
             application/json:
               schema:
@@ -1226,7 +1208,7 @@ paths:
         - bearerAuth: 
           - read
       summary: 'Update an existent payment method'
-      description: 'Admin level required'
+      description: 'Admin level required - You can update the [name], or [available] fields.'
       operationId: updatePayMethod
       parameters:
         - name: id
@@ -1251,7 +1233,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/payMethodResp200'          
         '400':
-          description: 'Id parameter or name field are not present'
+          description: '[Id] parameter, [name] or [available] fields are not present'
           content:
             application/json:
               schema:
@@ -1308,7 +1290,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/payMethodResp200'          
         '400':
-          description: 'The Id parameter is required'
+          description: 'The [Id] parameter is required'
           content:
             application/json:
               schema:
@@ -1371,7 +1353,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/payMethodResp200'          
         '400':
-          description: 'The Id parameter is required'
+          description: 'The [Id] parameter is required'
           content:
             application/json:
               schema:
@@ -1393,13 +1375,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error406'                     
-        '410':
-          description: 'The payment method is deleted (soft deleted)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error410'     
+                $ref: '#/components/schemas/error406'                      
         '500':
           description: 'The payment method could not be deleted'
           content:
@@ -1413,7 +1389,96 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorDefault'        
 
-         
+  # ------------------------------------------------------------PATHS FOR ORDERS 
+  # --------------------------------------------GET ALL ORDERS   
+  /orders:
+    get:
+      tags:
+        - Orders
+      security: 
+        - bearerAuth: 
+          - read      
+      summary: 'List all orders'
+      description: 'Admin level required'
+      operationId: getOrders
+      responses:
+        '200':
+          description: 'Successful operation - returns an array of orders'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ordersResp200'          
+        '403':
+          description: 'Admin Level required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403'                   
+        '404':
+          description: 'There are no orders in the database'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'           
+ 
+     
+  /orders/{id}:
+    # --------------------------------------------GET ORDER BY ID
+    get:
+      tags:
+        - Orders
+      security: 
+        - bearerAuth: 
+          - read
+      summary: 'Find Order by Id - Return a single order'
+      description: 'Admin level or account owner required '
+      operationId: getOrder
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of order to return'
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: 'Successful operation - returns the order with the Id specified by parameter'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/orderResp200'      
+        '403':
+          description: 'Admin Level or account owner required'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error403-2'         
+        '404':
+          description: 'The order not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'                   
+        '410':
+          description: 'The order is deleted (soft deleted)'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error410'                   
+        'default':
+          description: 'Internal error - Try again later'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDefault'       
+
                 
 #  -----------------------------------------------------------------COMPONENTS
 components:
@@ -1534,6 +1599,9 @@ components:
         message:
           type: string
           example: 'Successfully recovered ProductS'
+          
+
+      
   
       #  ----------------------------------SCHEMAS FOR ROLES
     role:
@@ -1652,7 +1720,7 @@ components:
           $ref: '#/components/schemas/messageSuccess'
 
           
-      #  ----------------------------------SCHEMAS FOR USERS
+    #  ----------------------------------SCHEMAS FOR USERS
     user:
       required:
         - id
@@ -1773,6 +1841,10 @@ components:
         role:
              $ref: '#/components/schemas/roleName'
 
+    usersResp:
+      type: array
+      items: 
+        $ref: '#/components/schemas/userResp'          
 
     userReqUpdate:
       type: object
@@ -1792,7 +1864,6 @@ components:
         password:
           type: string
           example: '***************'
-
 
     userResp200:
       type: object
@@ -1818,7 +1889,7 @@ components:
           type: object
           properties:
             users:
-              $ref: '#/components/schemas/userResp'     
+              $ref: '#/components/schemas/usersResp'     
         message:
           type: string
           example: 'Successfully recovered Users'
@@ -1837,6 +1908,9 @@ components:
         name:
           type: string
           example: 'user'
+        available:
+          type: boolean
+          example: true
         createdAt:
           type: string
           example: '|creation date and time|'
@@ -1846,13 +1920,6 @@ components:
         deletedAt:
           type: string
           example: '|null| or |delete date and time|'
-          
-    payMethodName:
-      properties:
-        name:
-          type: string
-          example: 'cash'
-
           
     payMethods:
       type: array
@@ -1874,6 +1941,9 @@ components:
         name:
           type: string
           example: 'user'
+        available:
+          type: boolean
+          example: 'true'
 
     payMethodResp200:
       type: object
@@ -1903,8 +1973,142 @@ components:
         message:
           type: string
           example: 'Successfully recovered Payment Methods'
-
           
+    #  ----------------------------------SCHEMAS FOR ORDERS
+    order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 7
+        date:
+          type: string
+          example: '|null| or |delete date and time|'
+        total_price:
+          type: integer
+          format: int64
+          example: 1400.00
+        status:
+          type: string
+          enum: ['new', 'confirmed', 'preparing', 'sending', 'cancelled', 'delivered']
+        createdAt:
+          type: string
+          example: '|creation date and time|'
+        updatedAt:
+          type: string
+          example: '|update date and time|'
+        deletedAt:
+          type: string
+          example: '|null| or |delete date and time|'
+        user_id:
+          type: integer
+          format: int64
+          example: 7
+        payment_method_id:
+          type: integer
+          format: int64
+          example: 7
+        products:
+             $ref: '#/components/schemas/orderPproducts'
+        user:
+             $ref: '#/components/schemas/orderUserResp'
+        payment_method:
+             $ref: '#/components/schemas/orderPayMethod'
+             
+    orders:
+      type: array
+      items: 
+        $ref: '#/components/schemas/order'     
+ 
+    orderResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            order:
+              $ref: '#/components/schemas/order'     
+        message:
+          $ref: '#/components/schemas/messageSuccess'
+
+    ordersResp200:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            orders:
+              $ref: '#/components/schemas/orders'     
+        message:
+          type: string
+          example: 'Successfully recovered Orders'       
+             
+    orderPproducts:
+      required:
+        - id
+        - name
+        - price
+        - image
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 7
+        name:
+          type: string
+          example: 'Burger Special Chesse'
+        price:
+          type: number
+          format: float
+          example: 700.00
+        image:
+          type: string
+          example: 'http://delilah/images/burger.png'
+        orders_has_products:
+          type: object
+          properties:
+            quantity:
+              type: integer
+              format: int64
+              example: 2 
+              
+    orderProducts:
+      type: array
+      items: 
+        $ref: '#/components/schemas/orderProducts'         
+        
+    orderUserResp:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'John Smith'
+        address:
+          type: string
+          example: 'TARDIST ST, 4242, Space 453, Gallifrey'
+        phone:
+          type: string
+          example: '+44 8812345678'
+        email:
+          type: string
+          example: 'jsmith@gmail.com'
+          
+    orderPayMethod:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'credit card'
+
+
     # -----------------------------------SCHEMA FOR Success message      
     messageSuccess:
       type: string
@@ -1950,7 +2154,19 @@ components:
         message:
           type: string
           example: '|parameter or field| |parameter or field name| is required | or has an incorrect format'  
- 
+
+    error401:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        data:
+          type: object
+        message:
+          type: string
+          example: '|entity| |entity name| already exists'     
+          
     error403:
       type: object
       properties:

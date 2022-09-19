@@ -7,7 +7,7 @@ const validateFields = async (req, res, next) => {
 
 	const error = { ok: false, data: {}, message: '' }; //object to record possible errors
 
-	if (!payMethod) error.message += 'Payment method is missing |';
+	if (!payMethod) error.message += 'Payment Method is missing |';
 	if (!products) error.message += 'Products are missing |';
 	if (error.message.length !== 0) return res.status(400).json(error);
 
@@ -74,7 +74,7 @@ const isAuthUser = async (req, res, next) => {
 		const userIdOrder = order.user_id;
 
 		if (user.role.name !== 'admin' && userId != userIdOrder)
-			return res.status(401).json({
+			return res.status(403).json({
 				ok: false,
 				data: {},
 				message: 'Administrator or data owner level required',

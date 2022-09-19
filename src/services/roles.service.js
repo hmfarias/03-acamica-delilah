@@ -76,7 +76,7 @@ const RolesService = () => {
 					message: 'Role is deleted - (soft deleted)',
 				};
 
-			const roleDeleted = await role.destroy({ where: { id: id } });
+			const roleDeleted = await role.destroy();
 
 			if (!roleDeleted)
 				return {
@@ -140,7 +140,7 @@ const RolesService = () => {
 			if (role.deletedAt === null)
 				return { code: 404, ok: false, data: {}, message: 'Role is not deleted' };
 
-			const roleRestored = await role.restore({ where: { id: id } });
+			const roleRestored = await role.restore();
 			if (!roleRestored)
 				return {
 					code: 500,
@@ -170,22 +170,12 @@ const RolesService = () => {
 			const { id } = req.params;
 			const { name } = req.body;
 
-			if (!name)
-				return {
-					code: 400,
-					ok: false,
-					data: {},
-					message: 'No data was sent - The role could not be updated',
-				};
-			const nameLow = name.toLowerCase();
-
 			const role = await Roles.findByPk(id);
 			if (!role) return { code: 404, ok: false, data: {}, message: 'Role not found' };
 
-			const updatedRole = await Roles.update(
-				{ name: name ? nameLow : product.name },
-				{ where: { id: id } }
-			);
+			const nameUpd = name ? name.toLowerCase() : role.name;
+
+			const updatedRole = await role.update({ name: nameUpd });
 
 			if (!updatedRole)
 				return {
@@ -199,7 +189,7 @@ const RolesService = () => {
 				code: 200,
 				ok: true,
 				data: { role },
-				message: `Successfully operation for role with ID: ${id} Name: ${name}`,
+				message: `Successfully operation for role with ID: ${id} Name: ${nameUpd}`,
 			};
 		} catch (error) {
 			return {
