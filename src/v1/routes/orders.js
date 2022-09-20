@@ -8,12 +8,12 @@ const {
 	isAuthUser,
 	validateFieldsUpdate,
 } = require('../../middlewares/ordersMiddleware');
+const { validateFieldParam } = require('../../middlewares/globalMiddleware');
 
 router
 	// //POST new order
-	// .post('/', validateFields, chekOrderExist, async (req, res) => {
 	.post('/', validateFields, async (req, res) => {
-		const { code, ok, data, message } = await OrdersService.createOrder(req, res);
+		const { code, ok, data, message } = await OrdersService.newOrder(req, res);
 		res.status(code).json({ ok, data, message });
 	})
 
@@ -30,21 +30,27 @@ router
 	})
 
 	// //UPDATE an order
-	.put('/newstatus/:id', isAdmin, validateFieldsUpdate, async (req, res) => {
+	.put('/update/:id', isAdmin, validateFieldsUpdate, async (req, res) => {
 		const { code, ok, data, message } = await OrdersService.updateOrderStatus(req, res);
 		res.status(code).json({ ok, data, message });
 	})
+	//UPDATE can only be done through the ID parameter
+	.put('/update', validateFieldParam, async (req, res) => {})
 
 	// //RESTORE order by ID param
-	.put('/:id', isAdmin, async (req, res) => {
+	.put('/restore/:id', isAdmin, async (req, res) => {
 		const { code, ok, data, message } = await OrdersService.restoreOrder(req.params.id);
 		res.status(code).json({ ok, data, message });
 	})
+	///RESTORE can only be done through the ID parameter
+	.put('/restore', validateFieldParam, async (req, res) => {})
 
 	//DELETE order by ID param
-	.delete('/:id', isAdmin, async (req, res) => {
+	.delete('/delete/:id', isAdmin, async (req, res) => {
 		const { code, ok, data, message } = await OrdersService.deleteOrder(req.params.id);
 		res.status(code).json({ ok, data, message });
-	});
+	})
+	///DELETE can only be done through the ID parameter
+	.delete('/delete', validateFieldParam, async (req, res) => {});
 
 module.exports = router;

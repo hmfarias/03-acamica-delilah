@@ -4,7 +4,6 @@ const PayMethodService = () => {
 	const getPayMethod = async (id) => {
 		try {
 			const payMethod = await PaymentMethods.findByPk(id, {
-				// attributes: ['id', 'name', 'available', 'deletedAt'],
 				paranoid: false,
 			});
 			if (!payMethod)
@@ -38,7 +37,6 @@ const PayMethodService = () => {
 		try {
 			const methods = await PaymentMethods.findAll({
 				paranoid: false,
-				// attributes: ['id', 'name', 'available', 'deletedAt'],
 			});
 			if (!methods)
 				return {

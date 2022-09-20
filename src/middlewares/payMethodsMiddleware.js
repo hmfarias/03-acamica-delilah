@@ -1,6 +1,6 @@
 const { PaymentMethods } = require('../models/index');
 
-//Check if a role already exists
+//Check if a pay method already exists
 const chekPayMethodExist = async (req, res, next) => {
 	try {
 		const { name } = req.body;
@@ -28,7 +28,7 @@ const chekPayMethodExist = async (req, res, next) => {
 	}
 };
 
-// Validate fields for a role registration
+// Validate fields for a pay method registration
 const validateFields = async (req, res, next) => {
 	const { name, available } = req.body;
 

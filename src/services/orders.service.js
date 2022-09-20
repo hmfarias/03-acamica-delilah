@@ -1,4 +1,4 @@
-const { getUserIdToken } = require('../helpers');
+const { getUserIdToken, formatOrderOutput } = require('../helpers');
 const {
 	Orders,
 	Products,
@@ -8,11 +8,10 @@ const {
 } = require('./../models/index');
 
 const OrdersService = () => {
-	const createOrder = async (req, res) => {
+	const newOrder = async (req, res) => {
 		try {
 			const { payment_method_id: payMethodId, products: productsOrder } = req.body;
-			// const payMethodId = req.body.paymethod;
-			// const productsOrder = req.body.products;
+
 			const userId = getUserIdToken(req.headers['authorization']);
 
 			const productsData = await Promise.all(
@@ -30,7 +29,7 @@ const OrdersService = () => {
 				return (acc += prod.quantity * parseFloat(prod.price));
 			}, 0);
 
-			const newOrder = await Orders.create({
+			const orderNew = await Orders.create({
 				date: Date.now(),
 				total_price: totalPrice,
 				user_id: userId,
@@ -41,7 +40,7 @@ const OrdersService = () => {
 				productsData.map(async (prod) => {
 					await OrdersHasProducts.create(
 						{
-							order_id: newOrder.id,
+							order_id: orderNew.id,
 							product_id: prod.id,
 							quantity: prod.quantity,
 						},
@@ -49,12 +48,31 @@ const OrdersService = () => {
 					);
 				})
 			);
+			const order = await Orders.findByPk(orderNew.id, {
+				include: [
+					{
+						model: Products,
+						attributes: ['id', 'name', 'price', 'image'],
+						through: { attributes: ['quantity'] },
+					},
+					{ model: Users, attributes: ['name', 'address', 'phone', 'email'] },
+					{ model: PaymentMethods, attributes: ['name'] },
+				],
+			});
+
+			if (!order)
+				return {
+					code: 500,
+					ok: false,
+					data: { order },
+					message: 'Unexpected error - The order could not be added',
+				};
 
 			return {
 				code: 200,
 				ok: true,
-				data: { order: newOrder },
-				message: 'Order was successfully registered',
+				data: { order },
+				message: `Successful operation for order ID: ${order.id}`,
 			};
 		} catch (error) {
 			return {
@@ -80,10 +98,10 @@ const OrdersService = () => {
 
 			if (order.deletedAt != null)
 				return {
-					code: 404,
+					code: 410,
 					ok: false,
 					data: {},
-					message: 'The Order is already deleted',
+					message: 'Order is deleted - (soft deleted)',
 				};
 
 			const deletedOrder = await order.destroy();
@@ -99,7 +117,7 @@ const OrdersService = () => {
 				code: 200,
 				ok: true,
 				data: { order },
-				message: `Order with Id: ${id} successfully deleted - (soft deleted)`,
+				message: `Successful operation for Order ID: ${id} `,
 			};
 		} catch (error) {
 			return {
@@ -116,7 +134,11 @@ const OrdersService = () => {
 			const order = await Orders.findByPk(id, {
 				paranoid: false,
 				include: [
-					{ model: Products, through: { attributes: ['quantity'] } },
+					{
+						model: Products,
+						attributes: ['id', 'name', 'price', 'image'],
+						through: { attributes: ['quantity'] },
+					},
 					{ model: Users, attributes: ['name', 'address', 'phone', 'email'] },
 					{ model: PaymentMethods, attributes: ['name'] },
 				],
@@ -156,7 +178,11 @@ const OrdersService = () => {
 		try {
 			const ordersDashboard = await Orders.findAll({
 				include: [
-					{ model: Products, through: { attributes: ['quantity'] } },
+					{
+						model: Products,
+						attributes: ['id', 'name', 'price', 'image'],
+						through: { attributes: ['quantity'] },
+					},
 					{ model: Users, attributes: ['name', 'address', 'phone', 'email'] },
 					{ model: PaymentMethods, attributes: ['name'] },
 				],
@@ -189,7 +215,11 @@ const OrdersService = () => {
 			const order = await Orders.findByPk(id, {
 				paranoid: false,
 				include: [
-					{ model: Products, through: { attributes: ['quantity'] } },
+					{
+						model: Products,
+						attributes: ['id', 'name', 'price', 'image'],
+						through: { attributes: ['quantity'] },
+					},
 					{ model: Users, attributes: ['name', 'address', 'phone', 'email'] },
 					{ model: PaymentMethods, attributes: ['name'] },
 				],
@@ -212,7 +242,7 @@ const OrdersService = () => {
 				code: 200,
 				ok: true,
 				data: { order },
-				message: `Order with Id: ${id} successfully restored`,
+				message: `Successful operation for Order ID: ${id}`,
 			};
 		} catch (error) {
 			return {
@@ -229,7 +259,18 @@ const OrdersService = () => {
 			const orderId = req.params.id;
 			const orderStatus = req.body.status;
 
-			const order = await Orders.findByPk(orderId);
+			const order = await Orders.findByPk(orderId, {
+				paranoid: false,
+				include: [
+					{
+						model: Products,
+						attributes: ['id', 'name', 'price', 'image'],
+						through: { attributes: ['quantity'] },
+					},
+					{ model: Users, attributes: ['name', 'address', 'phone', 'email'] },
+					{ model: PaymentMethods, attributes: ['name'] },
+				],
+			});
 
 			if (!order) return { code: 404, ok: false, data: {}, message: 'Order not found' };
 
@@ -241,7 +282,7 @@ const OrdersService = () => {
 				code: 200,
 				ok: true,
 				data: { order },
-				message: `Successfully updated Order Status - Order Id = ${orderId}, Status: ${orderStatus}`,
+				message: `Successful operation for Order ID: ${orderId} `,
 			};
 		} catch (error) {
 			return {
@@ -254,7 +295,7 @@ const OrdersService = () => {
 	};
 
 	return {
-		createOrder,
+		newOrder,
 		deleteOrder,
 		getOrder,
 		getOrders,

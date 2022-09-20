@@ -1,45 +1,40 @@
 const { Orders, Roles, Users } = require('../models/index');
 const { getUserIdToken } = require('../helpers');
 
-// Validate fields for a product registration
+// Validate fields for a order registration
 const validateFields = async (req, res, next) => {
 	const { payment_method_id: payMethod, products } = req.body;
 
 	const error = { ok: false, data: {}, message: '' }; //object to record possible errors
 
-	if (!payMethod) error.message += 'Payment Method is missing |';
-	if (!products) error.message += 'Products are missing |';
-	if (error.message.length !== 0) return res.status(400).json(error);
-
-	if (products.length === 0) error.message += 'There are no products in the order |';
+	if (!payMethod || payMethod == 0) error.message += 'Payment Method is required |';
+	if (!products || products.length == 0) error.message += 'Products are required |';
 	if (error.message.length !== 0) return res.status(400).json(error);
 
 	products.map((prod, index) => {
-		if (!prod.id) error.message += `Missing id for product ${index + 1} sent |`;
-		if (!prod.quantity)
-			error.message += `Missing quantity for product ${index + 1} sent |`;
+		if (!prod.id || prod.id == 0)
+			error.message += `Id for product ${index + 1} is required |`;
+		if (!prod.quantity || prod.quantity == 0)
+			error.message += `Quantity for product ${index + 1} is required |`;
 	});
 	if (error.message.length !== 0) return res.status(400).json(error);
 
 	next();
 };
 
-// Validate fields for a product registration
+// Validate fields for a order update
 const validateFieldsUpdate = async (req, res, next) => {
 	try {
 		const { status } = req.body;
-		console.log('status-----------');
-		console.log(status);
 
 		const error = { ok: false, data: {}, message: '' }; //object to record possible errors
 
-		if (!status || status.length === 0)
-			error.message += 'New status for the order is missing';
+		if (!status || status.length === 0) error.message += 'Status is required |';
 		if (error.message.length !== 0) return res.status(400).json(error);
 
 		const possibleStatus = 'new confirmed preparing sending cancelled delivered';
 		if (!possibleStatus.includes(status))
-			error.message += `Status |${status}| not supported - Only: new | confirmed | preparing | sending | cancelled | delivered, admitted`;
+			error.message += `Status |${status}| not supported - Only: new | confirmed | preparing | sending | cancelled | delivered |, admitted`;
 		if (error.message.length !== 0) return res.status(400).json(error);
 
 		next();
