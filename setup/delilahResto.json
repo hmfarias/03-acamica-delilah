@@ -1,813 +1,3724 @@
 {
-	"openapi": "3.0.0",
-	"info": {
-		"title": "Delilah Resto ",
-		"description": "API for delicious food orders. As a customer you can register, see the list of our products and place an order.Restaurant managers have the ability to receive orders and update them..",
-		"termsOfService": "https://github.com/hmfarias/03-acamica-delilah#readme",
-		"contact": {
-			"name": "Marcelo Farias",
-			"email": "hmfarias7@gmail.com"
-		},
-		"version": "1.0.0"
-	},
-	"servers": [
-		{
-			"description": "Local Server",
-			"url": "http://localhost:3000/api/v1"
-		}
-	],
-	"tags": [
-		{
-			"name": "Products",
-			"description": "Everything about Products availables in Delilah Resto"
-		},
-		{
-			"name": "Users",
-			"description": "Everything about Delilah Resto Users"
-		},
-		{
-			"name": "Orders",
-			"description": "Everything about Delilah Resto Orders"
-		}
-	],
-	"paths": {
-		"/products": {
-			"post": {
-				"tags": ["Products"],
-				"security": [
-					{
-						"bearerAuth": []
-					}
-				],
-				"summary": "Add a new dish to Delilah Resto's menu",
-				"description": "Admin level required",
-				"operationId": "newProduct",
-				"requestBody": {
-					"description": "Required to post a new product",
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/productReq"
-							}
-						}
-					},
-					"required": true
-				},
-				"responses": {
-					"200": {
-						"description": "Successful operation - returns the added product",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/productResp200"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Some required fields is not present",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error400"
-								}
-							}
-						}
-					},
-					"403": {
-						"description": "Admin Level required",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error403"
-								}
-							}
-						}
-					},
-					"409": {
-						"description": "Product already exists",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error409"
-								}
-							}
-						}
-					},
-					"500": {
-						"description": "The product could not be registered",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error500"
-								}
-							}
-						}
-					},
-					"default": {
-						"description": "Internal error - Try again later",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/errorDefault"
-								}
-							}
-						}
-					}
-				}
-			},
-			"get": {
-				"tags": ["Products"],
-				"security": [
-					{
-						"bearerAuth": []
-					}
-				],
-				"summary": "List all products",
-				"description": "Returns a list of products",
-				"operationId": "getProducts",
-				"responses": {
-					"200": {
-						"description": "Successful operation - returns an array of products",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/productsResp200"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "There are no products in the database",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error404"
-								}
-							}
-						}
-					},
-					"default": {
-						"description": "Internal error - Try again later",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/errorDefault"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/products/{id}": {
-			"get": {
-				"tags": ["Products"],
-				"security": [
-					{
-						"bearerAuth": ["read"]
-					}
-				],
-				"summary": "Find product by Id",
-				"description": "Returns a single product",
-				"operationId": "getProduct",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "ID of product to return",
-						"required": true,
-						"schema": {
-							"type": "integer",
-							"format": "int64"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Successful operation - returns the added product",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/productResp200"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "The product not found",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error404"
-								}
-							}
-						}
-					},
-					"410": {
-						"description": "The product is deleted (soft deleted)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error410"
-								}
-							}
-						}
-					},
-					"default": {
-						"description": "Internal error - Try again later",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/errorDefault"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/products/update/{id}": {
-			"put": {
-				"tags": ["Products"],
-				"security": [
-					{
-						"bearerAuth": ["read"]
-					}
-				],
-				"summary": "Update an existent product",
-				"description": "Admin level required",
-				"operationId": "updateProduct",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "ID of product that needs to be restored",
-						"required": true,
-						"schema": {
-							"type": "integer",
-							"format": "int64"
-						}
-					}
-				],
-				"requestBody": {
-					"description": "Required to update a product",
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/productReqUpdate"
-							}
-						}
-					},
-					"required": true
-				},
-				"responses": {
-					"200": {
-						"description": "Successful operation - returns the updated product",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/productResp200"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "The Id field is required together with at least one of the following fields: name, price, image or available",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error400"
-								}
-							}
-						}
-					},
-					"403": {
-						"description": "Admin Level required",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error403"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Product not found",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error404"
-								}
-							}
-						}
-					},
-					"500": {
-						"description": "The product could not be updated",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error500"
-								}
-							}
-						}
-					},
-					"default": {
-						"description": "Unexpected error",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/errorDefault"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/products/delete/{id}": {
-			"delete": {
-				"tags": ["Products"],
-				"security": [
-					{
-						"bearerAuth": ["read"]
-					}
-				],
-				"summary": "Deletes a product by Id",
-				"description": "Delete a product",
-				"operationId": "deleteProduct",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "ID of product that needs to be deleted",
-						"required": true,
-						"schema": {
-							"type": "integer",
-							"format": "int64"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Successful operation - returns the deleted product",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/productResp200"
-								}
-							}
-						}
-					},
-					"403": {
-						"description": "Admin Level required",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error403"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "The product not found",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error404"
-								}
-							}
-						}
-					},
-					"410": {
-						"description": "The product is deleted (soft deleted)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error410"
-								}
-							}
-						}
-					},
-					"500": {
-						"description": "The product could not be deleted",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error500"
-								}
-							}
-						}
-					},
-					"default": {
-						"description": "Internal error - Try again later",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/errorDefault"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/products/restore/{id}": {
-			"put": {
-				"tags": ["Products"],
-				"security": [
-					{
-						"bearerAuth": ["read"]
-					}
-				],
-				"summary": "Restore a product by Id",
-				"description": "restore a product",
-				"operationId": "restoreProduct",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"description": "ID of product that needs to be restored",
-						"required": true,
-						"schema": {
-							"type": "integer",
-							"format": "int64"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Successful operation - returns the restored product",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/productResp200"
-								}
-							}
-						}
-					},
-					"403": {
-						"description": "Admin Level required",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error403"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "The product not found",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error404"
-								}
-							}
-						}
-					},
-					"406": {
-						"description": "The product is not deleted",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error406"
-								}
-							}
-						}
-					},
-					"410": {
-						"description": "The product is deleted (soft deleted)",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error410"
-								}
-							}
-						}
-					},
-					"500": {
-						"description": "The product could not be deleted",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/error500"
-								}
-							}
-						}
-					},
-					"default": {
-						"description": "Internal error - Try again later",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/errorDefault"
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	},
-	"components": {
-		"securitySchemes": {
-			"bearerAuth": {
-				"type": "http",
-				"scheme": "bearer",
-				"bearerFormat": "JWT"
-			}
-		},
-		"schemas": {
-			"productReq": {
-				"required": ["name", "price", "image"],
-				"type": "object",
-				"properties": {
-					"name": {
-						"type": "string",
-						"example": "Burger Special Chesse"
-					},
-					"price": {
-						"type": "number",
-						"format": "float",
-						"example": 700
-					},
-					"image": {
-						"type": "string",
-						"example": "http://delilah/images/burger.png"
-					}
-				}
-			},
-			"productReqUpdate": {
-				"required": ["id"],
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int64",
-						"example": 7
-					},
-					"name": {
-						"type": "string",
-						"example": "Burger Special Chesse"
-					},
-					"price": {
-						"type": "number",
-						"format": "float",
-						"example": 700
-					},
-					"image": {
-						"type": "string",
-						"example": "http://delilah/images/burger.png"
-					},
-					"available": {
-						"type": "boolean",
-						"example": true
-					}
-				}
-			},
-			"product": {
-				"required": ["id", "name", "price", "image"],
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int64",
-						"example": 7
-					},
-					"name": {
-						"type": "string",
-						"example": "Burger Special Chesse"
-					},
-					"price": {
-						"type": "number",
-						"format": "float",
-						"example": 700
-					},
-					"image": {
-						"type": "string",
-						"example": "http://delilah/images/burger.png"
-					},
-					"available": {
-						"type": "boolean",
-						"example": true
-					}
-				}
-			},
-			"products": {
-				"type": "array",
-				"items": {
-					"$ref": "#/components/schemas/product"
-				}
-			},
-			"productResp200": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": true
-					},
-					"data": {
-						"type": "object",
-						"properties": {
-							"product": {
-								"$ref": "#/components/schemas/product"
-							}
-						}
-					},
-					"message": {
-						"type": "string",
-						"example": "Successful operation for Product ID: [product id], Name: [product name]"
-					}
-				}
-			},
-			"productsResp200": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": true
-					},
-					"data": {
-						"type": "object",
-						"properties": {
-							"products": {
-								"$ref": "#/components/schemas/products"
-							}
-						}
-					},
-					"message": {
-						"type": "string",
-						"example": "Successfully recovered ProductS"
-					}
-				}
-			},
-			"productRespPost": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": false
-					},
-					"data": {
-						"type": "object"
-					},
-					"message": {
-						"type": "string",
-						"example": "The product could not be registered"
-					}
-				}
-			},
-			"productResp404": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": false
-					},
-					"data": {
-						"type": "object"
-					},
-					"message": {
-						"type": "string",
-						"example": "Product not found"
-					}
-				}
-			},
-			"errorDefault": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": false
-					},
-					"data": {
-						"type": "object",
-						"properties": {
-							"error": {
-								"type": "string",
-								"example": "|Error|"
-							}
-						}
-					},
-					"message": {
-						"type": "string",
-						"example": "Internal error - Try again later"
-					}
-				}
-			},
-			"error400": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": false
-					},
-					"data": {
-						"type": "object"
-					},
-					"message": {
-						"type": "string",
-						"example": "|field| is required |"
-					}
-				}
-			},
-			"error403": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": false
-					},
-					"data": {
-						"type": "object"
-					},
-					"message": {
-						"type": "string",
-						"example": "Admin level required"
-					}
-				}
-			},
-			"error404": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": false
-					},
-					"data": {
-						"type": "object"
-					},
-					"message": {
-						"type": "string",
-						"example": "|entity| not found"
-					}
-				}
-			},
-			"error406": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": false
-					},
-					"data": {
-						"type": "object"
-					},
-					"message": {
-						"type": "string",
-						"example": "|entity| is not deleted"
-					}
-				}
-			},
-			"error409": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": false
-					},
-					"data": {
-						"type": "object"
-					},
-					"message": {
-						"type": "string",
-						"example": "|entity| already exists"
-					}
-				}
-			},
-			"error410": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": false
-					},
-					"data": {
-						"type": "object"
-					},
-					"message": {
-						"type": "string",
-						"example": "|entity| is deleted - (soft deleted)"
-					}
-				}
-			},
-			"error500": {
-				"type": "object",
-				"properties": {
-					"ok": {
-						"type": "boolean",
-						"example": false
-					},
-					"data": {
-						"type": "object"
-					},
-					"message": {
-						"type": "string",
-						"example": "Unexpected error - |message|"
-					}
-				}
-			}
-		}
-	}
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Delilah Resto ",
+    "description": "API for delicious food orders. As a customer you can register, see the list of our products and place an order.Restaurant managers have the ability to receive orders and update them..",
+    "termsOfService": "https://github.com/hmfarias/03-acamica-delilah#readme",
+    "contact": {
+      "name": "Marcelo Farias",
+      "email": "hmfarias7@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "description": "Local Server",
+      "url": "http://localhost:3000/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Everything about Delilah Resto Users"
+    },
+    {
+      "name": "Products",
+      "description": "Everything about Products availables in Delilah Resto"
+    },
+    {
+      "name": "Roles",
+      "description": "Everything about users Roles availables in Delilah Resto"
+    },
+    {
+      "name": "PayMethods",
+      "description": "Everything about Delilah Resto Paymwent Methods"
+    },
+    {
+      "name": "Orders",
+      "description": "Everything about Delilah Resto Orders"
+    }
+  ],
+  "paths": {
+    "/register": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Register a new User to Delilah Resto's system",
+        "description": "",
+        "operationId": "signUp",
+        "requestBody": {
+          "description": "Required to register a new User",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the added User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields is not present",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error409"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The User could not be registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Authenticate a User to the system",
+        "description": "",
+        "operationId": "signIn",
+        "requestBody": {
+          "description": "Required to autenticate an User",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the added User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields is not present",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The User could not be registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "List all Users",
+        "description": "Admin level required",
+        "operationId": "getUsers",
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns an array of Users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/usersResp200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There are no Users in the database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Find user by Id - Return a single User",
+        "description": "Admin level or account owner required ",
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of User to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the User with the Id specified by parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userResp200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level or account owner required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403-2"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The User is deleted (soft deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error410"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/update/{id}": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Update an existent User",
+        "description": "Admin level required, or be the account owner - You can update the [name], [email], [phone] and [password] fields - You can not update the [username] or [user role] fields",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of User that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Required to update a User",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userReqUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the updated User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "[Id] parameter or some field is missing or has an incorrect format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level or data owner required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403-2"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The User could not be updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Deletes a User by Id",
+        "description": "Admin level required",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of User that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the deleted User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The User is already deleted (soft deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error410"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The User could not be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/restore/{id}": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Restore a User by Id",
+        "description": "Admin Level required",
+        "operationId": "restoreUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of User that needs to be restored",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the restored User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "The User is not deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error406"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The User could not be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Add a new dish to Delilah Resto's menu",
+        "description": "Admin level required",
+        "operationId": "newProduct",
+        "requestBody": {
+          "description": "Required to post a new product",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/productReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the added product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/productResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields is not present",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Product already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error409"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The product could not be registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "List all Products",
+        "description": "Returns a list of Products",
+        "operationId": "getProducts",
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns an array of Products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/productsResp200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There are no Products in the database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Find product by Id",
+        "description": "Returns a single product",
+        "operationId": "getProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of product to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the product with the Id specified by parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/productResp200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The product not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The product is deleted (soft deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error410"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/update/{id}": {
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Update an existent product",
+        "description": "Admin level required",
+        "operationId": "updateProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of product that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Required to update a product",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/productReqUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the updated product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/productResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required together with at least one of the following fields: [name], [price], [image] or [available]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The product could not be updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Deletes a product by Id",
+        "description": "Admin level required",
+        "operationId": "deleteProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of product that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the deleted product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/productResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The product not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The product is already deleted (soft deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error410"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The product could not be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/restore/{id}": {
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Restore a product by Id",
+        "description": "Admin level required",
+        "operationId": "restoreProduct",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of product that needs to be restored",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the restored product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/productResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The product not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "The product is not deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error406"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The product could not be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles": {
+      "post": {
+        "tags": [
+          "Roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Add a new user Role to Delilah Resto's system",
+        "description": "Admin level required",
+        "operationId": "newRole",
+        "requestBody": {
+          "description": "Required to post a new Role",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/roleReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the added Role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/roleResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields is not present",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Role already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error409"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Role could not be registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "List all Roles",
+        "description": "Admin level required",
+        "operationId": "getRoles",
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns an array of Roles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/rolesResp200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There are no Roles in the database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles/{id}": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Find role by Id - Return a single Role",
+        "description": "Admin level required",
+        "operationId": "getRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Role to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the Role with the Id specified by parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/roleResp200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The Role is already deleted (soft deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error410"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles/update/{id}": {
+      "put": {
+        "tags": [
+          "Roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Update an existent Role",
+        "description": "Admin level required",
+        "operationId": "updateRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Role that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Required to update a Role",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/roleReqUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the updated Role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/roleResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "[Id] parameter or [name] field are not present",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Role could not be updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Deletes a Role by Id",
+        "description": "Admin level required",
+        "operationId": "deleteRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Role that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the deleted Role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/roleResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The Role is already deleted (soft deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error410"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Role could not be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles/restore/{id}": {
+      "put": {
+        "tags": [
+          "Roles"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Restore a Role by Id",
+        "description": "Admin Level required",
+        "operationId": "restoreRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Role that needs to be restored",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the restored Role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/roleResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "The Role is not deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error406"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Role could not be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paymethods": {
+      "post": {
+        "tags": [
+          "PayMethods"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Add a new Payment Method to Delilah Resto's system",
+        "description": "Admin level required",
+        "operationId": "newPayMethod",
+        "requestBody": {
+          "description": "Required to post a new Payment Method",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/payMethodReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the added Payment Method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payMethodResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields is not present",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Payment Method already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error409"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Payment Method could not be registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "PayMethods"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "List all Payment Method",
+        "description": "Admin level required",
+        "operationId": "getPayMethods",
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns an array of Payment Methods",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payMethodsResp200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There are no Payment Methods in the database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paymethods/{id}": {
+      "get": {
+        "tags": [
+          "PayMethods"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Find payment method by Id - Return a single Payment Method",
+        "description": "Admin level required",
+        "operationId": "getPayMethod",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Payment Method to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the Payment Method with the Id specified by parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payMethodResp200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The  Payment Method not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The Payment Method is already deleted (soft deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error410"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paymethods/update/{id}": {
+      "put": {
+        "tags": [
+          "PayMethods"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Update an existent Payment Method",
+        "description": "Admin level required - You can update the [name], or [available] fields.",
+        "operationId": "updatePayMethod",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Payment Method that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Required to update a Payment Method",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/payMethodReqUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the updated Payment Method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payMethodResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "[Id] parameter, [name] or [available] fields are not present",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Payment Method not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Payment Method could not be updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paymethods/delete/{id}": {
+      "delete": {
+        "tags": [
+          "PayMethods"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Deletes a Payment Method by Id",
+        "description": "Admin level required",
+        "operationId": "deletePayMethod",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Payment Method that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the deleted Payment Method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payMethodResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Payment Method not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The Payment Method is already deleted (soft deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error410"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Payment Method could not be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paymethods/restore/{id}": {
+      "put": {
+        "tags": [
+          "PayMethods"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Restore a  Payment Method by Id",
+        "description": "Admin Level required",
+        "operationId": "restorePayMethod",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Payment Method that needs to be restored",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the restored Payment Method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/payMethodResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Payment Method not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "The Payment Method is not deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error406"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Payment Method could not be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Register a new order in Delilah Resto's system",
+        "description": "",
+        "operationId": "newOrder",
+        "requestBody": {
+          "description": "Required to register a new order",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/orderReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the added order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/orderResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some required fields is not present",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The order could not be registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "List all orders",
+        "description": "Admin level required",
+        "operationId": "getOrders",
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns an array of orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ordersResp200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There are no orders in the database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Find Order by Id - Return a single order",
+        "description": "Admin level or account owner required ",
+        "operationId": "getOrder",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of order to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the order with the Id specified by parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/orderResp200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level or account owner required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403-2"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The order not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The order is deleted (soft deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error410"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/update/{id}": {
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Update the status of an order",
+        "description": "Admin level required - You can update the [status] field.",
+        "operationId": "updateOrderStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Order that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Required to update a Order",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/orderReqUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the updated Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/orderResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "[Id} Parameter or [Status] field are not presents or the status sent is incorrect, Only: | new | confirmed | preparing | sending | cancelled | delivered |, stats are admitted\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Status"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Order could not be updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Deletes an Order by Id",
+        "description": "Admin level required",
+        "operationId": "deleteOrder",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Order that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the deleted Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/orderResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Order not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The Order is already deleted (soft deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error410"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Order could not be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/restore/{id}": {
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              "read"
+            ]
+          }
+        ],
+        "summary": "Restore an Order by Id",
+        "description": "Admin Level required",
+        "operationId": "restoreOrder",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of Order that needs to be restored",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation - returns the restored Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/orderResp200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The [Id] parameter is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400Param"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin Level required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Order not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "The Order is not deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error406"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The Order could not be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error500"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Internal error - Try again later",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorDefault"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "loginReq": {
+        "required": [
+          "username",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "jSmith"
+          },
+          "password": {
+            "type": "string",
+            "example": "********"
+          }
+        }
+      },
+      "loginResp": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIzI1NiIsInR5cCI6IkpjXVCJ9. ..."
+          }
+        }
+      },
+      "loginResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "$ref": "#/components/schemas/loginResp"
+              }
+            }
+          },
+          "message": {
+            "$ref": "#/components/schemas/messageSuccess"
+          }
+        }
+      },
+      "userReq": {
+        "required": [
+          "username",
+          "name",
+          "email",
+          "phone",
+          "address",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "jSmith"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Smith"
+          },
+          "email": {
+            "type": "string",
+            "example": "jsmith@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+44 8812345678"
+          },
+          "address": {
+            "type": "string",
+            "example": "TARDIST ST, 4242, Space 453, Gallifrey"
+          },
+          "password": {
+            "type": "string",
+            "example": "********"
+          },
+          "role_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": "1"
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 7
+          },
+          "username": {
+            "type": "string",
+            "example": "jSmith"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Smith"
+          },
+          "email": {
+            "type": "string",
+            "example": "jsmith@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+44 8812345678"
+          },
+          "address": {
+            "type": "string",
+            "example": "TARDIST ST, 4242, Space 453, Gallifrey"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "|creation date and time|"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "|update date and time|"
+          },
+          "deletedAt": {
+            "type": "string",
+            "example": "|null| or |delete date and time|"
+          },
+          "role": {
+            "$ref": "#/components/schemas/roleName"
+          }
+        }
+      },
+      "users": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/user"
+        }
+      },
+      "userReqUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Smith"
+          },
+          "email": {
+            "type": "string",
+            "example": "jsmith@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+44 8812345678"
+          },
+          "address": {
+            "type": "string",
+            "example": "TARDIST ST, 4242, Space 453, Gallifrey"
+          },
+          "password": {
+            "type": "string",
+            "example": "***************"
+          }
+        }
+      },
+      "userResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "$ref": "#/components/schemas/user"
+              }
+            }
+          },
+          "message": {
+            "$ref": "#/components/schemas/messageSuccess"
+          }
+        }
+      },
+      "usersResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "users": {
+                "$ref": "#/components/schemas/users"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "Successfully recovered Users"
+          }
+        }
+      },
+      "product": {
+        "required": [
+          "id",
+          "name",
+          "price",
+          "image"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 7
+          },
+          "name": {
+            "type": "string",
+            "example": "Burger Special Chesse"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "example": 700
+          },
+          "image": {
+            "type": "string",
+            "example": "http://delilah/images/burger.png"
+          },
+          "available": {
+            "type": "boolean",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "|creation date and time|"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "|update date and time|"
+          },
+          "deletedAt": {
+            "type": "string",
+            "example": "|null| or |delete date and time|"
+          }
+        }
+      },
+      "products": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/product"
+        }
+      },
+      "productReq": {
+        "required": [
+          "name",
+          "price",
+          "image"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Burger Special Chesse"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "example": 700
+          },
+          "image": {
+            "type": "string",
+            "example": "http://delilah/images/burger.png"
+          },
+          "available": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "productReqUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Burger Special Chesse"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "example": 700
+          },
+          "image": {
+            "type": "string",
+            "example": "http://delilah/images/burger.png"
+          },
+          "available": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "productResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "product": {
+                "$ref": "#/components/schemas/product"
+              }
+            }
+          },
+          "message": {
+            "$ref": "#/components/schemas/messageSuccess"
+          }
+        }
+      },
+      "productsResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "products": {
+                "$ref": "#/components/schemas/products"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "Successfully recovered ProductS"
+          }
+        }
+      },
+      "role": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 7
+          },
+          "name": {
+            "type": "string",
+            "example": "user"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "|creation date and time|"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "|update date and time|"
+          },
+          "deletedAt": {
+            "type": "string",
+            "example": "|null| or |delete date and time|"
+          }
+        }
+      },
+      "roleName": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "user"
+          }
+        }
+      },
+      "roles": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/role"
+        }
+      },
+      "roleReq": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "user"
+          }
+        }
+      },
+      "roleReqUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "user"
+          }
+        }
+      },
+      "roleResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "role": {
+                "$ref": "#/components/schemas/role"
+              }
+            }
+          },
+          "message": {
+            "$ref": "#/components/schemas/messageSuccess"
+          }
+        }
+      },
+      "rolesResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "roles": {
+                "$ref": "#/components/schemas/roles"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "Successfully recovered Roles"
+          }
+        }
+      },
+      "payMethod": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 7
+          },
+          "name": {
+            "type": "string",
+            "example": "user"
+          },
+          "available": {
+            "type": "boolean",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "|creation date and time|"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "|update date and time|"
+          },
+          "deletedAt": {
+            "type": "string",
+            "example": "|null| or |delete date and time|"
+          }
+        }
+      },
+      "payMethods": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/payMethod"
+        }
+      },
+      "payMethodReq": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "user"
+          }
+        }
+      },
+      "payMethodReqUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "user"
+          },
+          "available": {
+            "type": "boolean",
+            "example": "true"
+          }
+        }
+      },
+      "payMethodResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "payMethod": {
+                "$ref": "#/components/schemas/payMethod"
+              }
+            }
+          },
+          "message": {
+            "$ref": "#/components/schemas/messageSuccess"
+          }
+        }
+      },
+      "payMethodsResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "payMethods": {
+                "$ref": "#/components/schemas/payMethods"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "Successfully recovered Payment Methods"
+          }
+        }
+      },
+      "order": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 7
+          },
+          "date": {
+            "type": "string",
+            "example": "|null| or |delete date and time|"
+          },
+          "total_price": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1400
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "new",
+              "confirmed",
+              "preparing",
+              "sending",
+              "cancelled",
+              "delivered"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "|creation date and time|"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "|update date and time|"
+          },
+          "deletedAt": {
+            "type": "string",
+            "example": "|null| or |delete date and time|"
+          },
+          "user_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 7
+          },
+          "payment_method_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 7
+          },
+          "products": {
+            "$ref": "#/components/schemas/orderProducts"
+          },
+          "user": {
+            "$ref": "#/components/schemas/orderUserResp"
+          },
+          "payment_method": {
+            "$ref": "#/components/schemas/orderPayMethod"
+          }
+        }
+      },
+      "orders": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/order"
+        }
+      },
+      "orderReq": {
+        "required": [
+          "payment_method_id",
+          "products"
+        ],
+        "type": "object",
+        "properties": {
+          "payment_method_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "products": {
+            "$ref": "#/components/schemas/orderProductsPost"
+          }
+        }
+      },
+      "orderResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "order": {
+                "$ref": "#/components/schemas/order"
+              }
+            }
+          },
+          "message": {
+            "$ref": "#/components/schemas/messageSuccess"
+          }
+        }
+      },
+      "ordersResp200": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "orders": {
+                "$ref": "#/components/schemas/orders"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "Successfully recovered Orders"
+          }
+        }
+      },
+      "orderProduct": {
+        "required": [
+          "id",
+          "name",
+          "price",
+          "image"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 7
+          },
+          "name": {
+            "type": "string",
+            "example": "Burger Special Chesse"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "example": 700
+          },
+          "image": {
+            "type": "string",
+            "example": "http://delilah/images/burger.png"
+          },
+          "orders_has_products": {
+            "type": "object",
+            "properties": {
+              "quantity": {
+                "type": "integer",
+                "format": "int64",
+                "example": 2
+              }
+            }
+          }
+        }
+      },
+      "orderProducts": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/orderProduct"
+        }
+      },
+      "orderProductPost": {
+        "required": [
+          "id",
+          "quantity"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 7
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int64",
+            "example": 2
+          }
+        }
+      },
+      "orderProductsPost": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/orderProductPost"
+        }
+      },
+      "orderUserResp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Smith"
+          },
+          "address": {
+            "type": "string",
+            "example": "TARDIST ST, 4242, Space 453, Gallifrey"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+44 8812345678"
+          },
+          "email": {
+            "type": "string",
+            "example": "jsmith@gmail.com"
+          }
+        }
+      },
+      "orderPayMethod": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "credit card"
+          }
+        }
+      },
+      "orderReqUpdate": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "new",
+              "confirmed",
+              "preparing",
+              "sending",
+              "cancelled",
+              "delivered"
+            ]
+          }
+        }
+      },
+      "messageSuccess": {
+        "type": "string",
+        "example": "Successful operation for |entity| ID: |entity ID|, Name: |entity name|"
+      },
+      "errorDefault": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "|Error|"
+              }
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "Internal error - Try again later"
+          }
+        }
+      },
+      "error400": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "|field| field is required |"
+          }
+        }
+      },
+      "error400Param": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "|parameter or field| |parameter or field name| is required | or has an incorrect format"
+          }
+        }
+      },
+      "error400Status": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "|parameter| |parameter name| or Status field is required or Status |status name| not suported - Only: new | confirmed | preparing | sending | cancelled | delivered, admitted"
+          }
+        }
+      },
+      "error403": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "Admin level required"
+          }
+        }
+      },
+      "error403-2": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "Admin level or data owner required"
+          }
+        }
+      },
+      "error404": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "|entity| not found"
+          }
+        }
+      },
+      "error406": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "|entity| is not deleted"
+          }
+        }
+      },
+      "error409": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "|entity| |entity name| already exists"
+          }
+        }
+      },
+      "error410": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "|entity| is deleted - (soft deleted)"
+          }
+        }
+      },
+      "error500": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": false
+          },
+          "data": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string",
+            "example": "Unexpected error - |message|"
+          }
+        }
+      }
+    }
+  }
 }
