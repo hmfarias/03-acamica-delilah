@@ -1,5 +1,7 @@
 #Delilah Resto
 
+<h1> Delilah Resto </h1>
+
 ##**TOPICS / TEMAS:**
 
 - **[Repository](#repository) / [Repositorio](#repositorio)**
@@ -10,6 +12,7 @@
 > **ENGLISH:**
 
 ##Repository
+
 You can download the project from the following GitHub repository:
 https://github.com/hmfarias/03-acamica-delilah.git
 [(return)](#delilah-resto)
