@@ -1,6 +1,6 @@
 #Delilah Resto
 
-> **TOPICS / TEMAS:**
+##**TOPICS / TEMAS:**
 
 - **[Repository](#repository) / [Repositorio](#repositorio)**
 - **[Technology Stack](#technology-stack) / [Tecnologías utilizadas](#tecnologías-utilizadas)**
@@ -8,7 +8,13 @@
 - **[Installation instructions](#installation-instructions) / [Instrucciones de Instalación](#instrucciones-de-instalación)**
 
 > **ENGLISH:**
-> ###Technology Stack
+
+##Repository
+You can download the project from the following GitHub repository:
+https://github.com/hmfarias/03-acamica-delilah.git
+[(return)](#delilah-resto)
+
+##Technology Stack
 
 - NodeJS
 - Nodemon
@@ -22,11 +28,7 @@
 
 [(return)](#delilah-resto)
 
-###Repository
-https://github.com/hmfarias/03-acamica-delilah.git
-[(return)](#delilah-resto)
-
-###General description
+##General description
 
 Delilah Resto is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.
 
@@ -131,10 +133,10 @@ Finally, the rate limit policy was incorporated to allow control of incoming tra
 
 [(return)](#delilah-resto)
 
-###Installation instructions
+##Installation instructions
 [(return)](#delilah-resto)
 
-####Environment File
+####**Environment File**
 [(return)](#delilah-resto)
 
 > **ESPAÑOL:**
@@ -153,11 +155,11 @@ Finally, the rate limit policy was incorporated to allow control of incoming tra
 
 [(return)](#delilah-resto)
 
-####Repositorio
+##Repositorio
 https://github.com/hmfarias/03-acamica-delilah.git
 [(return)](#delilah-resto)
 
-####Descripción General
+##Descripción General
 
 Delilah Resto is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.
 
