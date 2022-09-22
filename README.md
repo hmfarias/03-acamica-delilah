@@ -1,4 +1,5 @@
 #Delilah Resto
+![Logo delilah](https://user-images.githubusercontent.com/56005148/191755311-0408a1d6-c8c7-4956-959a-0b79166d0d9f.png)
 
 <h1> Delilah Resto </h1>
 
