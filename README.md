@@ -148,8 +148,8 @@ Libraries, plugins or any other resource that is not specified in the instructio
   Based on the specification created previously, the Users table was created with the columns required to meet the specification of the API.
   The **Users** table is related to **Roles** table. When creating it, the following conditions were taken into account:
 
-      - An user has only one role.
-      - A role can be assigned to multiple users.
+  - An user has only one role.
+  - A role can be assigned to multiple users.
 
 - **Step 2: Registration and user login**
   Based on the specification, the corresponding endpoint was created to give the user a way to create a new account.
@@ -179,10 +179,10 @@ Libraries, plugins or any other resource that is not specified in the instructio
 - **Step 1: Orders structure and table**
   The Order table is related to two tables: **Users** and **Products**. When creating it, the following conditions were taken into account:
 
-      - An order can be made by a single user.
-      - A user can perform more than an order.
-      - An order may contain several products.
-      - A product can be part of several orders.
+  - An order can be made by a single user.
+  - A user can perform more than an order.
+  - An order may contain several products.
+  - A product can be part of several orders.
 
 - **Step 2: Creating and getting Orders**
   With the tables already created, the first endpoint for the creation of the Orders was generated. Always based on the specification to know what should be received and what should be returned.
