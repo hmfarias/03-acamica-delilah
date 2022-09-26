@@ -7,6 +7,7 @@
 
 <!-- PROJECT LOGO -->
 
+[ENGLISH](https://github.com/hmfarias/03-acamica-delilah/blob/master/README.md) | [ESPAÑOL](https://github.com/hmfarias/03-acamica-delilah/blob/master/README-esp.md)
 <br />
 
 <div align="center">

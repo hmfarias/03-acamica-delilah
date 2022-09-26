@@ -7,6 +7,7 @@
 
 <!-- PROJECT LOGO -->
 
+[ENGLISH](https://github.com/hmfarias/03-acamica-delilah/blob/master/README.md) | [ESPAÑOL](https://github.com/hmfarias/03-acamica-delilah/blob/master/README-esp.md)
 <br />
 
 <div align="center">
@@ -95,7 +96,7 @@ The objective of the Delilah project submitted is to emulate the task of a backe
 - JS files
 - SQL file or installation from the application
 - Documentation file
-- [Readme.md](https://github.com/hmfarias/03-acamica-delilah#readme) with installation instructions
+- [Readme.md](https://github.com/hmfarias/03-acamica-delilah/blob/master/README-esp.md) with installation instructions
 
 (The frontend is not included in the deliverable package or resources of this project. The focus is on the backend.)
 
