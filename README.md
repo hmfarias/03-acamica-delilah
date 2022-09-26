@@ -11,7 +11,11 @@
 
 <div align="center">
   <a href="https://github.com/hmfarias/03-acamica-delilah">
+<<<<<<< HEAD
     <img src="https://user-images.githubusercontent.com/56005148/191755311-0408a1d6-c8c7-4956-959a-0b79166d0d9f.png" alt="Logo" width="310" height="270">
+=======
+    <img src="https://user-images.githubusercontent.com/56005148/191755311-0408a1d6-c8c7-4956-959a-0b79166d0d9f.png" alt="Logo" width="210" height="170">
+>>>>>>> 7892eab (README.md almost ready)
   </a>
 
   <h3 align="center">Delilah Resto</h3>
@@ -52,8 +56,17 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
+<<<<<<< HEAD
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
+=======
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+>>>>>>> 7892eab (README.md almost ready)
   </ol>
 
 <!-- ABOUT THE PROJECT -->
@@ -206,7 +219,10 @@ Before starting the installation, it is necessary to have:
   npm install nodemon -g (for global installation)
   npm install nodemon --save-dev (for local installation)
   ```
+<<<<<<< HEAD
 <p align="right">(<a href="#table-of-contents">back</a>)</p>
+=======
+>>>>>>> 7892eab (README.md almost ready)
 
 ### Installation
 
@@ -340,7 +356,11 @@ Project Link: [https://github.com/hmfarias/03-acamica-delilah](https://github.co
 [nodemon-url]: https://nodemon.io/
 [express]: https://img.shields.io/badge/express-35495E?style=for-the-badge&logo=express&logoColor=white
 [express-url]: https://expressjs.com/
+<<<<<<< HEAD
 [jsonweb]: https://img.shields.io/badge/JSON_Web_Token-4A4A55?style=for-the-badge&logo=jsonwebtokens&logoColor=white
+=======
+[jsonweb]: https://img.shields.io/badge/JSON_Web_Token-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white
+>>>>>>> 7892eab (README.md almost ready)
 [jsonweb-url]: https://jwt.io/
 [ratelimit]: https://img.shields.io/badge/Rate_Limt-4A4A55?style=for-the-badge&logo=express&logoColor=white
 [ratelimit-url]: https://www.npmjs.com/package/express-rate-limit
