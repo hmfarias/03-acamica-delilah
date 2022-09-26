@@ -1,69 +1,118 @@
-#Delilah Resto
-![Logo delilah](https://user-images.githubusercontent.com/56005148/191755311-0408a1d6-c8c7-4956-959a-0b79166d0d9f.png)
+[![Status][statuss-shield]][statuss-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
-<h1> Delilah Resto </h1>
+<!-- PROJECT LOGO -->
 
-##**TOPICS / TEMAS:**
+<br />
 
-- **[Repository](#repository) / [Repositorio](#repositorio)**
-- **[Technology Stack](#technology-stack) / [Tecnologías utilizadas](#tecnologías-utilizadas)**
-- **[General description](#general-description) / [Descripción General](#descripción-general)**
-- **[Installation instructions](#installation-instructions) / [Instrucciones de Instalación](#instrucciones-de-instalación)**
+<div align="center">
+  <a href="https://github.com/hmfarias/03-acamica-delilah">
+    <img src="https://user-images.githubusercontent.com/56005148/191755311-0408a1d6-c8c7-4956-959a-0b79166d0d9f.png" alt="Logo" width="310" height="270">
+  </a>
 
-> **ENGLISH:**
+  <h3 align="center">Delilah Resto</h3>
 
-##Repository
+  <p align="center">
+    An awesome REST API to manage a fast food delivery restaurant!
+    <br />
+    <a href="https://github.com/hmfarias/03-acamica-delilah"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/hmfarias/03-acamica-delilah">View repository</a>
+    ·
+    <a href="https://github.com/hmfarias/03-acamica-delilah/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/hmfarias/03-acamica-delilah/issues">Request Feature</a>
+  </p>
+</div>
 
-You can download the project from the following GitHub repository:
-https://github.com/hmfarias/03-acamica-delilah.git
-[(return)](#delilah-resto)
+<!-- TABLE OF CONTENTS -->
 
-##Technology Stack
+### Table of Contents
 
-- NodeJS
-- Nodemon
-- Express
-- JSON Web Token
-- Rate Limit
-- MySQL
-- Sequelize
-- Postman
-- Swagger
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#general-description">General Desription</a></li>
+          <ul><a href="#deliverable">Deliverable</a></ul>
+          <ul><a href="#use-of-libraries">Use of Libraries</a></ul>
+          <ul><a href="#creation-process">Creation Process</a></ul>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
 
-[(return)](#delilah-resto)
+<!-- ABOUT THE PROJECT -->
 
-##General description
+## About The Project
+
+[![Product Name Screen Shot][product-screenshot]](https://github.com/hmfarias/03-acamica-delilah)
 
 Delilah Resto is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.
 
-**Deliverable**
+<p align="right">(<a href="#table-of-contents">back</a>)</p>
+
+### Built With
+
+- [![NodeJS][nodejs]][node-url] As environnement
+- [![Express][express]][express-url] Framework
+- [![Nodemon][nodemon]][nodemon-url] Interface utility
+- [![Ratelimit][ratelimit]][ratelimit-url] Control of incoming traffic in the API
+- [![JSONWeb][jsonweb]][jsonweb-url] Standard to propagate between two parties in a secure way, the identity of a certain user and their privileges. Password encryption with the library [bcrypt](https://www.npmjs.com/package/bcrypt 'bcrypy').
+- [![XAMPP][xampp]][xampp-url] as a Server
+- [![MySQL][mysql]][mysql-url] Database Management System
+- [![Workbench][workbench]][workbench-url] Graphic environment for database design, servers, administration and maintenance for the MySQL system
+- [![Sequelize][sequelize]][sequelize-url] ORM for Nodejs to manipulate SQL database in a simple way
+- [![Postman][postman]][postman-url] Tool to create requests and test the API in a simple way
+- [![Swagger][swagger]][swagger-url] Open specification to define the REST API
+- [![Others][others]][others-url] Additional packages for security and cors handling like [Helmet](https://www.npmjs.com/package/helmet 'Helmet'), [Compression](https://www.npmjs.com/package/helmet 'Compression') y [Cors](https://www.npmjs.com/package/cors 'Cors')
+
+<p align="right">(<a href="#table-of-contents">back</a>)</p>
+
+### General description
+
+Delilah Resto is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.
+
+#### Deliverable
+
 The objective of the Delilah project submitted is to emulate the task of a backend developer. The deliverables are:
 
 - JS files
 - SQL file or installation from the application
 - Documentation file
-- Readme.md with installation instructions
+- [Readme.md](https://github.com/hmfarias/03-acamica-delilah#readme) with installation instructions
 
 (The frontend is not included in the deliverable package or resources of this project. The focus is on the backend.)
 
-**Use of libraries**
+#### Use of libraries
+
 No libraries, plugins or any other resource that is not specified in the instruction guide received, since the objective of the project is to validate the basic knowledge.
 
-**Creation process**
+#### Creation process
 
-> Project evaluation method
-> The task of an evaluator is to download the project and install it by following "readme" instructions.
-> The objective is to validate that the application works on any platform, therefore the evaluator will perform all the tests on your local environment.
+##### Steps followed
 
-**Steps followed**
-
-- **Step 1: Introduction to the project**
+- Step 1: Introduction to the project\*\*
   Among the discharged resources, each of the views was analyzed to understand the project in its entirety.
   It was observed rightly as it is the behavior of the application and the architecture of it began to be diagnosed roughly.
 
 - **Step 2: Definition of the specification**
   Based on the relevant information, the documentation was made with Swagger under the OpenAPI standard.
-  A "delilahResto.json" file was created in the "SETUP" directory of the project and the list of Endpoints was completed.
+  A `delilahResto.json` file was created in the `SETUP` directory of the project and the list of Endpoints was completed.
 
 - **Step 3: Creation of the environment**
   A folder was created on the computer, and a GIT repository was started over that folder. Likewise, the NodejS project was initialized by creating the package.json file.
@@ -98,7 +147,7 @@ No libraries, plugins or any other resource that is not specified in the instruc
   Likewise, the Token **JWT** was incorporated to give registered users a way to log in to the platform.
 
 - **Step 3: Role**
-  A role validation strategy was generated for all existing endpoints. For example, that "only administrators users can create, edit and delete products, and that logical users only have access to their personal information."
+  A role validation strategy was generated for all existing endpoints. For example, that `only administrators users can create, edit and delete products, and that logical users only have access to their personal information.`
 
 **Roles creation**
 
@@ -133,134 +182,179 @@ No libraries, plugins or any other resource that is not specified in the instruc
 Finally, the rate limit policy was incorporated to allow control of incoming traffic for the API by limiting the number of requests that the API can receive within a given period of time. After the limit is reached, the policy rejects all requests, thereby avoiding any additional load on the backend API.
 
 > When you configure the rate limiting policy, you can specify any number of pairs of quota (number of requests) and time window (time period) values.
-> Refer to the topic [Environment File](#environment-file)
+> Refer to the topic [Environment File](#the-environment-file)
 
-[(return)](#delilah-resto)
+<p align="right">(<a href="#table-of-contents">back</a>)</p>
 
-##Installation instructions
-[(return)](#delilah-resto)
+<!-- GETTING STARTED -->
 
-####**Environment File**
-[(return)](#delilah-resto)
+## Getting Started
 
-> **ESPAÑOL:**
+This guide describes step by step how to set up the local environment to get the system up and running.
+The necessary tools are indicated to set up the server, installation and configuration steps, the creation of the database and its population, and finally, the correct integration between both parts to be able to use the API locally or online.
 
-####Tecnologías Utilizadas
+### Prerequisites
 
-- NodeJS
-- Nodemon
-- Express
-- JSON Web Token
-- Rate Limit
-- MySQL
-- Sequelize
-- Postman
-- Swagger
+Before starting the installation, it is necessary to have:
 
-[(return)](#delilah-resto)
+- [Node Js](https://nodejs.org/en/ 'Node js')
+- [XAMPP](https://www.apachefriends.org/download.html 'XAMPP')
+- [MySQL Workbench](https://www.mysql.com/products/workbench/ 'MYSQL')
+- Install [Nodemon](https://nodemon.io/ 'nodemon')
 
-##Repositorio
-https://github.com/hmfarias/03-acamica-delilah.git
-[(return)](#delilah-resto)
+  ```
+  npm install nodemon -g (for global installation)
+  npm install nodemon --save-dev (for local installation)
+  ```
+<p align="right">(<a href="#table-of-contents">back</a>)</p>
 
-##Descripción General
+### Installation
 
-Delilah Resto is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.
+1. ##### Clone the repository project
 
-**Entregable**
-The objective of the Delilah project submitted is to emulate the task of a backend developer. The deliverables are:
+- Create a folder in a local directory and from the `terminal` inside the created folder initialize git:
 
-- JS files
-- SQL file or installation from the application
-- Documentation file
-- Readme.md with installation instructions
+```
+git init
+```
 
-(The frontend is not included in the deliverable package or resources of this project. The focus is on the backend.)
+- Clone the entire project:
 
-**Uso de Librerías**
-No libraries, plugins or any other resource that is not specified in the instruction guide received, since the objective of the project is to validate the basic knowledge.
+```
+git clone https://github.com/hmfarias/03-acamica-delilah.git
+```
 
-**Proceso de Creación**
+2. ##### Install dependencies
 
-> Project evaluation method
-> The task of an evaluator is to download the project and install it by following "readme" instructions.
-> The objective is to validate that the application works on any platform, therefore the evaluator will perform all the tests on your local environment.
+- In the root of the project, write the command::
 
-**Pasos seguidos**
+```
+npm install
+```
 
-- **Step 1: Introduction to the project**
-  Among the discharged resources, each of the views was analyzed to understand the project in its entirety.
-  It was observed rightly as it is the behavior of the application and the architecture of it began to be diagnosed roughly.
+> This creates the _node_modules_ folder with the necessary dependencies, such as _express_, _sequelize_, _jwt_ etc.
 
-- **Step 2: Definition of the specification**
-  Based on the relevant information, the documentation was made with Swagger under the OpenAPI standard.
-  A "delilahResto.json" file was created in the "SETUP" directory of the project and the list of Endpoints was completed.
+3. ##### Put online database
 
-- **Step 3: Creation of the environment**
-  A folder was created on the computer, and a GIT repository was started over that folder. Likewise, the NodejS project was initialized by creating the package.json file.
-  The necessary dependencies were also installed and the web server was created.
+- Open [XAMPP](https://www.apachefriends.org/download.html 'XAMPP'). Go to `Server Manage` and start the MySQL Server
+- Open [MySQL Workbench](https://www.mysql.com/products/workbench/ 'MYSQL') and establish the connection with the database. Make sure MySql database is running on port 3306.
+- In the project there is a folder called `./setup`. In this folder are the script files necessary to create and populate the database.
+  From MySQL Workbench go to the `File -> Open SQL Script` option, select and run the file `./setup/delilah_create.sql`. Next select and run the file `./setup/delilah_inserts.sql`.
 
-- **Step 4: Endpoints**
-  Express was installed on the project and it began to define all the routes that were specified in the documentation.
-  The Get, Post, Put and Delete methods were used depending on the action to be made.
+  > This creates the `delilah` database, as well as the necessary tables and test data in the created tables.
 
-- **Step 5: Structure of information**
-  The structure of the database was designed so that support all the flow of the application. For this, each of the views was reviewed again and each table was diamed based on the expedited information of those views.
+4. #### Environment Variables
 
-- **Step 6: Connection to the database**
-  The server code was introduced with the connection to the database and it was enabled and 'listening' in a local port, connected to a MySQL database.
+##### The Environment File
 
-**List and product creation**
+You will need to create an `.env` file in the root folder of the project.
+In this file you will need to set the following environment variables:
 
-- **Step 1: Products structure and table**
-  Based on the specification created previously, the Products table was created with the columns required to meet the specification of the API.
+- To configure the connection to the database: - **DB_SERVER= (e.g. 127.0.0.1)** - **DB_USER= (e.g. root)** - **DB_PWD=** - **DB_NAME= delilah** - **DB_PORT= 3306** - **APP_PORT= 3000**
+  <br>
+- Secret string for JWT. Are numbers and special symbols that the server will use to generate the token for each logged in user. -- _NEVER EXPOSE THIS CHARACTER STRING_ -- - **JWT_SECRET=(e.g. ger7gtlhiu&ylkjsd876fswihelgklmvals654sakltfghpa$)**
+  <br>
+- Time to live token - **EXPIRE_TIME_TOKEN = 120m**
+  <br>
+- Maximum number of requests according to the desired rate limit policy - **MAX_REQUEST = 20**
+  <br>
+- Waiting time in minutes after exceeding MAX_REQUEST - **MINUTES_TO_WAIT = 1**
 
-- **Step 2: Product CRUD**
-  Express was added to the project, and the first endpoint of / products was created and the necessary operations were generated to be able to create, read, update and delete a product.
+5. #### Put the server online
 
-**Users System**
+   To put the server online run the following command in the terminal:
 
-- **Step 1: Users Structure and table**
-  Based on the specification created previously, the Users table was created with the columns required to meet the specification of the API.
-  The **Users** table is related to **Roles** table. When creating it, the following conditions were taken into account: - An user has only one role. - A role can be assigned to multiple users.
-- **Step 2: Registration and user login**
-  Based on the specification, the corresponding endpoint was created to give the user a way to create a new account.
-  Likewise, the Token **JWT** was incorporated to give registered users a way to log in to the platform.
+   ```
+   npm run server
+   ```
 
-- **Step 3: Role validation was added**
-  Finally, a role validation strategy was generated for all existing endpoints. For example, that "only administrators users can create, edit and delete products, and that logical users only have access to their personal information."
+   > This starts the `./src/server.js ` file with nodemon.
 
-**Roles creation**
+6. #### The API is online and listening on the selected port
+   After completing the steps above, you can start testing the Delilah Resto API.
+   You can use [Postman](https://www.postman.com/ 'Postman') for it.
+   In the `setup` folder, you can find the Postman Collection which tests each and every API endpoint.
+   Start Postman and import the file `./setup/API Delilah-postman_collection.json`. There you will have all the examples of use of each available endpoint, as well as the Json models of each request.
+   According to the security scheme implemented for the API, in order to test each endpoint, you will need to log in to the system with an existing user (administrator or common user) and use the token returned by the server in the header of each request.
+   With Server online, you can visit the documentation page, `localhost:3000/api/v1/docs` to get the details of each request and its response.
 
-- **Step 1: Roles structure and table**
-  Based on the specification created previously, the Roles table was created with the columns required to meet the specification of the API.
+<p align="right">(<a href="#table-of-contents">back</a>)</p>
 
-- **Step 2: Roles CRUD**
-  Necessary operations were generated to be able to create, read, update and delete a roles.
+<!-- CONTRIBUTING -->
 
-**Payment Methods creation**
+## Contributing
 
-- **Step 1: Payment Methods structure and table**
-  Based on the specification created previously, the Payment Methods table was created with the columns required to meet the specification of the API.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-- **Step 2: Payment Methods CRUD**
-  Necessary operations were generated to be able to create, read, update and delete a payment methods.
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
 
-**Creation of orders**
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-- **Step 1: Orders structure and table**
-  The order table is related to two tables: **users** and **products**. When creating it, the following conditions were taken into account: - An order can be made by a single user. - A user can perform more than an order. - An order may contain several products. - A product can be part of several orders.
+<p align="right">(<a href="#table-of-contents">back</a>)</p>
 
-- **Step 2: Creating and getting orders**
-  With the tables already created, the first endpoint was generated for the creation of the products. Always based on the specification to know what to be received and what should be returned.
-  Then a new endpoint was created to get of all the products. This query not only returns the detail of orders but also the detail of all **products**, **users** and **payment method**.
-  The GET of all orders can only be executed by an administrator. A logged user only receives the own.
+<!-- LICENSE -->
 
-- **Step 3: Edition of orders**
-  The last step to end the API was to provide the administrator to edit tools on orders made to update the state of them. That's why an endpoint was created to make an update on the order path.
+## License
 
-[(return)](#delilah-resto)
+Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-####Instrucciones de Instalación
+<p align="right">(<a href="#table-of-contents">back</a>)</p>
 
-[(return)](#delilah-resto)
+<!-- CONTACT -->
+
+## Contact
+
+Marcelo Farias - [+54 9 3512601888](https://twitter.com/your_username) - hmfarias7@gmail.com
+
+Project Link: [https://github.com/hmfarias/03-acamica-delilah](https://github.com/hmfarias/03-acamica-delilah)
+
+<p align="right">(<a href="#table-of-contents">back</a>)</p>
+
+<!-- ACKNOWLEDGMENTS -->
+
+<!-- MARKDOWN LINKS & IMAGES -->
+
+<!-- [statuss-shield]: https://img.shields.io/badge/STATUS-Developing-green -->
+
+[statuss-shield]: https://img.shields.io/badge/STATUSS-finished-green
+[statuss-url]: https://github.com/hmfarias/03-acamica-delilah#readme
+[forks-shield]: https://img.shields.io/github/forks/hmfarias/03-acamica-delilah
+[forks-url]: https://github.com/hmfarias/03-acamica-delilah/network/members
+[stars-shield]: https://img.shields.io/github/stars/hmfarias/03-acamica-delilah
+[stars-url]: https://github.com/hmfarias/03-acamica-delilah/stargazers
+[issues-shield]: https://img.shields.io/github/issues/hmfarias/03-acamica-delilah
+[issues-url]: https://github.com/hmfarias/03-acamica-delilah/issues
+[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg
+[license-url]: https://github.com/hmfarias/03-acamica-delilah/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/hugo-marcelo-farias
+[product-screenshot]: https://user-images.githubusercontent.com/56005148/192166732-ecbcd321-b61d-4998-a114-5d616846ed8d.png
+[nodejs]: https://img.shields.io/badge/nodeJS-347012?style=for-the-badge&logo=nodedotjs&logoColor=white
+[node-url]: https://nodejs.org/
+[nodemon]: https://img.shields.io/badge/nodemon-76D04B?style=for-the-badge&logo=nodemon&logoColor=4F4D3F
+[nodemon-url]: https://nodemon.io/
+[express]: https://img.shields.io/badge/express-35495E?style=for-the-badge&logo=express&logoColor=white
+[express-url]: https://expressjs.com/
+[jsonweb]: https://img.shields.io/badge/JSON_Web_Token-4A4A55?style=for-the-badge&logo=jsonwebtokens&logoColor=white
+[jsonweb-url]: https://jwt.io/
+[ratelimit]: https://img.shields.io/badge/Rate_Limt-4A4A55?style=for-the-badge&logo=express&logoColor=white
+[ratelimit-url]: https://www.npmjs.com/package/express-rate-limit
+[xampp]: https://img.shields.io/badge/XAMPP-EFEEE5?style=for-the-badge&logo=xampp&logoColor=orange
+[xampp-url]: https://www.apachefriends.org/es/index.html
+[mysql]: https://img.shields.io/badge/MySQL-3E6E93?style=for-the-badge&logo=mysql&logoColor=orange
+[mysql-url]: https://www.mysql.com/
+[workbench]: https://img.shields.io/badge/MySQL_Workbench-orange?style=for-the-badge&logo=mysql&logoColor=blue
+[workbench-url]: https://www.mysql.com/products/workbench/
+[sequelize]: https://img.shields.io/badge/Sequelize-grey?style=for-the-badge&logo=sequelize&logoColor=52B0E6
+[sequelize-url]: https://sequelize.org/
+[postman]: https://img.shields.io/badge/Postman-orange?style=for-the-badge&logo=postman&logoColor=white
+[postman-url]: https://www.postman.com/
+[swagger]: https://img.shields.io/badge/Swagger-4F8C2E?style=for-the-badge&logo=swagger&logoColor=white
+[swagger-url]: https://swagger.io/
+[others]: https://img.shields.io/badge/Others-black?style=for-the-badge
+[others-url]: https://github.com/hmfarias/03-acamica-delilah
