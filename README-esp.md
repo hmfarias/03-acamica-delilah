@@ -88,7 +88,7 @@ Delilah Resto es el backend de un sistema de pedidos en línea para un restauran
 
 ### Descripción general
 
-Delilah Resto is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.
+Delilah Resto es el backend de un sistema de pedidos en línea para un restaurante que opera las partes necesarias para montar una API REST que permite operaciones CRUD en una estructura de datos.
 
 #### Entregable
 
