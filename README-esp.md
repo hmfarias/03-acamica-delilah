@@ -71,18 +71,18 @@ Delilah Resto es el backend de un sistema de pedidos en línea para un restauran
 
 ### Construido con
 
-- [![NodeJS][nodejs]][node-url] As environnement
+- [![NodeJS][nodejs]][node-url] Como entorno
 - [![Express][express]][express-url] Framework
-- [![Nodemon][nodemon]][nodemon-url] Interface utility
-- [![Ratelimit][ratelimit]][ratelimit-url] Control of incoming traffic in the API
-- [![JSONWeb][jsonweb]][jsonweb-url] Standard to propagate between two parties in a secure way, the identity of a certain user and their privileges. Password encryption with the library [bcrypt](https://www.npmjs.com/package/bcrypt 'bcrypy').
-- [![XAMPP][xampp]][xampp-url] as a Server
-- [![MySQL][mysql]][mysql-url] Database Management System
-- [![Workbench][workbench]][workbench-url] Graphic environment for database design, servers, administration and maintenance for the MySQL system
-- [![Sequelize][sequelize]][sequelize-url] ORM for Nodejs to manipulate SQL database in a simple way
-- [![Postman][postman]][postman-url] Tool to create requests and test the API in a simple way
-- [![Swagger][swagger]][swagger-url] Open specification to define the REST API
-- [![Others][others]][others-url] Additional packages for security and cors handling like [Helmet](https://www.npmjs.com/package/helmet 'Helmet'), [Compression](https://www.npmjs.com/package/helmet 'Compression') y [Cors](https://www.npmjs.com/package/cors 'Cors')
+- [![Nodemon][nodemon]][nodemon-url] Utilidad de interface
+- [![Ratelimit][ratelimit]][ratelimit-url] Control del tráfico entrante en la API
+- [![JSONWeb][jsonweb]][jsonweb-url] Estándar para propagar entre dos partes de forma segura, la identidad de un determinado usuario y sus privilegios. Cifrado de contraseña con la biblioteca [bcrypt](https://www.npmjs.com/package/bcrypt 'bcrypy').
+- [![XAMPP][xampp]][xampp-url] como Servidor
+- [![MySQL][mysql]][mysql-url] Sistema de administración de Base de Datos
+- [![Workbench][workbench]][workbench-url] Entorno gráfico para el diseño de bases de datos, servidores, administración y mantenimiento del sistema MySQL
+- [![Sequelize][sequelize]][sequelize-url] ORM para Nodejs que permite manipular la Base de Datos SQL de forma sencilla
+- [![Postman][postman]][postman-url] Herramienta para crear solicitudes y probar la API de forma sencilla
+- [![Swagger][swagger]][swagger-url] Especificación abierta para definir la API REST
+- [![Others][others]][others-url] Paquetes adicionales para seguridad y manejo de CORS como [Helmet](https://www.npmjs.com/package/helmet 'Helmet'), [Compression](https://www.npmjs.com/package/helmet 'Compression') y [Cors](https://www.npmjs.com/package/cors 'Cors')
 
 <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
