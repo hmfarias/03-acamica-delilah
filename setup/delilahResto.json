@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Delilah Resto ",
-    "description": "API for delicious food orders. As a customer you can register, see the list of our products and place an order.Restaurant managers have the ability to receive orders and update them..",
+    "description": "Delilah Resto is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.. As a customer you can register, see the list of our products and place an order. Restaurant managers have the ability to receive orders and update them; as well as the management of the rest of the data in the different tables that make up the system.",
     "termsOfService": "https://github.com/hmfarias/03-acamica-delilah#readme",
     "contact": {
       "name": "Marcelo Farias",

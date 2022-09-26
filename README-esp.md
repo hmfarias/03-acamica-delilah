@@ -17,57 +17,57 @@
   <h2 align="center">Delilah Resto</h2>
 
   <p align="center">
-    An awesome REST API to manage a fast food delivery restaurant!
+    ¡Una increíble API REST para administrar un restaurante de entrega de comida rápida!
     <br />
-    <a href="https://github.com/hmfarias/03-acamica-delilah"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/hmfarias/03-acamica-delilah"><strong>Explora los documentos »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/hmfarias/03-acamica-delilah">View repository</a>
+    <a href="https://github.com/hmfarias/03-acamica-delilah">Ver repositorio</a>
     ·
-    <a href="https://github.com/hmfarias/03-acamica-delilah/issues">Report Bug</a>
+    <a href="https://github.com/hmfarias/03-acamica-delilah/issues">Reportar un error</a>
     ·
-    <a href="https://github.com/hmfarias/03-acamica-delilah/issues">Request Feature</a>
+    <a href="https://github.com/hmfarias/03-acamica-delilah/issues">Solicitar función</a>
   </p>
 </div>
 
 <!-- TABLE OF CONTENTS -->
 
-### Table of Contents
+### Tabla de contenidos
 
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#sobre-el-proyecto">Sobre el proyecto</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
-        <li><a href="#general-description">General Desription</a></li>
-          <ul><a href="#deliverable">Deliverable</a></ul>
-          <ul><a href="#use-of-libraries">Use of Libraries</a></ul>
-          <ul><a href="#creation-process">Creation Process</a></ul>
+        <li><a href="#construido-con">Construido con</a></li>
+        <li><a href="#descripción-general">Desripción General</a></li>
+          <ul><a href="#entregable">Entregable</a></ul>
+          <ul><a href="#uso-de-librerias">Uso de Librerías</a></ul>
+          <ul><a href="#proceso-de-creacion">Proceso de Creación</a></ul>
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#empezando">Empezando</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-        <li><a href="#documentation">Documentation</a></li>
+        <li><a href="#prerequisitos">Prerequisitos</a></li>
+        <li><a href="#instalacion">Instalación</a></li>
+        <li><a href="#documentacion">Documentación</a></li>
       </ul>
     </li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contribuyendo">Contribuyendo</a></li>
+    <li><a href="#contacto">Contacto</a></li>
   </ol>
 
 <!-- ABOUT THE PROJECT -->
 
-## About The Project
+## Sobre el Proyecto
 
 [![Product Name Screen Shot][product-screenshot]](https://github.com/hmfarias/03-acamica-delilah)
 
-Delilah Resto is the backend of an online ordering system for a restaurant that operates the necessary parts to assemble a REST API that allows CRUD operations on a data structure.
+Delilah Resto es el backend de un sistema de pedidos en línea para un restaurante que opera las partes necesarias para montar una API REST que permite operaciones CRUD en una estructura de datos.
 
-<p align="right">(<a href="#table-of-contents">back</a>)</p>
+<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
-### Built With
+### Construido con
 
 - [![NodeJS][nodejs]][node-url] As environnement
 - [![Express][express]][express-url] Framework
@@ -82,9 +82,9 @@ Delilah Resto is the backend of an online ordering system for a restaurant that 
 - [![Swagger][swagger]][swagger-url] Open specification to define the REST API
 - [![Others][others]][others-url] Additional packages for security and cors handling like [Helmet](https://www.npmjs.com/package/helmet 'Helmet'), [Compression](https://www.npmjs.com/package/helmet 'Compression') y [Cors](https://www.npmjs.com/package/cors 'Cors')
 
-<p align="right">(<a href="#table-of-contents">back</a>)</p>
+<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
-### General description
+### Descripción general
 
 Delilah Resto is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.
 
@@ -185,7 +185,7 @@ Finally, the rate limit policy was incorporated to allow control of incoming tra
 > When you configure the rate limiting policy, you can specify any number of pairs of quota (number of requests) and time window (time period) values.
 > Refer to the topic [Environment File](#the-environment-file)
 
-<p align="right">(<a href="#table-of-contents">back</a>)</p>
+<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
 <!-- GETTING STARTED -->
 
@@ -208,7 +208,7 @@ Before starting the installation, it is necessary to have:
   npm install nodemon --save-dev (for local installation)
   ```
 
-  <p align="right">(<a href="#table-of-contents">back</a>)</p>
+  <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
 ### Installation
 
@@ -296,14 +296,14 @@ In this file you will need to set the following environment variables:
    According to the security scheme implemented for the API, in order to test each endpoint, you will need to log in to the system with an existing user (administrator or common user) and use the token returned by the server in the header of each request.
    With Server online, you can visit the documentation page, `localhost:3000/api/v1/docs` to get the details of each request and its response.
 
-<p align="right">(<a href="#table-of-contents">back</a>)</p>
+<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
 ### Documentation
 
 With Server online, you can visit the documentation page, `localhost:3000/api/v1/docs` to get the details of each request and its response.
 You can also go to [Swagger](https://editor.swagger.io/ 'Swagger') and drag or import the ` ./setup/delilahResto.yaml`.
 
-<p align="right">(<a href="#table-of-contents">back</a>)</p>
+<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 <!-- CONTRIBUTING -->
 
 ## Contributing
@@ -319,7 +319,7 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#table-of-contents">back</a>)</p>
+<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
 <!-- LICENSE -->
 
@@ -327,7 +327,7 @@ Don't forget to give the project a star! Thanks again!
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-<p align="right">(<a href="#table-of-contents">back</a>)</p>
+<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
 <!-- CONTACT -->
 
@@ -337,7 +337,7 @@ Marcelo Farias - [+54 9 3512601888](https://twitter.com/your_username) - hmfaria
 
 Project Link: [https://github.com/hmfarias/03-acamica-delilah](https://github.com/hmfarias/03-acamica-delilah)
 
-<p align="right">(<a href="#table-of-contents">back</a>)</p>
+<<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
 
