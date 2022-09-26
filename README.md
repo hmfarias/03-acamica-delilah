@@ -14,7 +14,7 @@
     <img src="https://user-images.githubusercontent.com/56005148/191755311-0408a1d6-c8c7-4956-959a-0b79166d0d9f.png" alt="Logo" width="310" height="270">
   </a>
 
-  <h3 align="center">Delilah Resto</h3>
+  <h2 align="center">Delilah Resto</h2>
 
   <p align="center">
     An awesome REST API to manage a fast food delivery restaurant!
