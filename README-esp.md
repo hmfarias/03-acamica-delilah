@@ -261,6 +261,7 @@ npm install
 > Esto crea la base de datos `delilah`, así como las tablas necesarias y los datos de prueba en las tablas creadas.
 
   <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
+  
 4. #### Variables de Entorno
 
 ##### El Archivo de Entorno
