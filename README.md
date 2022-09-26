@@ -357,5 +357,5 @@ Project Link: [https://github.com/hmfarias/03-acamica-delilah](https://github.co
 [postman-url]: https://www.postman.com/
 [swagger]: https://img.shields.io/badge/Swagger-4F8C2E?style=for-the-badge&logo=swagger&logoColor=white
 [swagger-url]: https://swagger.io/
-[others]: https://img.shields.io/badge/Others-black?style=for-the-badge
+[others]: https://img.shields.io/badge/Others-grey?style=for-the-badge
 [others-url]: https://github.com/hmfarias/03-acamica-delilah
