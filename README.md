@@ -100,9 +100,13 @@ The objective of the Delilah project submitted is to emulate the task of a backe
 
 (The frontend is not included in the deliverable package or resources of this project. The focus is on the backend.)
 
+<p align="right">(<a href="#table-of-contents">back</a>)</p>
+
 #### Use of libraries
 
-No libraries, plugins or any other resource that is not specified in the instruction guide received, since the objective of the project is to validate the basic knowledge.
+Libraries, plugins or any other resource that is not specified in the instruction guide received were not used, since the objective of the project is to validate basic knowledge.
+
+<p align="right">(<a href="#table-of-contents">back</a>)</p>
 
 #### Creation process
 
@@ -130,26 +134,29 @@ No libraries, plugins or any other resource that is not specified in the instruc
 - **Step 6: Connection to the database**
   The server code was introduced with the connection to the database and it was enabled and 'listening' in a local port, connected to a MySQL database.
 
-**List and product creation**
+**List and Product creation**
 
 - **Step 1: Products structure and table**
   Based on the specification created previously, the Products table was created with the columns required to meet the specification of the API.
 
 - **Step 2: Product CRUD**
-  Express was added to the project, and the first endpoint of / products was created and the necessary operations were generated to be able to create, read, update and delete a product.
+  Express was added to the project, and the first endpoint of Products was created and the necessary operations were generated to be able to create, read, update and delete a product.
 
 **Users System**
 
 - **Step 1: Users Structure and table**
   Based on the specification created previously, the Users table was created with the columns required to meet the specification of the API.
-  The **Users** table is related to **Roles** table. When creating it, the following conditions were taken into account: - An user has only one role. - A role can be assigned to multiple users.
+  The **Users** table is related to **Roles** table. When creating it, the following conditions were taken into account:
+
+  - An user has only one role.
+  - A role can be assigned to multiple users.
 
 - **Step 2: Registration and user login**
   Based on the specification, the corresponding endpoint was created to give the user a way to create a new account.
   Likewise, the Token **JWT** was incorporated to give registered users a way to log in to the platform.
 
 - **Step 3: Role**
-  A role validation strategy was generated for all existing endpoints. For example, that `only administrators users can create, edit and delete products, and that logical users only have access to their personal information.`
+  A role validation strategy was generated for all existing endpoints. For example, that `only admin users can create, edit and delete products, and ordinary users only have access to your personal information`.
 
 **Roles creation**
 
@@ -165,20 +172,25 @@ No libraries, plugins or any other resource that is not specified in the instruc
   Based on the specification created previously, the Payment Methods table was created with the columns required to meet the specification of the API.
 
 - **Step 2: Payment Methods CRUD**
-  Necessary operations were generated to be able to create, read, update and delete a payment methods.
+  Necessary operations were generated to be able to create, read, update and delete a Payment Methods.
 
-**Creation of orders**
+**Creation of Orders**
 
 - **Step 1: Orders structure and table**
-  The order table is related to two tables: **users** and **products**. When creating it, the following conditions were taken into account: - An order can be made by a single user. - A user can perform more than an order. - An order may contain several products. - A product can be part of several orders.
+  The Order table is related to two tables: **Users** and **Products**. When creating it, the following conditions were taken into account:
 
-- **Step 2: Creating and getting orders**
-  With the tables already created, the first endpoint was generated for the creation of the products. Always based on the specification to know what to be received and what should be returned.
-  Then a new endpoint was created to get of all the products. This query not only returns the detail of orders but also the detail of all **products**, **users** and **payment method**.
-  The GET of all orders can only be executed by an administrator. A logged user only receives the own.
+  - An order can be made by a single user.
+  - A user can perform more than an order.
+  - An order may contain several products.
+  - A product can be part of several orders.
+
+- **Step 2: Creating and getting Orders**
+  With the tables already created, the first endpoint for the creation of the Orders was generated. Always based on the specification to know what should be received and what should be returned.
+  A new endpoint was then created to fetch all orders. This query not only returns the details of the orders, but also the details of all the **products**, **users** and **payment methods** related to it.
+  The GET of all Órders can only be executed by an administrator. A registered user only receives the data of his own Order.
 
 - **Step 3: Edition of orders**
-  The last step to end the API was to provide the administrator to edit tools on orders made to update the state of them. That's why an endpoint was created to make an update on the order path.
+  The last step to finish with the API was to provide the administrator with editing tools on the orders made to update their status ('new', 'confirmed', 'preparing', 'shipping', 'cancelled', 'delivered' ). That is why an endpoint was created to perform an update on the Order path.
 
 **Rate Limit Policy**
 Finally, the rate limit policy was incorporated to allow control of incoming traffic for the API by limiting the number of requests that the API can receive within a given period of time. After the limit is reached, the policy rejects all requests, thereby avoiding any additional load on the backend API.
@@ -229,7 +241,7 @@ git clone https://github.com/hmfarias/03-acamica-delilah.git
 
 2. ##### Install dependencies
 
-- In the root of the project, write the command::
+- In the root of the project, write the command:
 
 ```
 npm install
@@ -237,15 +249,17 @@ npm install
 
 > This creates the _node_modules_ folder with the necessary dependencies, such as _express_, _sequelize_, _jwt_ etc.
 
-3. ##### Put online database
+3. ##### Put online the Database
 
 - Open [XAMPP](https://www.apachefriends.org/download.html 'XAMPP'). Go to `Server Manage` and start the `MySQL Database`
 - Open [MySQL Workbench](https://www.mysql.com/products/workbench/ 'MYSQL') and establish the connection with the database. Make sure MySql database is running on port 3306.
-- In the project there is a folder called `./setup`. In this folder are the script files necessary to create and populate the database.
+- In the project there is a folder called `./setup`. In this folder are the script files necessary to create and populate the database with test data.
   From MySQL Workbench go to the `File -> Open SQL Script` option, select and run the file `./setup/delilah_create.sql`. Next select and run the file `./setup/delilah_inserts.sql`.
 
-  > This creates the `delilah` database, as well as the necessary tables and test data in the created tables.
+> This creates the `delilah` database, as well as the necessary tables and test data in the created tables.
 
+  <p align="right">(<a href="#table-of-contents">back</a>)</p>
+  
 4. #### Environment Variables
 
 ##### The Environment File
@@ -255,12 +269,13 @@ In this file you will need to set the following environment variables:
 
 - To configure the connection to the database:
   - **DB_SERVER= (e.g. 127.0.0.1)**
-  - **DB_USER= (e.g. root)** - **DB_PWD=**
+  - **DB_USER= (e.g. root)**
+  - **DB_PWD=**
   - **DB_NAME= delilah**
   - **DB_PORT= 3306**
   - **APP_PORT= 3000**
     <br>
-- Secret string for JWT. Are numbers and special symbols that the server will use to generate the token for each logged in user. -- _NEVER EXPOSE THIS CHARACTER STRING_ --
+- Secret string for JWT. Are numbers and special symbols that the server will use to generate the token for each logged in user. **NEVER EXPOSE THIS CHARACTER STRING**
   - **JWT_SECRET=(e.g. ger7gtlhiu&ylkjsd876fswihelgklmvals654sakltfghpa$)**
     <br>
 - Time to live token
@@ -274,7 +289,7 @@ In this file you will need to set the following environment variables:
 
 5. #### Put the server online
 
-   To put the server online run the following command in the terminal:
+   To put the server online run the following command in the terminal (from the root of the project):
 
    ```
    npm run server

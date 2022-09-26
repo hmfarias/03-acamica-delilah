@@ -42,19 +42,20 @@
         <li><a href="#construido-con">Construido con</a></li>
         <li><a href="#descripción-general">Desripción General</a></li>
           <ul><a href="#entregable">Entregable</a></ul>
-          <ul><a href="#uso-de-librerias">Uso de Librerías</a></ul>
-          <ul><a href="#proceso-de-creacion">Proceso de Creación</a></ul>
+          <ul><a href="#uso-de-librerías">Uso de Librerías</a></ul>
+          <ul><a href="#proceso-de-creación">Proceso de Creación</a></ul>
       </ul>
     </li>
     <li>
-      <a href="#empezando">Empezando</a>
+      <a href="#comenzando">Comenzando</a>
       <ul>
         <li><a href="#prerequisitos">Prerequisitos</a></li>
-        <li><a href="#instalacion">Instalación</a></li>
-        <li><a href="#documentacion">Documentación</a></li>
+        <li><a href="#instalación">Instalación</a></li>
+        <li><a href="#documentación">Documentación</a></li>
       </ul>
     </li>
     <li><a href="#contribuyendo">Contribuyendo</a></li>
+    <li><a href="#licencia">Licencia</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ol>
 
@@ -89,120 +90,133 @@ Delilah Resto es el backend de un sistema de pedidos en línea para un restauran
 
 Delilah Resto is the backend for an online ordering system for a restaurant by operating the necessary parts to mount a REST API that allows CRUD operations on a data structure.
 
-#### Deliverable
+#### Entregable
 
-The objective of the Delilah project submitted is to emulate the task of a backend developer. The deliverables are:
+El objetivo del proyecto Delilah Resto presentado, es emular la tarea de un desarrollador backend.
+Los entregables son:
 
-- JS files
-- SQL file or installation from the application
-- Documentation file
-- [Readme.md](https://github.com/hmfarias/03-acamica-delilah/blob/master/README-esp.md) with installation instructions
+- Archivos JS
+- Archivo SQL o instalación desde la aplicación
+- Archivo de Documentación
+- [Readme.md](https://github.com/hmfarias/03-acamica-delilah/blob/master/README-esp.md) con instrucciones de instalación.
 
-(The frontend is not included in the deliverable package or resources of this project. The focus is on the backend.)
+(El frontend no está incluido en el paquete entregable ni en los recursos de este proyecto. El foco está en el backend.)
 
-#### Use of libraries
+<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
-No libraries, plugins or any other resource that is not specified in the instruction guide received, since the objective of the project is to validate the basic knowledge.
+#### Uso de Librerías
 
-#### Creation process
+No se usaron librerías, plugins o cualquier otro recurso que no esté especificado en la guía de instrucciones recibida, ya que el objetivo del proyecto es validar los conocimientos básicos.
 
-##### Steps followed
+<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
-- **Step 1: Introduction to the project**
-  Among the discharged resources, each of the views was analyzed to understand the project in its entirety.
-  It was observed rightly as it is the behavior of the application and the architecture of it began to be diagnosed roughly.
+#### Proceso de creación
 
-- **Step 2: Definition of the specification**
-  Based on the relevant information, the documentation was made with Swagger under the OpenAPI standard.
-  A `delilahResto.json` file was created in the `SETUP` directory of the project and the list of Endpoints was completed.
+##### Pasos seguidos
 
-- **Step 3: Creation of the environment**
-  A folder was created on the computer, and a GIT repository was started over that folder. Likewise, the NodejS project was initialized by creating the package.json file.
-  The necessary dependencies were also installed and the web server was created.
+- **Paso 1: Introducción al proyecto**
+  Entre los recursos recibidos, se analizó cada una de las vistas para entender el proyecto en su totalidad.
+  Se observó detalladamente como es el comportamiento de la aplicación y se empezó a diagnosticar a grandes rasgos la arquitectura de la misma.
 
-- **Step 4: Endpoints**
-  Express was installed on the project and it began to define all the routes that were specified in the documentation.
-  The Get, Post, Put and Delete methods were used depending on the action to be made.
+- **Paso 2: Definición de la especificación**
+  En base a la información relevada se realizó la documentación con Swagger bajo el estándar OpenAPI.
+  Se creó un archivo `delilahResto.json` en el directorio `SETUP` del proyecto y se completó la lista de Endpoints.
 
-- **Step 5: Structure of information**
-  The structure of the database was designed so that support all the flow of the application. For this, each of the views was reviewed again and each table was diamed based on the expedited information of those views.
+- **Paso 3: Creación del entorno**
+  Se creó una carpeta en la computadora y se inició un repositorio GIT sobre esa carpeta. Asimismo, el proyecto NodejS se inicializó creando el archivo package.json.
+  También se instalaron las dependencias necesarias y se creó el servidor web.
 
-- **Step 6: Connection to the database**
-  The server code was introduced with the connection to the database and it was enabled and 'listening' in a local port, connected to a MySQL database.
+- **Paso 4: Endpoints**
+  Se instaló Express en el proyecto y se comenzó a definir todas las rutas que se especificaron en la documentación.
+  Se utilizaron los métodos Get, Post, Put y Delete dependiendo de la acción a realizar.
 
-**List and product creation**
+- **Paso 5: Estructura de la información**
+  La estructura de la base de datos fue diseñada para soportar todo el flujo de la aplicación. Para ello se revisó nuevamente cada una de las vistas y se diseñó cada tabla en base a la información expedita de dichas vistas.
 
-- **Step 1: Products structure and table**
-  Based on the specification created previously, the Products table was created with the columns required to meet the specification of the API.
+- **Paso 6: Conexión a la base de datos**
+  Se introdujo el código necesario para la conexión a la base de datos y se habilitó un puerto local, conectado a una base de datos MySQL.
 
-- **Step 2: Product CRUD**
-  Express was added to the project, and the first endpoint of / products was created and the necessary operations were generated to be able to create, read, update and delete a product.
+**Listar y crear Productos**
 
-**Users System**
+- **Paso 1: estructura y tabla de Productos**
+  En base a la especificación creada previamente, se creó la tabla Productos con las columnas requeridas para cumplir con la especificación de la API.
 
-- **Step 1: Users Structure and table**
-  Based on the specification created previously, the Users table was created with the columns required to meet the specification of the API.
-  The **Users** table is related to **Roles** table. When creating it, the following conditions were taken into account: - An user has only one role. - A role can be assigned to multiple users.
+- **Step 2: CRUD para Productos**
+  Se agregó Express al proyecto, y se creó el primer endpoint de Products y se generaron las operaciones necesarias para poder crear, leer, actualizar y borrar un producto.
 
-- **Step 2: Registration and user login**
-  Based on the specification, the corresponding endpoint was created to give the user a way to create a new account.
-  Likewise, the Token **JWT** was incorporated to give registered users a way to log in to the platform.
+**Sistema de Usuarios**
 
-- **Step 3: Role**
-  A role validation strategy was generated for all existing endpoints. For example, that `only administrators users can create, edit and delete products, and that logical users only have access to their personal information.`
+- **Paso 1: Estructura y tabla de Usuarios**
+  En base a la especificación creada previamente, se creó la tabla Usuarios con las columnas requeridas para cumplir con la especificación de la API.
+  La tabla **Usuarios** está relacionada con la tabla **Roles**. Al crearlo se tuvieron en cuenta las siguientes condiciones:
 
-**Roles creation**
+  - Un usuario tiene un solo rol.
+  - Se puede asignar un rol a varios usuarios.
 
-- **Step 1: Roles structure and table**
-  Based on the specification created previously, the Roles table was created with the columns required to meet the specification of the API.
+- **Paso 2: Registro e inicio de sesión de Usuario**
+  Según la especificación, se creó el endpoint correspondiente para brindarle al usuario una forma de crear una nueva cuenta.
+  Asimismo, se incorporó el Token **JWT** para brindar a los usuarios registrados una forma de iniciar sesión en la plataforma.
 
-- **Step 2: Roles CRUD**
-  Necessary operations were generated to be able to create, read, update and delete a roles.
+- **Paso 3: Rol**
+  Se generó una estrategia de validación de roles para todos endpoints existentes. Por ejemplo, que `solo los usuarios administradores pueden crear, editar y eliminar productos, y que los usuarios comunes solo tienen acceso a su información personal`.
 
-**Payment Methods creation**
+**Creación de Roles**
 
-- **Step 1: Payment Methods structure and table**
-  Based on the specification created previously, the Payment Methods table was created with the columns required to meet the specification of the API.
+- **Paso 1: Estructura y tabla de Roles**
+  En base a la especificación creada anteriormente, se creó la tabla Roles con las columnas requeridas para cumplir con la especificación de la API.
 
-- **Step 2: Payment Methods CRUD**
-  Necessary operations were generated to be able to create, read, update and delete a payment methods.
+- **Step 2: CRUD para Roles**
+  Se generaron las operaciones necesarias para poder crear, leer, actualizar y borrar roles.
 
-**Creation of orders**
+**Creación de Métodos de Pago**
 
-- **Step 1: Orders structure and table**
-  The order table is related to two tables: **users** and **products**. When creating it, the following conditions were taken into account: - An order can be made by a single user. - A user can perform more than an order. - An order may contain several products. - A product can be part of several orders.
+- **Paso 1: Estructura y tabla de Métodos de Pago**
+  En base a la especificación creada anteriormente, se creó la tabla Métodos de pago con las columnas requeridas para cumplir con la especificación de la API.
 
-- **Step 2: Creating and getting orders**
-  With the tables already created, the first endpoint was generated for the creation of the products. Always based on the specification to know what to be received and what should be returned.
-  Then a new endpoint was created to get of all the products. This query not only returns the detail of orders but also the detail of all **products**, **users** and **payment method**.
-  The GET of all orders can only be executed by an administrator. A logged user only receives the own.
+- **Step 2: CRUD para Métodos de Pago**
+  Se generaron las operaciones necesarias para poder crear, leer, actualizar y eliminar un Medios de Pago.
 
-- **Step 3: Edition of orders**
-  The last step to end the API was to provide the administrator to edit tools on orders made to update the state of them. That's why an endpoint was created to make an update on the order path.
+**Creación de Órdenes**
+
+- **Paso 1: estructura y tabla de Órdenes**
+  La tabla de Órdenes está relacionada con dos tablas: **Usuarios** y **Productos**. A la hora de crearla se han tenido en cuenta las siguientes condiciones:
+
+  - Una órden puede ser realizada por un solo usuario.
+  - Un usuario puede realizar más de una órden.
+  - Una órden puede contener varios productos.
+  - Un producto puede formar parte de varias órdenes.
+
+- **Paso 2: Crear y recibir Órdenes**
+  Con las tablas ya creadas, se generó el primer endpoint para la creación de las Órdenes. Siempre en base a la especificación para saber qué se debe recibir y qué se debe devolver.
+  Luego se creó un nuevo endpoint para obtener todas las órdenes. Esta consulta no solo devuelve el detalle de las órdenes, sino también el detalle de todos los **productos**, **usuarios** y **métodos de pago** relacionados a la misma.
+  El GET de todas las órdenes solo puede ser ejecutado por un administrador. Un usuario registrado solo recibe los datos de su propia Órden.
+
+- **Paso 3: Edición de Órdenes**
+  El último paso para terminar con la API fue proporcionar al administrador herramientas de edición sobre las órdenes realizadas para actualizar el estado de las mismas ('nueva', 'confirmada', 'preparando', 'enviando', 'cancelada', 'entregada'). Es por eso que se creó un endpoint para realizar una actualización en la ruta de la Órden.
 
 **Rate Limit Policy**
-Finally, the rate limit policy was incorporated to allow control of incoming traffic for the API by limiting the number of requests that the API can receive within a given period of time. After the limit is reached, the policy rejects all requests, thereby avoiding any additional load on the backend API.
+Finalmente, se incorporó el _Rate Limit Policy_ para permitir el control del tráfico entrante para la API al limitar la cantidad de solicitudes que la API puede recibir dentro de un período de tiempo determinado. Una vez que se alcanza el límite, la política rechaza todas las solicitudes, evitando así cualquier carga adicional en la API de back-end.
 
-> When you configure the rate limiting policy, you can specify any number of pairs of quota (number of requests) and time window (time period) values.
-> Refer to the topic [Environment File](#the-environment-file)
+> Cuando configura el _Rate Limit Policy_, puede especificar cualquier número de pares de valores de cuota (número de solicitudes) y ventana de tiempo (período de tiempo).
+> Consulte el tema [Archivo de Entorno](#el-archivo-de-entorno)
 
 <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
 <!-- GETTING STARTED -->
 
-## Getting Started
+## Comenzando
 
-This guide describes step by step how to set up the local environment to get the system up and running.
-The necessary tools are indicated to set up the server, installation and configuration steps, the creation of the database and its population, and finally, the correct integration between both parts to be able to use the API locally or online.
+Esta guía describe paso a paso cómo configurar el entorno local para poner en marcha el sistema.
+Se indican las herramientas necesarias para montar el servidor, los pasos de instalación y configuración, la creación de la base de datos y su población y por último, la correcta integración entre ambas partes para poder utilizar la API de forma local u online.
 
-### Prerequisites
+### Prerequisitos
 
-Before starting the installation, it is necessary to have:
+Antes de comenzar la instalación, es necesario tener:
 
 - [Node Js](https://nodejs.org/en/ 'Node js')
 - [XAMPP](https://www.apachefriends.org/download.html 'XAMPP')
 - [MySQL Workbench](https://www.mysql.com/products/workbench/ 'MYSQL')
-- Install [Nodemon](https://nodemon.io/ 'nodemon')
+- Instale [Nodemon](https://nodemon.io/ 'nodemon')
 
   ```
   npm install nodemon -g (for global installation)
@@ -211,77 +225,79 @@ Before starting the installation, it is necessary to have:
 
   <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
-### Installation
+### Instalación
 
-1. ##### Clone the repository project
+1. ##### Clonar el proyecto del repositorio
 
-- Create a folder in a local directory and from the `terminal` inside the created folder initialize git:
+- Cree una carpeta en un directorio local y desde la `terminal` dentro de la carpeta creada, inicialice git:
 
 ```
 git init
 ```
 
-- Clone the entire project:
+- Clonar todo el proyecto:
 
 ```
 git clone https://github.com/hmfarias/03-acamica-delilah.git
 ```
 
-2. ##### Install dependencies
+2. ##### Instalar Dependencias
 
-- In the root of the project, write the command::
+- En la raíz del proyecto, escriba el comando:
 
 ```
 npm install
 ```
 
-> This creates the _node_modules_ folder with the necessary dependencies, such as _express_, _sequelize_, _jwt_ etc.
+> Esto crea la carpeta _node_modules_ con las dependencias necesarias, como _express_, _sequelize_, _jwt_, etc.
 
-3. ##### Put online database
+3. ##### Poner la Base de Datos en línea
 
-- Open [XAMPP](https://www.apachefriends.org/download.html 'XAMPP'). Go to `Server Manage` and start the `MySQL Database`
-- Open [MySQL Workbench](https://www.mysql.com/products/workbench/ 'MYSQL') and establish the connection with the database. Make sure MySql database is running on port 3306.
-- In the project there is a folder called `./setup`. In this folder are the script files necessary to create and populate the database.
-  From MySQL Workbench go to the `File -> Open SQL Script` option, select and run the file `./setup/delilah_create.sql`. Next select and run the file `./setup/delilah_inserts.sql`.
+- Abra [XAMPP](https://www.apachefriends.org/download.html 'XAMPP'). Vaya a `Server Manage` e inicie `MySQL Database`
+- Abra [MySQL Workbench](https://www.mysql.com/products/workbench/ 'MYSQL') y establezca la conexión con la base de datos. Asegúrese de que la base de datos MySql se esté ejecutando en el puerto 3306.
+- En el proyecto existe una carpeta llamada `./setup`. En esta carpeta se encuentran los archivos de script necesarios para crear y llenar la base de datos con datos de prueba.
+  Desde MySQL Workbench, vaya a la opción `Archivo -> Abrir script SQL`, seleccione y ejecute el archivo `./setup/delilah_create.sql`. A continuación, seleccione y ejecute el archivo `./setup/delilah_inserts.sql`.
 
-  > This creates the `delilah` database, as well as the necessary tables and test data in the created tables.
+> Esto crea la base de datos `delilah`, así como las tablas necesarias y los datos de prueba en las tablas creadas.
 
-4. #### Environment Variables
+  <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
+4. #### Variables de Entorno
 
-##### The Environment File
+##### El Archivo de Entorno
 
-You will need to create or modify the `.env` file in the root folder of the project.
-In this file you will need to set the following environment variables:
+Deberá crear o modificar el archivo `.env` en la carpeta raíz del proyecto.
+En este archivo, deberá configurar las siguientes variables de entorno:
 
-- To configure the connection to the database:
-  - **DB_SERVER= (e.g. 127.0.0.1)**
-  - **DB_USER= (e.g. root)** - **DB_PWD=**
+- Para configurar la conexión con la Base de Datos:
+  - **DB_SERVER= (ej: 127.0.0.1)**
+  - **DB_USER= (ej: root)**
+  - **DB_PWD=**
   - **DB_NAME= delilah**
   - **DB_PORT= 3306**
   - **APP_PORT= 3000**
     <br>
-- Secret string for JWT. Are numbers and special symbols that the server will use to generate the token for each logged in user. -- _NEVER EXPOSE THIS CHARACTER STRING_ --
+- Cadena secreta para JWT. Son números y caracteres especiales que utilizará el servidor para generar el token para cada usuario que haya iniciado sesión. **NUNCA EXPONGA ESTA CADENA DE CARACTERES**
   - **JWT_SECRET=(e.g. ger7gtlhiu&ylkjsd876fswihelgklmvals654sakltfghpa$)**
     <br>
-- Time to live token
+- Tiempo de vida del Token
   - **EXPIRE_TIME_TOKEN = 120m**
     <br>
-- Maximum number of requests according to the desired rate limit policy
-  - **MAX_REQUEST = 20**
+- Número máximo de solicitudes según el _Rate Limit Policy_ deseado
+  - **MAX_REQUEST = ej: 20**
     <br>
-- Waiting time in minutes after exceeding MAX_REQUEST
+- Tiempo de espera en minutos después de superar MAX_REQUEST
   - **MINUTES_TO_WAIT = 1**
 
-5. #### Put the server online
+5. #### Poner el Servidor en línea
 
-   To put the server online run the following command in the terminal:
+   Para poner el servidor en línea, ejecute el siguiente comando en la terminal (desde la raíz del proyecto):
 
    ```
    npm run server
    ```
 
-   > This starts the `./src/server.js ` file with nodemon.
-   > You will see the following message in the console:
+   > Esto inicia el archivo `./src/server.js ` con nodemon.
+   > Verá el siguiente mensaje en la consola:
    >
    > ```
    >   Listening in Port: 3000
@@ -289,56 +305,55 @@ In this file you will need to set the following environment variables:
    >   All OK - connected database
    > ```
 
-6. #### The API is online and listening on the selected port
-   After completing the steps above, you can start testing the Delilah Resto API.
-   You can use [Postman](https://www.postman.com/ 'Postman') for it.
-   In the `setup` folder, you can find the Postman Collection which tests each and every API endpoint.
-   Start Postman and import the file `./setup/API Delilah-postman_collection.json`. There you will have all the examples of use of each available endpoint, as well as the Json models of each request.
-   According to the security scheme implemented for the API, in order to test each endpoint, you will need to log in to the system with an existing user (administrator or common user) and use the token returned by the server in the header of each request.
-   With Server online, you can visit the documentation page, `localhost:3000/api/v1/docs` to get the details of each request and its response.
+6. #### La API está en línea y "escuchando" en el puerto seleccionado
+   Después de completar los pasos anteriores, puede comenzar a probar la API de Delilah Resto.
+   Puede usar [Postman](https://www.postman.com/ 'Postman') para ello.
+   En la carpeta `/setup`, puede encontrar la Colección Postman que prueba todos y cada uno de los endpoints de la API.
+   Inicie Postman e importe el archivo `./setup/API Delilah-postman_collection.json`. Allí tendrá todos los ejemplos de uso de cada endpoint disponible, así como los modelos Json de cada petición.
+   Tener en cuenta que de acuerdo con el esquema de seguridad implementado para la API, para probar cada punto final, deberá iniciar sesión en el sistema con un usuario existente (administrador o usuario común) y usar el token devuelto por el servidor en el encabezado de cada solicitud. .
 
 <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
-### Documentation
+### Documentación
 
-With Server online, you can visit the documentation page, `localhost:3000/api/v1/docs` to get the details of each request and its response.
-You can also go to [Swagger](https://editor.swagger.io/ 'Swagger') and drag or import the ` ./setup/delilahResto.yaml`.
+Con Server "online", puede visitar la página de documentación, `localhost:3000/api/v1/docs` para obtener los detalles de cada solicitud y su respuesta.
+También puede ir a [Swagger](https://editor.swagger.io/ 'Swagger') y arrastrar o importar ` ./setup/delilahResto.yaml` para obtener el mismo resultado.
 
 <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 <!-- CONTRIBUTING -->
 
-## Contributing
+## Contribuyendo
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Las contribuciones son lo que hace que la comunidad de código abierto sea un lugar increíble para aprender, inspirar y crear. Cualquier contribución que haga es **muy apreciada**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+Si tiene una sugerencia para mejorar este proyecto, por favor haga un "fork" al repositorio y cree un "pull request". También puede simplemente abrir un "issue" con la etiqueta "mejora".
+¡No olvide darle una estrella al proyecto! ¡Gracias de nuevo!
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork al Proyecto
+2. Cree una nueva rama para su característica (`git checkout -b feature/newFeature`)
+3. Commit para los cambios (`git commit -m 'Add some newFeature'`)
+4. Push a la nueva rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
 <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
 <!-- LICENSE -->
 
-## License
+## Licencia
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distribuido bajo la licencia MIT. Consulte `LICENSE.txt` para obtener más información.
 
 <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
 <!-- CONTACT -->
 
-## Contact
+## Contacto
 
 Marcelo Farias - [+54 9 3512601888](https://twitter.com/your_username) - hmfarias7@gmail.com
 
-Project Link: [https://github.com/hmfarias/03-acamica-delilah](https://github.com/hmfarias/03-acamica-delilah)
+Link del Proyecto: [https://github.com/hmfarias/03-acamica-delilah](https://github.com/hmfarias/03-acamica-delilah)
 
-<<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
+<p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
 
