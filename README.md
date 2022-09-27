@@ -317,7 +317,7 @@ In this file you will need to set the following environment variables:
 ### Documentation
 
 With Server online, you can visit the documentation page, [http://localhost:3000/api/v1/docs/#/](http://localhost:3000/api/v1/docs/#/) to get the details of each request and its response.
-You can also go to [Swagger](https://editor.swagger.io/ 'Swagger') and drag or import the ` ./setup/delilahResto.yaml`.
+You can also go to [Swagger](https://editor.swagger.io/ 'Swagger') and drag or import the ` ./setup/delilahResto.yaml` file, to get the same result.
 
 <p align="right">(<a href="#table-of-contents">back</a>)</p>
 <!-- CONTRIBUTING -->

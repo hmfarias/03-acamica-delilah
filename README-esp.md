@@ -318,7 +318,7 @@ En este archivo, deberá configurar las siguientes variables de entorno:
 ### Documentación
 
 Con Server "online", puede visitar la página de documentación, [http://localhost:3000/api/v1/docs/#/](http://localhost:3000/api/v1/docs/#/) para obtener los detalles de cada solicitud y su respuesta.
-También puede ir a [Swagger](https://editor.swagger.io/ 'Swagger') y arrastrar o importar ` ./setup/delilahResto.yaml` para obtener el mismo resultado.
+También puede ir a [Swagger](https://editor.swagger.io/ 'Swagger') y arrastrar o importar el archivo ` ./setup/delilahResto.yaml` para obtener el mismo resultado.
 
 <p align="right">(<a href="#tabla-de-contenidos">volver</a>)</p>
 <!-- CONTRIBUTING -->
